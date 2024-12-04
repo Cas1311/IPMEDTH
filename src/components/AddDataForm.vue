@@ -8,7 +8,7 @@
             </div>
             <div>
                 <label for="description">Description:</label>
-                <textarea id="description" v-model="formData.content"></textarea>
+                <textarea id="description" v-model="formData.description"></textarea>
             </div>
             <div>
                 <label for="category">Category:</label>
@@ -43,7 +43,8 @@ export default {
                 );
                 this.message = response.data.message;
                 this.formData.title = '';
-                this.formData.content = '';
+                this.formData.description = '';
+                this.formData.category = '';
             } catch (error) {
                 console.error(error.response?.data || error.message);
                 this.message = 'An error occurred while submitting the form.';
