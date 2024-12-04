@@ -2,6 +2,7 @@
 import axios from 'axios'
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import AddDataForm from './components/AddDataForm.vue';
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import TheWelcome from './components/TheWelcome.vue'
       <HelloWorld msg="waterpolo!" />
     </div>
   </header>
+    <AddDataForm />
 
   <main>
     <TheWelcome />
