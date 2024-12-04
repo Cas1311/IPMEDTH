@@ -38,7 +38,7 @@ export default {
         async submitForm() {
             try {
                 const response = await axios.post(
-                    'http://127.0.0.1:8000/api/add-data',
+                    'https://zvl-trainingen.wptraining.info/api/add-data',
                     this.formData
                 );
                 this.message = response.data.message;

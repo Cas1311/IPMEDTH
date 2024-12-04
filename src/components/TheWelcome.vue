@@ -10,7 +10,7 @@ export default {
   },
   mounted() {
     axios
-      .get('http://localhost:8000/api/exercises')
+      .get('https://zvl-trainingen.wptraining.info/api/exercises')
       .then((response) => {
         this.exercises = response.data
       })
