@@ -20,7 +20,7 @@ export default {
 </script>
 
 <template>
-  <h3>bruh</h3>
+  <h1>Oefeningen</h1>
   <div v-for="exercise in exercises" :key="exercise.id">
     <h2>{{ exercise.title }}</h2>
     <p>{{ exercise.description }}</p>
