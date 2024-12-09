@@ -1,9 +1,11 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import AddDataForm from '@/components/AddDataForm.vue'
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <AddDataForm />
+    
   </main>
+  
 </template>
