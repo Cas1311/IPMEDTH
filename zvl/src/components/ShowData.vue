@@ -31,9 +31,9 @@ export default {
         <p class="category">Warming Up</p>
         <p class="category">Cooling Down</p>
       </div>
-      <p>{{ exercise.description }}</p>
-      <p>{{ exercise.description }}</p>
-      <p>{{ exercise.description }}</p>
+      <p class="skill">{{ exercise.description }}</p>
+      <p class="skill">{{ exercise.description }}</p>
+      <p class="skill">{{ exercise.description }}</p>
     </div>
   </div>
 </template>
@@ -70,7 +70,7 @@ export default {
 }
 
 .category {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   border-radius: 0.5em;
   background: var(--theme-primary);
   box-shadow: 0px 0.125em 0.25em 0px rgba(0, 0, 0, 0.25);
@@ -86,7 +86,12 @@ export default {
 .title {
   color: #FFF;
   font-family: "Roboto Condensed";
-  font-size: min(1.5rem, 5vw);
+  font-size: 2rem;
   font-weight: 400;
+}
+
+.skill{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 </style>
