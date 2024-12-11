@@ -20,9 +20,73 @@ export default {
 </script>
 
 <template>
-  <h1>Oefeningen</h1>
-  <div v-for="exercise in exercises" :key="exercise.id">
-    <h2>{{ exercise.title }}</h2>
-    <p>{{ exercise.description }}</p>
+  <div class="exercisecontainer">
+    <h1>Oefeningen</h1>
+    <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
+      <div class="exercise-header">
+        <h2 class="title">{{ exercise.title }}</h2>
+        <p class="duration">5 Minuten</p>
+      </div>
+      <div class="categorycontainer">
+        <p class="category">Warming Up</p>
+        <p class="category">Cooling Down</p>
+      </div>
+      <p>{{ exercise.description }}</p>
+      <p>{{ exercise.description }}</p>
+      <p>{{ exercise.description }}</p>
+    </div>
   </div>
 </template>
+
+<style scoped>
+
+.exercisecontainer {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 100ch);
+  margin-inline: auto;
+  gap: 0.75em;
+}
+
+.exercise {
+  border-radius: 0.4em;
+  background: var(--theme-secondary);
+  box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
+  min-width: 100%;
+  padding: 1em;
+  position: relative;
+}
+
+.exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categorycontainer {
+  display: flex;
+  gap: 0.5em;
+  border-bottom: 0.125em solid var(--theme-primary);
+}
+
+.category {
+  font-size: 0.6rem;
+  border-radius: 0.5em;
+  background: var(--theme-primary);
+  box-shadow: 0px 0.125em 0.25em 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  padding: 0.3em 0.8em;
+  margin-bottom: 0.5em;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+}
+
+.title {
+  color: #FFF;
+  font-family: "Roboto Condensed";
+  font-size: min(1.5rem, 5vw);
+  font-weight: 400;
+}
+</style>
