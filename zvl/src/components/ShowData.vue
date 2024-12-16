@@ -1,5 +1,6 @@
 <script>
 
+import AboutView from '@/views/AboutView.vue';
 import axios from 'axios'
 
 export default {
@@ -24,15 +25,17 @@ export default {
     <h1>Oefeningen</h1>
     <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
       <div class="exercise-header">
-        <h2 class="title">{{ exercise.title }}</h2>
+        <router-link
+          :to="'/exercise/' + exercise.id" 
+          class="title">
+        <h2 class="title">{{ exercise.name }}</h2>
+        </router-link>
         <p class="duration">5 Minuten</p>
       </div>
       <div class="categorycontainer">
         <p class="category">Warming Up</p>
         <p class="category">Cooling Down</p>
       </div>
-      <p class="skill">{{ exercise.description }}</p>
-      <p class="skill">{{ exercise.description }}</p>
       <p class="skill">{{ exercise.description }}</p>
     </div>
   </div>
@@ -84,9 +87,8 @@ export default {
 }
 
 .title {
-  color: #FFF;
   font-family: "Roboto Condensed";
-  font-size: 2rem;
+  font-size: min(2rem, 5vw);
   font-weight: 400;
 }
 

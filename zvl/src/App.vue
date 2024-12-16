@@ -4,7 +4,7 @@
   <nav>
     <RouterLink to="/">Go to Home</RouterLink>
     <RouterLink to="/about">Go to About</RouterLink>
-    <RouterLink to="/exercise">Go to Exercises</RouterLink>
+    <RouterLink to="/exercises">Go to Exercises</RouterLink>
   </nav>
   
   <main>
