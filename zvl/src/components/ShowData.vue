@@ -26,10 +26,9 @@ export default {
     <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
       <div class="exercise-header">
         <router-link
-          :to="'/exercise/' + exercise.id" 
-          class="title">
+          :to="'/exercise/' + exercise.id" >
         <h2 class="title">{{ exercise.name }}</h2>
-        </router-link>
+      </router-link>
         <p class="duration">5 Minuten</p>
       </div>
       <div class="categorycontainer">
