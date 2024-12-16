@@ -1,34 +1,44 @@
 <script>
-
-import AboutView from '@/views/AboutView.vue';
 import axios from 'axios'
 
 export default {
   data() {
     return {
-      exercises: []
-    }
+      exercises: [],  // Store the exercises
+      loading: true,   // Loading state to show "Loading..." until the data is fetched
+    };
   },
   mounted() {
+    // Fetch the data when the component is mounted
     axios
-      .get('https://zvl-trainingen.wptraining.info/api/exercises')
+      .get('https://zvl-trainingen.wptraining.info/api/exercises')  // Your API URL here
       .then((response) => {
-        this.exercises = response.data
+        this.exercises = response.data;  // Assign fetched data to the exercises array
+        this.loading = false;            // Set loading to false once data is fetched
       })
-  }
-}
+      .catch((error) => {
+        console.error('Error fetching exercises:', error);
+        this.loading = false;            // Even if there’s an error, stop loading
+      });
+  },
+};
 
 </script>
 
 <template>
   <div class="exercisecontainer">
     <h1>Oefeningen</h1>
+
+    <!-- <div v-if="loading">
+      <p>Loading...</p>
+    </div> -->
+
+    <!-- <div v-else> -->
     <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
       <div class="exercise-header">
-        <router-link
-          :to="'/exercise/' + exercise.id" >
-        <h2 class="title">{{ exercise.name }}</h2>
-      </router-link>
+        <router-link :to="'/exercise/' + exercise.id">
+          <h2 class="title">{{ exercise.name }}</h2>
+        </router-link>
         <p class="duration">5 Minuten</p>
       </div>
       <div class="categorycontainer">
@@ -38,10 +48,10 @@ export default {
       <p class="skill">{{ exercise.description }}</p>
     </div>
   </div>
+<!-- </div> -->
 </template>
 
 <style scoped>
-
 .exercisecontainer {
   display: flex;
   flex-direction: column;
@@ -91,7 +101,7 @@ export default {
   font-weight: 400;
 }
 
-.skill{
+.skill {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
