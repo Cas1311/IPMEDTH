@@ -1,64 +1,50 @@
 <template>
     <div>
-        <h1>Exercise Detail</h1>
-        
-        <div v-if="exercise">
-            <div class="exercisecontainer">
-                <div class="exercise">
-                    <h2>{{ exercise.name }}</h2>
-                    <p>{{ exercise.description }}</p>
-                    <!-- Categories -->
-                    <div class="categorycontainer">
-                        <h3>Categories:</h3>
-                        <ul>
-                            <li v-for="category in exercise.categories" :key="category.id">
-                                {{ category.name }}
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- Skills -->
-                    <div class="skillcontainer">
-                        <h3>Skills:</h3>
-                        <ul>
-                            <li v-for="skill in exercise.skills" :key="skill.id">
-                                {{ skill.name }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div v-else>
-            <p>Loading...</p>
-        </div>
+      <h1>Exercise Detail</h1>
+  
+      <div v-if="loading">
+        <p>Loading...</p>
+      </div>
+  
+      <div v-else>
+        <!-- Display a single ShowData card -->
+        <ShowData :exercise="exercise" :show-extra="true" />
+      </div>
     </div>
-</template>
-
-<script>
-import axios from 'axios';
-
-export default {
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  import ShowData from '@/components/ShowData.vue';
+  
+  export default {
     data() {
-        return {
-            exercise: null, // Store exercise data
-        };
+      return {
+        exercise: null, // Holds the specific exercise
+        loading: true,  // Loading state
+      };
     },
     mounted() {
-        const exerciseId = this.$route.params.id; // Get exercise ID from route params
-
-        // Fetch the exercise details using the ID
-        axios
-            .get(`https://zvl-trainingen.wptraining.info/api/exercises/${exerciseId}`)
-            .then((response) => {
-                this.exercise = response.data; // Store the fetched data in `exercise`
-            })
-            .catch((error) => {
-                console.error('Error fetching exercise data:', error);
-            });
+      const exerciseId = this.$route.params.id; // Get exercise ID from the route params
+  
+      // Fetch the specific exercise from the API
+      axios
+        .get(`http://127.0.0.1:8000/api/exercises/${exerciseId}`) // Update the URL if needed
+        .then((response) => {
+          this.exercise = response.data; // Store the fetched exercise
+        })
+        .catch((error) => {
+          console.error('Error fetching exercise:', error);
+        })
+        .finally(() => {
+          this.loading = false; // Stop loading
+        });
     },
-};
-</script>
+    components: {
+      ShowData, // Use the ShowData component
+    },
+  };
+  </script>
 
 <style scoped>
 .exercisecontainer {

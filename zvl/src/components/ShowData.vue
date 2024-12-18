@@ -1,62 +1,52 @@
-<script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      exercises: [], // Array to hold exercises
-      loading: true, // Loading state
-    };
-  },
-  mounted() {
-    const exerciseId = this.$route.params.id;
-    // Fetch exercise data
-    axios
-      .get('http://127.0.0.1:8000/api/exercises')
-      .then((response) => {
-        this.exercises = response.data; // Populate exercises array
-      })
-      .catch((error) => {
-        console.error('Error fetching exercises:', error);
-      })
-      .finally(() => {
-        this.loading = false; // Stop loading
-      });
-  },
-};
-</script>
-
 <template>
   <div class="exercisecontainer">
-    <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
+    <div class="exercise">
       <div class="exercise-header">
+        <!-- Title and duration -->
         <router-link :to="'/exercise/' + exercise.id">
           <h2 class="title">{{ exercise.name }}</h2>
         </router-link>
         <p class="duration"> {{ exercise.duration }} Minuten </p>
       </div>
+
       <!-- Categories -->
-      <div >
-        <h3>Categories:</h3>
+      <div>
         <ul class="categorycontainer">
-          <li class="category" v-for="category in exercise.categories" :key="category.id">
+          <li class="category" v-for="category in exercise.categories || []" :key="category.id">
             {{ category.name }}
           </li>
         </ul>
       </div>
+
       <!-- Skills -->
-      <div class="skillcontainer">
-        <h3>Skills:</h3>
+      <div>
         <ul>
-          <li class="category" v-for="skill in exercise.skills" :key="skill.id">
+          <li class="skill" v-for="skill in exercise.skills || []" :key="skill.id">
             {{ skill.name }}
           </li>
         </ul>
       </div>
-      <p>{{ exercise.description }}</p>
+      <p class="description" v-if="showExtra">{{ exercise.description }}</p>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  props: {
+    exercise: {
+      type: Object,
+      required: true,
+    },
+    showExtra: {
+      type: Boolean,
+      default: false, // Default to not showing extra details
+    },
+  },
+};
+</script>
+
+
 
 <style scoped>
 .exercisecontainer {
@@ -64,7 +54,7 @@ export default {
   flex-direction: column;
   width: min(100%, 100ch);
   margin-inline: auto;
-  gap: 0.75em;
+  margin-bottom: 2em;
 }
 
 .exercise {
@@ -100,7 +90,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-  max-width: 20em; /* temporary styling for skills */
+  max-width: 20em;
 }
 
 .title {
@@ -112,5 +102,10 @@ export default {
 .skill {
   word-wrap: break-word;
   overflow-wrap: break-word;
+  list-style: none;
+}
+
+.description {
+  margin-top: 1em;
 }
 </style>
