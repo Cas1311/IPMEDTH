@@ -1,14 +1,34 @@
 <template>
     <div>
         <h1>Exercise Detail</h1>
+        
         <div v-if="exercise">
             <div class="exercisecontainer">
                 <div class="exercise">
                     <h2>{{ exercise.name }}</h2>
                     <p>{{ exercise.description }}</p>
+                    <!-- Categories -->
+                    <div class="categorycontainer">
+                        <h3>Categories:</h3>
+                        <ul>
+                            <li v-for="category in exercise.categories" :key="category.id">
+                                {{ category.name }}
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Skills -->
+                    <div class="skillcontainer">
+                        <h3>Skills:</h3>
+                        <ul>
+                            <li v-for="skill in exercise.skills" :key="skill.id">
+                                {{ skill.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div v-else>
             <p>Loading...</p>
         </div>

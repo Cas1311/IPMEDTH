@@ -1,54 +1,61 @@
 <script>
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
   data() {
     return {
-      exercises: [],  // Store the exercises
-      loading: true,   // Loading state to show "Loading..." until the data is fetched
+      exercises: [], // Array to hold exercises
+      loading: true, // Loading state
     };
   },
   mounted() {
-    // Fetch the data when the component is mounted
+    const exerciseId = this.$route.params.id;
+    // Fetch exercise data
     axios
-      .get('https://zvl-trainingen.wptraining.info/api/exercises')  // Your API URL here
+      .get('http://127.0.0.1:8000/api/exercises')
       .then((response) => {
-        this.exercises = response.data;  // Assign fetched data to the exercises array
-        this.loading = false;            // Set loading to false once data is fetched
+        this.exercises = response.data; // Populate exercises array
       })
       .catch((error) => {
         console.error('Error fetching exercises:', error);
-        this.loading = false;            // Even if there’s an error, stop loading
+      })
+      .finally(() => {
+        this.loading = false; // Stop loading
       });
   },
 };
-
 </script>
 
 <template>
   <div class="exercisecontainer">
-    <h1>Oefeningen</h1>
-
-    <!-- <div v-if="loading">
-      <p>Loading...</p>
-    </div> -->
-
-    <!-- <div v-else> -->
     <div class="exercise" v-for="exercise in exercises" :key="exercise.id">
       <div class="exercise-header">
         <router-link :to="'/exercise/' + exercise.id">
           <h2 class="title">{{ exercise.name }}</h2>
         </router-link>
-        <p class="duration">5 Minuten</p>
+        <p class="duration"> {{ exercise.duration }} Minuten </p>
       </div>
-      <div class="categorycontainer">
-        <p class="category">Warming Up</p>
-        <p class="category">Cooling Down</p>
+      <!-- Categories -->
+      <div >
+        <h3>Categories:</h3>
+        <ul class="categorycontainer">
+          <li class="category" v-for="category in exercise.categories" :key="category.id">
+            {{ category.name }}
+          </li>
+        </ul>
       </div>
-      <p class="skill">{{ exercise.description }}</p>
+      <!-- Skills -->
+      <div class="skillcontainer">
+        <h3>Skills:</h3>
+        <ul>
+          <li class="category" v-for="skill in exercise.skills" :key="skill.id">
+            {{ skill.name }}
+          </li>
+        </ul>
+      </div>
+      <p>{{ exercise.description }}</p>
     </div>
   </div>
-<!-- </div> -->
 </template>
 
 <style scoped>
@@ -87,12 +94,13 @@ export default {
   background: var(--theme-primary);
   box-shadow: 0px 0.125em 0.25em 0px rgba(0, 0, 0, 0.25);
   display: flex;
+  flex-direction: row;
   padding: 0.3em 0.8em;
   margin-bottom: 0.5em;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
-
+  max-width: 20em; /* temporary styling for skills */
 }
 
 .title {
