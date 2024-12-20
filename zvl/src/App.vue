@@ -1,7 +1,6 @@
 <template>
-  <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" width="125" height="125" />
-    <strong>Current route path:</strong> {{ $route.fullPath }}
-  <nav>
+  <nav class="navBar">
+    <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" width="125" height="125" />
     <RouterLink class="link" to="/">Go to Home</RouterLink>
     <RouterLink class="link" to="/about">Go to About</RouterLink>
     <RouterLink class="link" to="/exercises">Go to Exercises</RouterLink>
@@ -21,8 +20,26 @@
   gap: 12px;
 }
 
+.navBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  background: var(--theme-secondary);
+}
+
+.logo {
+  /* border-radius: 50%; */
+  border: 2px solid var(--theme-primary);
+  box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
+  padding: 0.25em;
+  margin: 0.5em;
+  width: 3em;
+  height: 3em;
+}
+
 .link {
-  color: var(--theme-secondary);
+  color: var(--theme-primary);
   text-decoration: none;
   font-size: 1.25em;
 } 
