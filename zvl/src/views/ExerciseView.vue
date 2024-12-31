@@ -30,7 +30,7 @@ export default {
   mounted() {
     // Fetch all exercises from the API
     axios
-      .get('http://127.0.0.1:8000/api/exercises') // Update the URL if needed
+      .get('http://127.0.0.1:8000/api/exercises?filter[skills]=all') // Update the URL if needed
       .then((response) => {
         this.exercises = response.data; // Populate exercises array
       })
@@ -64,11 +64,19 @@ export default {
     },
 
     applyFilters(selectedFilters) {
+      let params = {};
+
+      if(selectedFilters.length > 0){
       const skillIds = selectedFilters.map(skill => skill.id).join(',');
-      const params = skillIds ? { 'filter[skills]': skillIds } : {};
+      params['filter[skills]'] = skillIds;
+      } else {
+        params['filter[skills]'] = 'all';
+      }
+      
       this.getFilteredExercises(params);
     }
   },
+  
   components: {
     ShowData, // Use the ShowData component
     Filter
