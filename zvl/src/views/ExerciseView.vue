@@ -2,7 +2,12 @@
   <div>
     <h1>All Exercises</h1>
 
-    <Filter @filter-changed="applyFilters" />
+    <Filter 
+    @filter-changed="applySkillFilters" 
+    @duration-slider-changed="updateDurationSliderValue" 
+    @player-slider-changed="updatePlayerSliderValue"
+    @age-changed="updateAgeValue" 
+    @water-changed="updateWaterValue" />
 
     <div v-if="loading">
       <p>Loading...</p>
@@ -10,7 +15,7 @@
 
     <div v-else class="exercise-list">
       <!-- Loop through exercises and display each as a ShowData card -->
-      <ShowData v-for="exercise in exercises" :key="exercise.id" :exercise="exercise" :show-extra="true" />
+      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="true" />
     </div>
   </div>
 </template>
@@ -25,6 +30,10 @@ export default {
     return {
       exercises: [], // Holds all exercises
       loading: true, // Loading state
+      durationSliderValue: [1, 60],
+      playerSliderValue: '',
+      ageValue: 18,
+      waterValue: '',
     };
   },
   mounted() {
@@ -46,7 +55,7 @@ export default {
   methods: {
     getFilteredExercises(params = {}) {
       this.loading = true;
-        
+
       axios
         .get('http://127.0.0.1:8000/api/exercises', {
           params
@@ -63,20 +72,53 @@ export default {
         });
     },
 
-    applyFilters(selectedFilters) {
+    applySkillFilters(selectedFilters) {
       let params = {};
 
-      if(selectedFilters.length > 0){
-      const skillIds = selectedFilters.map(skill => skill.id).join(',');
-      params['filter[skills]'] = skillIds;
+      if (selectedFilters.length > 0) {
+        const skillIds = selectedFilters.map(skill => skill.id).join(',');
+        params['filter[skills]'] = skillIds;
       } else {
         params['filter[skills]'] = 'all';
       }
-      
+
       this.getFilteredExercises(params);
+    },
+
+    updateDurationSliderValue(value) {
+      this.durationSliderValue = value;
+    },
+
+    updatePlayerSliderValue(value) {
+      this.playerSliderValue = value;
+    },
+
+    updateAgeValue(value) {
+      this.ageValue = value;
+    },
+
+    updateWaterValue(value) {
+      this.waterValue = value;
+    }
+
+  },
+
+  computed: {
+    // Filter exercises locally based on slider values
+    filteredExercises() {
+      const [min, max] = this.durationSliderValue;
+      console.log('hi');
+      return this.exercises.filter(exercise => {
+        const matchesDuration = exercise.duration >= min && exercise.duration <= max;
+        const matchesPlayers = exercise.minimum_players <= this.playerSliderValue;
+        const matchesAge = exercise.minimum_age <= this.ageValue;
+        const matchesWater = this.waterValue === '' || Number(exercise.water_exercise) === this.waterValue;
+
+        return matchesDuration &&matchesPlayers && matchesAge && matchesWater;
+      });
     }
   },
-  
+
   components: {
     ShowData, // Use the ShowData component
     Filter
