@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <Panel header="Filters" toggleable collapsed>
 
         <div class="slidercontainer">
             <label>Selecteer categorie and onderdelen</label>
@@ -45,7 +45,7 @@
             <Slider class="slider" v-model="durationSliderValue" range :min="1" :max="60" />
         </div>
 
-    </div>
+    </Panel>
 
 </template>
 
@@ -54,6 +54,7 @@ import axios from 'axios';
 import Multiselect from 'vue-multiselect';
 import Slider from 'primevue/slider';
 import InputText from 'primevue/inputtext';
+import Panel from 'primevue/panel';
 
 export default {
     data() {
@@ -140,7 +141,8 @@ export default {
     components: {
         Multiselect,
         Slider,
-        InputText
+        InputText,
+        Panel,
     },
 };
 </script>
