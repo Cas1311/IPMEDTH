@@ -2,12 +2,10 @@
     <div>
 
         <div class="slidercontainer">
-            <label>Select category and skills</label>
-            <multiselect v-model="value" :options="options" :multiple="true" group-values="skill" group-label="category"
-                :group-select="true" placeholder="Type to search" track-by="name" label="name"><span
-                    slot="noResult">Oops!
-                    No
-                    elements found. Consider changing the search query.</span>
+            <label>Selecteer categorie and onderdelen</label>
+            <multiselect v-model="skillValue" :options="options" :multiple="true" group-values="skill" group-label="category"
+                :group-select="true" placeholder="Typ om te zoeken" track-by="name" label="name"><span
+                    slot="noResult">Geen resultaten gevonden voor je zoekopdracht</span>
             </multiselect>
         </div>
 
@@ -61,7 +59,7 @@ export default {
     data() {
         return {
             options: [],
-            value: [],
+            skillValue: [],
             durationSliderValue: [1, 60],
             playerSliderValue: '',
             minimumAge: '',
@@ -73,9 +71,9 @@ export default {
     },
 
     watch: {
-        value: {
+        skillValue: {
             handler(newValue) {
-                this.$emit('filter-changed', newValue);
+                this.$emit('skill-filter-changed', newValue);
             },
             deep: true
         },

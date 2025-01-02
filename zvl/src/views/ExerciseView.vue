@@ -3,7 +3,7 @@
     <h1>All Exercises</h1>
 
     <Filter 
-    @filter-changed="applySkillFilters" 
+    @skill-filter-changed="applySkillFilters" 
     @duration-slider-changed="updateDurationSliderValue" 
     @player-slider-changed="updatePlayerSliderValue"
     @age-changed="updateAgeValue" 
@@ -110,8 +110,8 @@ export default {
       console.log('hi');
       return this.exercises.filter(exercise => {
         const matchesDuration = exercise.duration >= min && exercise.duration <= max;
-        const matchesPlayers = exercise.minimum_players <= this.playerSliderValue;
-        const matchesAge = exercise.minimum_age <= this.ageValue;
+        const matchesPlayers = this.playerSliderValue === '' || exercise.minimum_players <= this.playerSliderValue;
+        const matchesAge = this.ageValue === '' || exercise.minimum_age <= this.ageValue;
         const matchesWater = this.waterValue === '' || Number(exercise.water_exercise) === this.waterValue;
 
         return matchesDuration &&matchesPlayers && matchesAge && matchesWater;
