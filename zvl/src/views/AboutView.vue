@@ -1,7 +1,15 @@
+<script setup>
+import CreateTrainingForm from '@/components/CreateTrainingForm.vue'
+import ShowTrainings from '@/components/ShowTrainings.vue'
+</script>
+
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <main>
+    <ShowTrainings/>
+    <CreateTrainingForm />
+    
+  </main>
+  
 </template>
 
 <style>

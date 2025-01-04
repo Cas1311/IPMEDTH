@@ -6,6 +6,11 @@
         <router-link :to="'/exercise/' + exercise.id">
           <h2 class="title">{{ exercise.name }}</h2>
         </router-link>
+
+        <button v-if="showButton" @click="addExercise" type="button" >
+          Add
+        </button>
+
         <p class="duration"> {{ exercise.duration }} Minuten </p>
       </div>
 
@@ -41,6 +46,16 @@ export default {
     showExtra: {
       type: Boolean,
       default: false, // Default to not showing extra details
+    },
+  
+    showButton: {
+      type: Boolean,
+      default: false, // Default to not showing extra details
+    },
+  },
+  methods: {
+    addExercise() {
+      this.$emit('add-exercise', this.exercise.id);
     },
   },
 };
