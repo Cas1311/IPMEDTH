@@ -2,6 +2,7 @@
     <div class="filter-container">
         <Panel class="filter-panel" header="Filters" toggleable collapsed>
 
+
             <div class="filter-item-container">
                 <h3>Selecteer categorie of onderdelen</h3>
                 <multiselect v-model="skillValue" :options="options" :multiple="true" group-values="skill"
@@ -12,24 +13,17 @@
 
             <div class="filter-item-container">
                 <h3>Vanaf leeftijd</h3>
-                <select v-model.number="minimumAge">
-                    <option value="" disabled>Selecteer leeftijd</option>
-                    <option value="8">8</option>
-                    <option value="10">10</option>
-                    <option value="12">12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                </select>
+                <SelectButton v-model="minimumAge" :options="ageOptions" :allowEmpty="false" />
+                
+
             </div>
 
             <div class="filter-item-container">
                 <h3>Type oefening</h3>
-                <select v-model.number="waterValue">
-                    <option value="">Alles</option>
-                    <option value="1">Water</option>
-                    <option value="0">Niet water</option>
-                </select>
+                <SelectButton v-model="waterValue" :options="waterExerciseOptions" optionLabel="name" optionValue="value" :allowEmpty="false" />
+
+          
+               
             </div>
 
             <div class="filter-item-container">
@@ -56,6 +50,7 @@ import Multiselect from 'vue-multiselect';
 import Slider from 'primevue/slider';
 import InputText from 'primevue/inputtext';
 import Panel from 'primevue/panel';
+import SelectButton from 'primevue/selectbutton';
 
 export default {
     data() {
@@ -66,6 +61,9 @@ export default {
             playerSliderValue: '',
             minimumAge: '',
             waterValue: '',
+            waterExerciseOptions: [{ name: 'Alles', value:''}, { name: 'In het water', value: 1 }, { name: 'Niet in het water', value: 0 }],
+            ageOptions: [8, 10, 12, 14, 16, 18]
+
         };
     },
     mounted() {
@@ -136,6 +134,7 @@ export default {
                 });
         },
 
+        
 
     },
 
@@ -144,14 +143,13 @@ export default {
         Slider,
         InputText,
         Panel,
+        SelectButton,
     },
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>\
 <style scoped>
-.filter-container {
-    
-}
+.filter-container {}
 
 .filter-panel {
 
@@ -174,4 +172,29 @@ export default {
 .slider {
     max-width: 80%;
 }
+
+:deep(.p-selectbutton.p-component){
+   
+}
+
+:deep(.p-selectbutton.p-togglebutton){
+    
+   
+}
+
+
+:deep(.p-togglebutton.p-component) {
+   
+}
+
+:deep(.p-togglebutton.p-component.p-togglebutton-checked) {
+    
+    
+}
+
+:deep(.p-togglebutton.p-component.p-togglebutton-checked::before) {
+   
+   
+}
+
 </style>
