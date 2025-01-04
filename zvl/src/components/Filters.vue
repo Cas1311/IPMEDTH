@@ -2,7 +2,6 @@
     <div class="filter-container">
         <Panel class="filter-panel" header="Filters" toggleable collapsed>
 
-
             <div class="filter-item-container">
                 <h3>Selecteer categorie of onderdelen</h3>
                 <multiselect v-model="skillValue" :options="options" :multiple="true" group-values="skill"
@@ -51,7 +50,7 @@ import Slider from 'primevue/slider';
 import InputText from 'primevue/inputtext';
 import Panel from 'primevue/panel';
 import SelectButton from 'primevue/selectbutton';
-
+import Button from 'primevue/button';
 export default {
     data() {
         return {
@@ -144,6 +143,7 @@ export default {
         InputText,
         Panel,
         SelectButton,
+        Button
     },
 };
 </script>
@@ -172,29 +172,4 @@ export default {
 .slider {
     max-width: 80%;
 }
-
-:deep(.p-selectbutton.p-component){
-   
-}
-
-:deep(.p-selectbutton.p-togglebutton){
-    
-   
-}
-
-
-:deep(.p-togglebutton.p-component) {
-   
-}
-
-:deep(.p-togglebutton.p-component.p-togglebutton-checked) {
-    
-    
-}
-
-:deep(.p-togglebutton.p-component.p-togglebutton-checked::before) {
-   
-   
-}
-
 </style>

@@ -3,17 +3,34 @@
         <h1>Add Data</h1>
         <form @submit.prevent="submitForm">
             <div>
-                <label for="title">Title:</label>
-                <input type="text" id="title" v-model="formData.title" />
+                <label for="title">Naam:</label>
+                <input type="text" id="title" v-model="formData.name" />
             </div>
             <div>
-                <label for="description">Description:</label>
+                <label for="description">Beschrijving:</label>
                 <textarea id="description" v-model="formData.description"></textarea>
             </div>
             <div>
-                <label for="category">Category:</label>
-                <textarea id="category" v-model="formData.category"></textarea>
+                <label for="description">Procedure:</label>
+                <textarea id="description" v-model="formData.procedure"></textarea>
             </div>
+            <div>
+                <label for="description">Duur:</label>
+                <textarea id="description" v-model="formData.duration"></textarea>
+            </div>
+            <div>
+                <label for="description">Minimum spelers:</label>
+                <textarea id="description" v-model="formData.minimum_players"></textarea>
+            </div>
+            <div>
+                <label for="description">Minimum leeftijd:</label>
+                <textarea id="description" v-model="formData.minimum_age"></textarea>
+            </div>
+            <div>
+                <label for="description">water_exercise:</label>
+                <textarea id="description" v-model="formData.water_exercise"></textarea>
+            </div>
+            
             <button type="submit">Submit</button>
         </form>
         <p v-if="message">{{ message }}</p>
@@ -29,9 +46,14 @@ export default {
     data() {
         return {
             formData: {
-                title: '',
-                description: '',
-                category: '',
+                name: '',
+                description: '', 
+                procedure: '',
+                duration: '',
+                minimum_players: '',
+                minimum_age: '',
+                water_exercise: '',
+                
             },
             message: '',
         };
@@ -40,7 +62,7 @@ export default {
         async submitForm() {
             try {
                 const response = await axios.post(
-                    'https://zvl-trainingen.wptraining.info/api/add-data',
+                    'http://127.0.0.1:8000/api/exercises',
                     this.formData
                 );
                 this.message = response.data.message;
