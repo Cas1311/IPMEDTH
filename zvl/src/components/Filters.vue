@@ -1,6 +1,9 @@
 <template>
     <div class="filter-container">
-        <Panel class="filter-panel" header="Filters" toggleable collapsed>
+        <Accordion  value="0">
+            <AccordionPanel class="filter-panel">
+                <AccordionHeader>Filters</AccordionHeader>
+                    <AccordionContent>
 
             <div class="filter-item-container">
                 <h3>Selecteer categorie of onderdelen</h3>
@@ -38,8 +41,10 @@
                 <InputText class="durationinput" v-model.number="durationSliderValue[1]" />
                 <Slider class="slider" v-model="durationSliderValue" range :min="1" :max="60" />
             </div>
-
-        </Panel>
+        </AccordionContent>
+        
+        </AccordionPanel>
+        </Accordion>
     </div>
 </template>
 
@@ -48,9 +53,13 @@ import axios from 'axios';
 import Multiselect from 'vue-multiselect';
 import Slider from 'primevue/slider';
 import InputText from 'primevue/inputtext';
-import Panel from 'primevue/panel';
 import SelectButton from 'primevue/selectbutton';
 import Button from 'primevue/button';
+import Accordion from 'primevue/accordion';
+import AccordionPanel from 'primevue/accordionpanel';
+import AccordionHeader from 'primevue/accordionheader';
+import AccordionContent from 'primevue/accordioncontent';
+
 export default {
     data() {
         return {
@@ -141,9 +150,12 @@ export default {
         Multiselect,
         Slider,
         InputText,
-        Panel,
         SelectButton,
-        Button
+        Button,
+        Accordion,
+        AccordionPanel,
+        AccordionHeader,
+        AccordionContent
     },
 };
 </script>
@@ -156,10 +168,7 @@ export default {
     margin: 1em;
 }
 
-.p-panel {
-    background-color: var(--theme-primary);
-    border-color: var(--theme-secondary);
-}
+
 
 .filter-item-container {
     padding: 1em;
