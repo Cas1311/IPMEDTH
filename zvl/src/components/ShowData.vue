@@ -1,5 +1,5 @@
 <template>
-  <div class="exercisecontainer">
+  <div class="exerciseContainer">
     <div class="exercise">
       <div class="exercise-header">
         <!-- Title and duration -->
@@ -11,22 +11,33 @@
 
       <!-- Categories -->
       <div>
-        <ul class="categorycontainer">
+        <ul class="categoryContainer">
           <li class="category" v-for="category in exercise.categories || []" :key="category.id">
             {{ category.name }}
           </li>
         </ul>
       </div>
 
+      <img v-if="showExtra" class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
+
       <!-- Skills -->
       <div>
-        <ul>
+        <ul class="skillContainer">
           <li class="skill" v-for="skill in exercise.skills || []" :key="skill.id">
             {{ skill.name }}
           </li>
         </ul>
       </div>
-      <p class="description" v-if="showExtra">{{ exercise.description }}</p>
+      <div v-if="showExtra">
+        <p class="description">{{ exercise.description }}</p>
+        <p>min age: {{ exercise.minimum_age }}</p>
+        <p>max age: {{ exercise.maximum_age }}</p>
+        <p>min players: {{ exercise.minimum_players }}</p>
+        <p>water: {{ exercise.water_exercise }}</p>
+        <p>procedure: {{ exercise.procedure }}</p>
+        
+
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +60,7 @@ export default {
 
 
 <style scoped>
-.exercisecontainer {
+.exerciseContainer {
   display: flex;
   flex-direction: column;
   width: min(100%, 100ch);
@@ -72,10 +83,18 @@ export default {
   align-items: center;
 }
 
-.categorycontainer {
+.exerciseImage {
+  width: 100%;
+  height: auto;
+  padding: 1em 0;
+  border-radius: 0.4em;
+}
+
+.categoryContainer {
   display: flex;
   gap: 0.5em;
   border-bottom: 0.125em solid var(--theme-primary);
+  
 }
 
 .category {
@@ -91,12 +110,20 @@ export default {
   align-items: center;
   flex-shrink: 0;
   max-width: 20em;
+  font-size: min(1rem, 4vw);
 }
 
 .title {
-  font-family: "Roboto Condensed";
   font-size: min(2rem, 5vw);
   font-weight: 400;
+}
+
+
+
+.skillContainer {
+  padding-top: 0.5em;
+  /* margin-top: 1em; */
+  border-top: 0.125em solid var(--theme-primary);
 }
 
 .skill {

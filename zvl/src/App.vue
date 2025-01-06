@@ -22,7 +22,7 @@
 
 .navBar {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   gap: 1em;
   background: var(--theme-secondary);
