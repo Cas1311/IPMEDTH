@@ -1,0 +1,76 @@
+<template>
+  <h1>Alle trainingen</h1>
+  <div class="">
+    
+    
+    <div v-if="loading">
+      <p>Loading...</p>
+    </div>
+    <div v-else class="exercise-list">
+    
+      <TrainingCard v-for="training in trainings" :key="training.id" :training="training" :show-extra="true" />
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import TrainingCard from '@/components/TrainingCard.vue';
+
+export default {
+  data() {
+    return {
+      trainings: [],
+      exercises: [], // Holds all exercises
+      loading: true, // Loading state
+    };
+  },
+  mounted() {
+
+    this.getTrainings();
+  },
+
+
+  methods: {
+    getTrainings() {
+      this.loading = true;
+
+      axios
+        .get('http://127.0.0.1:8000/api/trainings?filter[exercises]=all', {
+          
+
+        })
+        .then((response) => {
+          this.trainings = response.data; // Populate exercises array
+        })
+        .catch((error) => {
+          console.error('Error fetching exercises:', error);
+        })
+        .finally(() => {
+          this.loading = false; // Stop loading
+        });
+    },
+
+
+
+  },
+
+  computed: {
+    
+  },
+
+  components: {
+    TrainingCard
+  },
+};
+</script>
+
+<style>
+@media (min-width: 1024px) {
+  .about {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
