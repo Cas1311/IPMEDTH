@@ -61,22 +61,25 @@ import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
 
 export default {
-    data() {
-        return {
-            options: [],
-            skillValue: [],
-            durationSliderValue: [1, 60],
-            playerSliderValue: '',
-            minimumAge: '',
-            waterValue: '',
-            waterExerciseOptions: [{ name: 'Alles', value:''}, { name: 'In het water', value: 1 }, { name: 'Niet in het water', value: 0 }],
-            ageOptions: [8, 10, 12, 14, 16, 18]
-
-        };
-    },
-    mounted() {
-        this.loadOptions();
-    },
+  data() {
+    return {
+      options: [],
+      skillValue: [],
+      durationSliderValue: [1, 60],
+      playerSliderValue: "",
+      minimumAge: "",
+      waterValue: "",
+      waterExerciseOptions: [
+        { name: "Alles", value: "" },
+        { name: "In het water", value: 1 },
+        { name: "Niet in het water", value: 0 },
+      ],
+      ageOptions: [8, 10, 12, 14, 16, 18],
+    };
+  },
+  mounted() {
+    this.loadOptions();
+  },
 
     watch: {
         skillValue: {
@@ -110,42 +113,43 @@ export default {
             deep: true
         }
     },
+  },
 
+  methods: {
+    loadOptions() {
+      Promise.all([
+        axios.get("http://127.0.0.1:8000/api/skills"),
+        axios.get("http://127.0.0.1:8000/api/categories"),
+      ])
+        .then(([skillsResponse, categoriesResponse]) => {
+          const skills = skillsResponse.data;
+          const categories = categoriesResponse.data;
 
-
-
-    methods: {
-        loadOptions() {
-            Promise.all([
-                axios
-                    .get('http://127.0.0.1:8000/api/skills'),
-                axios
-                    .get('http://127.0.0.1:8000/api/categories')
-            ])
-                .then(([skillsResponse, categoriesResponse]) => {
-                    const skills = skillsResponse.data;
-                    const categories = categoriesResponse.data;
-
-                    // Group skills under their respective categories
-                    this.options = categories.map(category => ({
-                        category: category.name,
-                        skill: skills
-                            .filter(skill => skill.category_id === category.id)
-                            .map(skill => ({
-                                id: skill.id,
-                                name: skill.name
-                            }))
-                    }));
-                })
-                .catch(error => {
-                    console.error('Error fetching skills or categories:', error);
-                });
-        },
-
-        
-
+          // Group skills under their respective categories
+          this.options = categories.map((category) => ({
+            category: category.name,
+            skill: skills
+              .filter((skill) => skill.category_id === category.id)
+              .map((skill) => ({
+                id: skill.id,
+                name: skill.name,
+              })),
+          }));
+        })
+        .catch((error) => {
+          console.error("Error fetching skills or categories:", error);
+        });
     },
+  },
 
+  components: {
+    Multiselect,
+    Slider,
+    InputText,
+    Panel,
+    SelectButton,
+    Button,
+  },
     components: {
         Multiselect,
         Slider,
@@ -159,26 +163,27 @@ export default {
     },
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>\
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+\
 <style scoped>
-.filter-container {}
+.filter-container {
+}
 
 .filter-panel {
-
-    margin: 1em;
+  margin: 1em;
 }
 
 
 
 .filter-item-container {
-    padding: 1em;
+  padding: 1em;
 }
 
 .durationinput {
-    margin: 0.5em;
+  margin: 0.5em;
 }
 
 .slider {
-    max-width: 80%;
+  max-width: 80%;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <nav class="navBar">
     <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" width="125" height="125" />
-    <RouterLink class="link" to="/">Go to Home</RouterLink>
+    <RouterLink class="link" to="/">Voeg Oefening Toe</RouterLink>
     <RouterLink class="link" to="/about">Go to About</RouterLink>
     <RouterLink class="link" to="/exercises">Go to Exercises</RouterLink>
   </nav>
