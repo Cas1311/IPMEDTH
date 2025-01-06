@@ -1,11 +1,14 @@
 import './assets/main.css'
 
+
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
 import { definePreset } from '@primevue/themes';
 import Aura from '@primevue/themes/aura';
+import axios from 'axios'
+
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -93,3 +96,6 @@ app.use(router)
 
 
 app.mount('#app')
+
+app.config.globalProperties.$axios = axios
+axios.defaults.baseURL = import.meta.env.VITE_API_URL

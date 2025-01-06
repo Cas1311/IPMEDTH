@@ -35,8 +35,8 @@ export default {
     getTrainings() {
       this.loading = true;
 
-      axios
-        .get('http://127.0.0.1:8000/api/trainings?filter[exercises]=all', {
+      this.$axios
+        .get('/trainings?filter[exercises]=all', {
           
 
         })

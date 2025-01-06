@@ -28,8 +28,8 @@
       const exerciseId = this.$route.params.id; // Get exercise ID from the route params
   
       // Fetch the specific exercise from the API
-      axios
-        .get(`http://127.0.0.1:8000/api/exercises/${exerciseId}`) // Update the URL if needed
+      this.$axios
+        .get('/exercises/${exerciseId}') // Update the URL if needed
         .then((response) => {
           this.exercise = response.data; // Store the fetched exercise
         })

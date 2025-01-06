@@ -38,8 +38,8 @@ export default {
   },
   mounted() {
     // Fetch all exercises from the API
-    axios
-      .get('http://127.0.0.1:8000/api/exercises?filter[skills]=all') // Update the URL if needed
+    this.$axios
+      .get('/exercises?filter[skills]=all') // Update the URL if needed
       .then((response) => {
         this.exercises = response.data; // Populate exercises array
       })
@@ -56,8 +56,8 @@ export default {
     getFilteredExercises(params = {}) {
       this.loading = true;
 
-      axios
-        .get('http://127.0.0.1:8000/api/exercises', {
+      this.$axios
+        .get('/exercises', {
           params
 
         })

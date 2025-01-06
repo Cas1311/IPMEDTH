@@ -117,10 +117,10 @@ export default {
     methods: {
         loadOptions() {
             Promise.all([
-                axios
-                    .get('http://127.0.0.1:8000/api/skills'),
-                axios
-                    .get('http://127.0.0.1:8000/api/categories')
+                this.$axios
+                    .get('/skills'),
+                this.$axios
+                    .get('/categories')
             ])
                 .then(([skillsResponse, categoriesResponse]) => {
                     const skills = skillsResponse.data;

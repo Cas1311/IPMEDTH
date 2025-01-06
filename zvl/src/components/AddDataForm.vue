@@ -67,8 +67,8 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/exercises",
+        const response = await this.$axios.post(
+          "/exercises",
           this.formData
         );
         this.message = response.data.message;
