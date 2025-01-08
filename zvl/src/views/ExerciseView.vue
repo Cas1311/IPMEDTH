@@ -110,7 +110,7 @@ export default {
       console.log('hi');
       return this.exercises.filter(exercise => {
         const matchesDuration = exercise.duration >= min && exercise.duration <= max;
-        const matchesPlayers = this.playerSliderValue === '' || exercise.minimum_players <= this.playerSliderValue;
+        const matchesPlayers = this.playerSliderValue === '' || exercise.minimum_players >= this.playerSliderValue;
         const matchesAge = this.ageValue === '' || exercise.minimum_age <= this.ageValue;
         const matchesWater = this.waterValue === '' || Number(exercise.water_exercise) === this.waterValue;
 
