@@ -1,61 +1,115 @@
-<template>
-  <div>
-    <form @submit.prevent="submitForm">
-      <div>
-        <h3>Naam Oefening</h3>
-        <InputText id="exercisename" v-model="formData.name" />
-      </div>
-      <div>
-        <h3>Beschrijving</h3>
-        <InputText id="description" v-model="formData.description" />
-      </div>
-      <div>
-        <h3>Procedure</h3>
-        <InputText class="durationinput" v-model="formData.procedure" />
-      </div>
-      <div>
-        <h3>Duur</h3>
-        <InputText class="durationinput" v-model="formData.duration" />
-      </div>
-      <div>
-        <TimeSelect/>
-      </div>
-      <div class="filter-item-container">
-        <h3>Minimum aantal spelers</h3>
-        <InputText class="durationinput" v-model="formData.minimum_players" />
-        <Slider class="slider" v-model="formData.minimum_players" :min="1" :max="10" />
-      </div>
-      <div class="filter-item-container">
-        <h3>Vanaf leeftijd</h3>
-        <SelectButton
-          v-model="formData.minimum_age"
-          :options="ageOptions"
-          optionLabel="name"
-          optionValue="value"
-          :allowEmpty="false"
-        />
-      </div>
-      <h3>Type oefening</h3>
-      <SelectButton
-        v-model="formData.water_exercise"
-        :options="waterExerciseOptions"
-        optionLabel="name"
-        optionValue="value"
-        :allowEmpty="false"
-      />
+<<template>
+  <div class="card flex justify-center">
+    <Stepper value="1" class="basis-[50rem]">
+      <StepList>
+        <Step value="1">Basisinformatie</Step>
+        <Step value="2">Details</Step>
+        <Step value="3">Type en Beoordeling</Step>
+      </StepList>
+      <StepPanels>
+        <!-- Step 1: Basisinformatie -->
+        <StepPanel v-slot="{ activateCallback }" value="1">
+          <div>
+            <form @submit.prevent>
+              <div>
+                <h3>Naam Oefening</h3>
+                <InputText id="exercisename" v-model="formData.name" />
+              </div>
+              <div>
+                <h3>Beschrijving</h3>
+                <InputText id="description" v-model="formData.description" />
+                <Message size="small" severity="secondary" variant="simple"
+                  >Beschrijf het doel en eventuele aandachtspunten van de oefening in duidelijke en beknopte termen.</Message>
+              </div>
+            </form>
+          </div>
+          <div class="flex pt-6 justify-end">
+            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('2')" />
+          </div>
+        </StepPanel>
 
-      <button type="submit">Submit</button>
-    </form>
+        <!-- Step 2: Details -->
+        <StepPanel v-slot="{ activateCallback }" value="2">
+          <div>
+            <form @submit.prevent>
+              <div>
+                <h3>Procedure</h3>
+                <InputText class="durationinput" v-model="formData.procedure" />
+              </div>
+              <div>
+                <h3>Duur (minuten)</h3>
+                <InputNumber
+                  class="durationinput"
+                  v-model="formData.duration"
+                  inputId="integeronly"
+                  fluid
+                />
+              </div>
+              <div class="filter-item-container">
+                <h3>Minimum aantal spelers</h3>
+                <InputText class="durationinput" v-model="formData.minimum_players" />
+                <Slider class="slider" v-model="formData.minimum_players" :min="1" :max="10" />
+              </div>
+            </form>
+          </div>
+          <div class="flex pt-6 justify-between">
+            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('1')" />
+            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('3')" />
+          </div>
+        </StepPanel>
+
+        <!-- Step 3: Type en Beoordeling -->
+        <StepPanel v-slot="{ activateCallback }" value="3">
+          <div>
+            <form @submit.prevent="submitForm">
+              <div class="filter-item-container">
+                <h3>Vanaf leeftijd</h3>
+                <SelectButton
+                  v-model="formData.minimum_age"
+                  :options="ageOptions"
+                  optionLabel="name"
+                  optionValue="value"
+                  :allowEmpty="false"
+                />
+              </div>
+              <div>
+                <h3>Type oefening</h3>
+                <SelectButton
+                  v-model="formData.water_exercise"
+                  :options="waterExerciseOptions"
+                  optionLabel="name"
+                  optionValue="value"
+                  :allowEmpty="false"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="flex pt-6 justify-between">
+            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('2')" />
+            <Button label="Submit" icon="pi pi-check" @click="submitForm" />
+          </div>
+        </StepPanel>
+      </StepPanels>
+    </Stepper>
     <p v-if="message">{{ message }}</p>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import Button from "primevue/button";
 import SelectButton from "primevue/selectbutton";
 import Slider from "primevue/slider";
 import InputText from "primevue/inputtext";
 import TimeSelect from "@/components/TimeSelect.vue";
+import { InputNumber } from "primevue";
+import Message from "primevue/message";
+import Stepper from 'primevue/stepper';
+import StepList from 'primevue/steplist';
+import StepPanels from 'primevue/steppanels';
+import StepItem from 'primevue/stepitem';
+import Step from 'primevue/step';
+import StepPanel from 'primevue/steppanel';
+
 
 export default {
   data() {
@@ -88,10 +142,7 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const response = await this.$axios.post(
-          "/exercises",
-          this.formData
-        );
+        const response = await this.$axios.post("/exercises", this.formData);
         this.message = response.data.message;
         this.formData.name = "";
         this.formData.description = "";
@@ -111,15 +162,24 @@ export default {
     Slider,
     InputText,
     TimeSelect,
+    Button,
+    InputNumber,
+    Message,
+    Stepper,
+    StepList,
+    StepPanels,
+    StepItem,
+    Step,
+    StepPanel
+
   },
 };
 </script>
 
 <style scoped>
 .durationinput {
-  margin: 0.5em 0;
+  width: 60%;
 }
-
 .slider {
   max-width: 80%;
 }
@@ -127,6 +187,11 @@ export default {
 form {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 0.8em;
+}
+
+.submitButton {
+  background-color: var(--theme-primary);
+  color: var(--color-text);
 }
 </style>

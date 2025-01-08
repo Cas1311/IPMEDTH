@@ -15,13 +15,13 @@
 
     <div v-else class="exercise-list">
       <!-- Loop through exercises and display each as a ShowData card -->
-      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="true" />
+      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="false" />
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+
 import ShowData from '@/components/ShowData.vue';
 import Filter from '@/components/Filters.vue';
 
