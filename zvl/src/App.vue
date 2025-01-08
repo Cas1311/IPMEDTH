@@ -1,23 +1,28 @@
 <template>
   <nav class="navBar">
-    <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="./assets/zvllogo.png"
+      width="125"
+      height="125"
+    />
     <RouterLink class="link" to="/">Voeg Oefening Toe</RouterLink>
     <RouterLink class="link" to="/trainings">Trainingen</RouterLink>
     <RouterLink class="link" to="/exercises">Go to Exercises</RouterLink>
   </nav>
-  
-  <main>
+
+  <main class="router">
     <RouterView />
-    
   </main>
 </template>
 
-<style>
-.router{
+<style scoped>
+.router {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 1em;
 }
 
 .navBar {
@@ -42,5 +47,5 @@
   color: var(--theme-primary);
   text-decoration: none;
   font-size: 1.25em;
-} 
+}
 </style>

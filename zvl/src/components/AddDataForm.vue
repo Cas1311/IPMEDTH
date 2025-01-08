@@ -1,15 +1,16 @@
-<<template>
-  <div class="card flex justify-center">
-    <Stepper value="1" class="basis-[50rem]">
-      <StepList>
+<
+<template>
+  <div>
+    <Stepper class="stepper" value="1">
+      <StepList class="steplist">
         <Step value="1">Basisinformatie</Step>
         <Step value="2">Details</Step>
         <Step value="3">Type en Beoordeling</Step>
       </StepList>
-      <StepPanels>
+      <StepPanels class="steppanels">
         <!-- Step 1: Basisinformatie -->
-        <StepPanel v-slot="{ activateCallback }" value="1">
-          <div>
+        <StepPanel class="step-panel" v-slot="{ activateCallback }" value="1">
+          <div class="formcontainer">
             <form @submit.prevent>
               <div>
                 <h3>Naam Oefening</h3>
@@ -17,19 +18,35 @@
               </div>
               <div>
                 <h3>Beschrijving</h3>
-                <InputText id="description" v-model="formData.description" />
-                <Message size="small" severity="secondary" variant="simple"
-                  >Beschrijf het doel en eventuele aandachtspunten van de oefening in duidelijke en beknopte termen.</Message>
+                <!-- <Message
+                  class="message"
+                  size="small"
+                  severity="secondary"
+                  variant="simple"
+                  >Beschrijf het doel en eventuele aandachtspunten van de oefening in
+                  duidelijke en beknopte termen.</Message
+                > -->
+                <Textarea
+                  class="bigText"
+                  rows="10"
+                  id="description"
+                  v-model="formData.description"
+                />
               </div>
             </form>
           </div>
-          <div class="flex pt-6 justify-end">
-            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('2')" />
+          <div>
+            <Button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              @click="activateCallback('2')"
+            />
           </div>
         </StepPanel>
 
         <!-- Step 2: Details -->
-        <StepPanel v-slot="{ activateCallback }" value="2">
+        <StepPanel class="step-panel" v-slot="{ activateCallback }" value="2">
           <div>
             <form @submit.prevent>
               <div>
@@ -48,13 +65,28 @@
               <div class="filter-item-container">
                 <h3>Minimum aantal spelers</h3>
                 <InputText class="durationinput" v-model="formData.minimum_players" />
-                <Slider class="slider" v-model="formData.minimum_players" :min="1" :max="10" />
+                <Slider
+                  class="slider"
+                  v-model="formData.minimum_players"
+                  :min="1"
+                  :max="10"
+                />
               </div>
             </form>
           </div>
-          <div class="flex pt-6 justify-between">
-            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('1')" />
-            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" @click="activateCallback('3')" />
+          <div>
+            <Button
+              label="Back"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback('1')"
+            />
+            <Button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              @click="activateCallback('3')"
+            />
           </div>
         </StepPanel>
 
@@ -84,8 +116,13 @@
               </div>
             </form>
           </div>
-          <div class="flex pt-6 justify-between">
-            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="activateCallback('2')" />
+          <div>
+            <Button
+              label="Back"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback('2')"
+            />
             <Button label="Submit" icon="pi pi-check" @click="submitForm" />
           </div>
         </StepPanel>
@@ -103,13 +140,13 @@ import InputText from "primevue/inputtext";
 import TimeSelect from "@/components/TimeSelect.vue";
 import { InputNumber } from "primevue";
 import Message from "primevue/message";
-import Stepper from 'primevue/stepper';
-import StepList from 'primevue/steplist';
-import StepPanels from 'primevue/steppanels';
-import StepItem from 'primevue/stepitem';
-import Step from 'primevue/step';
-import StepPanel from 'primevue/steppanel';
-
+import Stepper from "primevue/stepper";
+import StepList from "primevue/steplist";
+import StepPanels from "primevue/steppanels";
+import StepItem from "primevue/stepitem";
+import Step from "primevue/step";
+import StepPanel from "primevue/steppanel";
+import Textarea from "primevue/textarea";
 
 export default {
   data() {
@@ -170,28 +207,51 @@ export default {
     StepPanels,
     StepItem,
     Step,
-    StepPanel
-
+    StepPanel,
+    Textarea,
   },
 };
 </script>
 
-<style scoped>
-.durationinput {
-  width: 60%;
-}
-.slider {
-  max-width: 80%;
+<style>
+.p-step-active .p-step-title {
+  color: var(--theme-primary);
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8em;
-}
-
-.submitButton {
-  background-color: var(--theme-primary);
+.p-step-title {
   color: var(--color-text);
 }
+
+.p-steppanel {
+  border-radius: 0.4em;
+}
+
+@media (max-width: 40em) {
+  .steplist{
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+}
+
+
+</style>
+
+<style scoped>
+form {
+  padding: 1em;
+}
+
+.stepper {
+  width: 100%;
+}
+
+.bigText {
+  width: 100%;
+}
+.message {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 </style>
