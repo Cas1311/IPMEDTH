@@ -14,18 +14,18 @@
             <form @submit.prevent>
               <div>
                 <h3>Naam Oefening</h3>
-                <InputText id="exercisename" v-model="formData.name" />
+                <InputText class="exercisename" v-model="formData.name" />
               </div>
               <div>
                 <h3>Beschrijving</h3>
-                <!-- <Message
+                <Message
                   class="message"
                   size="small"
                   severity="secondary"
                   variant="simple"
                   >Beschrijf het doel en eventuele aandachtspunten van de oefening in
                   duidelijke en beknopte termen.</Message
-                > -->
+                >
                 <Textarea
                   class="bigText"
                   rows="10"
@@ -35,7 +35,7 @@
               </div>
             </form>
           </div>
-          <div>
+          <div class="button-container">
             <Button
               label="Next"
               icon="pi pi-arrow-right"
@@ -51,49 +51,48 @@
             <form @submit.prevent>
               <div>
                 <h3>Procedure</h3>
-                <InputText class="durationinput" v-model="formData.procedure" />
+                <Message
+                  class="message"
+                  size="small"
+                  severity="secondary"
+                  variant="simple"
+                  >Beschrijf hoe de oefening uitgevoerd moet worden</Message
+                >
+
+                <Textarea
+                  class="bigText"
+                  rows="10"
+                  id="description"
+                  v-model="formData.procedure"
+                />
               </div>
               <div>
                 <h3>Duur (minuten)</h3>
                 <InputNumber
+                  showButtons="true"
+                  buttonLayout="vertical"
+                  :min="0"
+                  :max="180"
+                  :step="5"
                   class="durationinput"
                   v-model="formData.duration"
                   inputId="integeronly"
                   fluid
-                />
+                  ><template #incrementbuttonicon><h3>+5</h3></template>
+                  <template #decrementbuttonicon>
+                    <h3>-5</h3></template
+                ></InputNumber>
               </div>
               <div class="filter-item-container">
                 <h3>Minimum aantal spelers</h3>
-                <InputText class="durationinput" v-model="formData.minimum_players" />
+                <InputNumber class="durationinput" v-model="formData.minimum_players" />
                 <Slider
                   class="slider"
                   v-model="formData.minimum_players"
                   :min="1"
-                  :max="10"
+                  :max="20"
                 />
               </div>
-            </form>
-          </div>
-          <div>
-            <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="activateCallback('1')"
-            />
-            <Button
-              label="Next"
-              icon="pi pi-arrow-right"
-              iconPos="right"
-              @click="activateCallback('3')"
-            />
-          </div>
-        </StepPanel>
-
-        <!-- Step 3: Type en Beoordeling -->
-        <StepPanel v-slot="{ activateCallback }" value="3">
-          <div>
-            <form @submit.prevent="submitForm">
               <div class="filter-item-container">
                 <h3>Vanaf leeftijd</h3>
                 <SelectButton
@@ -116,7 +115,28 @@
               </div>
             </form>
           </div>
+          <div class="button-container">
+            <Button
+              label="Back"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="activateCallback('1')"
+            />
+            <Button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              @click="activateCallback('3')"
+            />
+          </div>
+        </StepPanel>
+
+        <!-- Step 3: Type en Beoordeling -->
+        <StepPanel v-slot="{ activateCallback }" value="3">
           <div>
+            <form @submit.prevent="submitForm"></form>
+          </div>
+          <div class="button-container">
             <Button
               label="Back"
               severity="secondary"
@@ -215,26 +235,44 @@ export default {
 
 <style>
 .p-step-active .p-step-title {
-  color: var(--theme-primary);
+  color: var(--theme-primary) !important;
 }
 
 .p-step-title {
-  color: var(--color-text);
+  font-size: min(1.5em, 5vw);
+  color: var(--color-text) !important;
 }
 
 .p-steppanel {
   border-radius: 0.4em;
 }
+.p-slider {
+  width: 100%;
+}
+
+.durationinput {
+  width: 100%;
+}
+
+@media (max-width: 25em) {
+  .p-selectbutton {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+.p-selectbutton {
+  width: 100%;
+  font-size: min(1.5em, 5vw);
+}
 
 @media (max-width: 40em) {
-  .steplist{
-  display: flex;
-  flex-direction: column;
-  align-items: start;
+  .steplist {
+    display: flex;
+    flex-direction: column;
+    align-items: start !important;
+  }
 }
-}
-
-
 </style>
 
 <style scoped>
@@ -253,5 +291,18 @@ form {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+.exercisename {
+  width: 100%;
+}
 
+.button-container {
+  display: flex;
+  justify-content: end;
+  gap: 1em;
+  padding: 1em;
+}
+
+h3 {
+  font-size: min(1.5em, 5vw);
+}
 </style>
