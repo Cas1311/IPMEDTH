@@ -48,19 +48,19 @@
 
 <style scoped>
 .exercisecontainer {
-    display: flex;
-    flex-direction: column;
-    width: min(100%, 100ch);
-    margin-inline: auto;
-    gap: 0.75em;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 100ch);
+  margin-inline: auto;
+  gap: 0.75em;
 }
 
 .exercise {
-    border-radius: 0.4em;
-    background: var(--theme-secondary);
-    box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
-    min-width: 100%;
-    padding: 1em;
-    position: relative;
+  border-radius: 0.4em;
+  background: var(--theme-secondary);
+  box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
+  min-width: 100%;
+  padding: 1em;
+  position: relative;
 }
 </style>

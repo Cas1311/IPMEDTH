@@ -41,6 +41,8 @@
                 <InputText class="durationinput" v-model.number="durationSliderValue[1]" />
                 <Slider class="slider" v-model="durationSliderValue" range :min="1" :max="60" />
             </div>
+
+            
         </AccordionContent>
         
         </AccordionPanel>
