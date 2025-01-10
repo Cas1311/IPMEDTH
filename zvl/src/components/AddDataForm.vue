@@ -5,7 +5,7 @@
       <StepList class="steplist">
         <Step value="1">Basisinformatie</Step>
         <Step value="2">Details</Step>
-        <Step value="3">Type en Beoordeling</Step>
+        <Step value="3">Vaardigheden</Step>
       </StepList>
       <StepPanels class="steppanels">
         <!-- Step 1: Basisinformatie -->
@@ -14,7 +14,14 @@
             <form @submit.prevent>
               <div>
                 <h3>Naam Oefening</h3>
-                <InputText class="exercisename" v-model="formData.name" />
+                <InputText
+                  class="exercisename"
+                  v-model="formData.name"
+                  :class="{ 'error-input': showErrors.step1 && !formData.name }"
+                />
+                <p v-if="showErrors.step1 && !formData.name" class="error-message">
+                  Dit veld is verplicht.
+                </p>
               </div>
               <div>
                 <h3>Beschrijving</h3>
@@ -31,16 +38,20 @@
                   rows="10"
                   id="description"
                   v-model="formData.description"
+                  :class="{ 'error-input': showErrors.step1 && !formData.description }"
                 />
+                <p v-if="showErrors.step1 && !formData.description" class="error-message">
+                  Dit veld is verplicht.
+                </p>
               </div>
             </form>
           </div>
           <div class="button-container">
             <Button
-              label="Next"
+              label="Volgende"
               icon="pi pi-arrow-right"
               iconPos="right"
-              @click="activateCallback('2')"
+              @click="handleNextStep(activateCallback, 1)"
             />
           </div>
         </StepPanel>
@@ -64,7 +75,11 @@
                   rows="10"
                   id="description"
                   v-model="formData.procedure"
+                  :class="{ 'error-input': showErrors.step2 && !formData.procedure }"
                 />
+                <p v-if="showErrors.step2 && !formData.procedure" class="error-message">
+                  Dit veld is verplicht.
+                </p>
               </div>
               <div>
                 <h3>Duur (minuten)</h3>
@@ -76,22 +91,35 @@
                   :step="5"
                   class="durationinput"
                   v-model="formData.duration"
+                  :class="{ 'error-input': showErrors.step2 && !formData.duration }"
                   inputId="integeronly"
                   fluid
                   ><template #incrementbuttonicon><h3>+5</h3></template>
-                  <template #decrementbuttonicon>
-                    <h3>-5</h3></template
-                ></InputNumber>
+                  <template #decrementbuttonicon> <h3>-5</h3></template></InputNumber
+                >
+                <p v-if="showErrors.step2 && !formData.duration" class="error-message">
+                  Dit veld is verplicht.
+                </p>
               </div>
               <div class="filter-item-container">
                 <h3>Minimum aantal spelers</h3>
-                <InputNumber class="durationinput" v-model="formData.minimum_players" />
+                <InputNumber
+                  class="durationinput"
+                  v-model="formData.minimum_players"
+                  :class="{ 'error-input': showErrors.step2 && !formData.procedure }"
+                />
                 <Slider
                   class="slider"
                   v-model="formData.minimum_players"
                   :min="1"
                   :max="20"
                 />
+                <p
+                  v-if="showErrors.step2 && !formData.minimum_players"
+                  class="error-message"
+                >
+                  Dit veld is verplicht.
+                </p>
               </div>
               <div class="filter-item-container">
                 <h3>Vanaf leeftijd</h3>
@@ -101,7 +129,11 @@
                   optionLabel="name"
                   optionValue="value"
                   :allowEmpty="false"
+                  :class="{ 'error-input': showErrors.step2 && !formData.procedure }"
                 />
+                <p v-if="showErrors.step2 && !formData.minimum_age" class="error-message">
+                  Dit veld is verplicht.
+                </p>
               </div>
               <div>
                 <h3>Type oefening</h3>
@@ -111,22 +143,38 @@
                   optionLabel="name"
                   optionValue="value"
                   :allowEmpty="false"
+                  :class="{ 'error-input': showErrors.step2 && !formData.procedure }"
+                />
+                <p
+                  v-if="showErrors.step2 && !formData.water_exercise"
+                  class="error-message"
+                >
+                  Dit veld is verplicht.
+                </p>
+              </div>
+              <div class="filter-item-container">
+                <h3>Benodigdheden</h3>
+                <Textarea
+                  class="bigText"
+                  rows="4"
+                  id="benodigdheden"
+                  v-model="formData.equipment"
                 />
               </div>
             </form>
           </div>
           <div class="button-container">
             <Button
-              label="Back"
+              label="Terug"
               severity="secondary"
               icon="pi pi-arrow-left"
               @click="activateCallback('1')"
             />
             <Button
-              label="Next"
+              label="Volgende"
               icon="pi pi-arrow-right"
               iconPos="right"
-              @click="activateCallback('3')"
+              @click="handleNextStep(activateCallback, 2)"
             />
           </div>
         </StepPanel>
@@ -134,16 +182,44 @@
         <!-- Step 3: Type en Beoordeling -->
         <StepPanel v-slot="{ activateCallback }" value="3">
           <div>
-            <form @submit.prevent="submitForm"></form>
+            <form @submit.prevent="submitForm">
+              <div class="filter-item-container">
+                <h3>Welke vaardigheden worden getraind?</h3>
+                <multiselect
+                  v-model="formData.skills"
+                  :options="options"
+                  :multiple="true"
+                  group-values="skill"
+                  group-label="category"
+                  :group-select="true"
+                  placeholder="Typ om te zoeken"
+                  track-by="name"
+                  label="name"
+                  :class="{
+                    'error-input': showErrors.step3 && formData.skills.length === 0,
+                  }"
+                >
+                  <span slot="noResult"
+                    >Geen resultaten gevonden voor je zoekopdracht</span
+                  >
+                </multiselect>
+                <p
+                  v-if="showErrors.step3 && formData.skills.length === 0"
+                  class="error-message"
+                >
+                  Dit veld is verplicht.
+                </p>
+              </div>
+            </form>
           </div>
           <div class="button-container">
             <Button
-              label="Back"
+              label="Terug"
               severity="secondary"
               icon="pi pi-arrow-left"
               @click="activateCallback('2')"
             />
-            <Button label="Submit" icon="pi pi-check" @click="submitForm" />
+            <Button label="Opslaan" icon="pi pi-check" @click="submitForm" />
           </div>
         </StepPanel>
       </StepPanels>
@@ -167,6 +243,7 @@ import StepItem from "primevue/stepitem";
 import Step from "primevue/step";
 import StepPanel from "primevue/steppanel";
 import Textarea from "primevue/textarea";
+import Multiselect from "vue-multiselect";
 
 export default {
   data() {
@@ -179,7 +256,15 @@ export default {
         minimum_players: "",
         minimum_age: "",
         water_exercise: "",
+        skills: [],
+        equipment: "",
       },
+      showErrors: {
+        step1: false,
+        step2: false,
+        step3: false,
+      },
+      options: [],
       ageOptions: [
         { name: "O8", value: "8" },
         { name: "O10", value: "10" },
@@ -196,6 +281,10 @@ export default {
     };
   },
 
+  mounted() {
+    this.loadOptions();
+  },
+
   methods: {
     async submitForm() {
       try {
@@ -210,7 +299,56 @@ export default {
         this.formData.water_exercise = "";
       } catch (error) {
         console.error(error.response?.data || error.message);
-        this.message = "An error occurred while submitting the form.";
+        this.message = "Er is iets mis gegaan. Heb je alle velden ingevuld?";
+      }
+    },
+    async loadOptions() {
+      try {
+        const [skillsResponse, categoriesResponse] = await Promise.all([
+          this.$axios.get("/skills"),
+          this.$axios.get("/categories"),
+        ]);
+
+        const skills = skillsResponse.data;
+        const categories = categoriesResponse.data;
+
+        // Group skills under their respective categories
+        this.options = categories.map((category) => ({
+          category: category.name,
+          skill: skills
+            .filter((skill) => skill.category_id === category.id)
+            .map((skill) => ({
+              id: skill.id,
+              name: skill.name,
+            })),
+        }));
+      } catch (error) {
+        console.error("Error fetching skills or categories:", error);
+      }
+    },
+    validateFields(requiredFields) {
+      // Validate only required fields
+      return requiredFields.every((field) => {
+        const value = this.formData[field];
+        return (
+          value !== null && value !== "" && !(Array.isArray(value) && value.length === 0)
+        );
+      });
+    },
+    handleNextStep(activateCallback, step) {
+      // Define required fields per step
+      const stepRequirements = {
+        1: ["name", "description"],
+        2: ["procedure", "duration", "minimum_players", "minimum_age", "water_exercise"], // Equipment is excluded
+        3: ["skills"],
+      };
+
+      // Validate the current step
+      if (!this.validateFields(stepRequirements[step])) {
+        this.showErrors[`step${step}`] = true; // Show errors for the current step
+      } else {
+        this.showErrors[`step${step}`] = false; // Clear errors for the current step
+        activateCallback(String(step + 1)); // Move to the next step
       }
     },
   },
@@ -229,9 +367,11 @@ export default {
     Step,
     StepPanel,
     Textarea,
+    Multiselect,
   },
 };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style>
 .p-step-active .p-step-title {
@@ -304,5 +444,15 @@ form {
 
 h3 {
   font-size: min(1.5em, 5vw);
+}
+
+.error-input {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 0.25em;
 }
 </style>
