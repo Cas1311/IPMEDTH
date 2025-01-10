@@ -107,7 +107,6 @@ export default {
     // Filter exercises locally based on slider values
     filteredExercises() {
       const [min, max] = this.durationSliderValue;
-      console.log('hi');
       return this.exercises.filter(exercise => {
         const matchesDuration = exercise.duration >= min && exercise.duration <= max;
         const matchesPlayers = this.playerSliderValue === '' || exercise.minimum_players >= this.playerSliderValue;

@@ -256,8 +256,8 @@ export default {
         minimum_players: "",
         minimum_age: "",
         water_exercise: "",
-        skills: [],
         equipment: "",
+        skills: [],
       },
       showErrors: {
         step1: false,
@@ -288,19 +288,53 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const response = await this.$axios.post("/exercises", this.formData);
-        this.message = response.data.message;
-        this.formData.name = "";
-        this.formData.description = "";
-        this.formData.procedure = "";
-        this.formData.duration = "";
-        this.formData.minimum_players = "";
-        this.formData.minimum_age = "";
-        this.formData.water_exercise = "";
+        // Stel de payload samen voor het aanmaken van de oefening, zonder skills
+        const payload = {
+          ...this.formData,
+          skills: [], // Laat de skills tijdelijk leeg in de aanmaak request
+        };
+
+        // Stap 1: Maak de oefening aan
+        const response = await this.$axios.post("/exercises", payload);
+        console.log("Response data:", response); // Log de volledige response voor debugging
+
+        // Stap 2: Haal het ID van de aangemaakte oefening op
+        const exerciseId = response.data.data.id;
+        console.log("Exercise created with ID:", exerciseId);
+
+        // Stap 3: Koppel de skills aan de oefening
+        if (this.formData.skills.length > 0) {
+          const skillIds = this.formData.skills.map((skill) => skill.id).join(",");
+          await this.$axios.post(`/exercises/${exerciseId}/linkToSkill/${skillIds}`);
+          console.log("Skills linked successfully");
+        }
+
+        // Toon een succesbericht
+        this.message = "Oefening succesvol opgeslagen";
+
+        // Reset het formulier na succesvol opslaan
+        this.resetForm();
       } catch (error) {
-        console.error(error.response?.data || error.message);
+        console.error(
+          "Fout bij het opslaan van de oefening of koppelen van skills:",
+          error.response?.data || error.message
+        );
         this.message = "Er is iets mis gegaan. Heb je alle velden ingevuld?";
       }
+    },
+    resetForm() {
+      // Reset alle velden van het formulier
+      this.formData = {
+        name: "",
+        description: "",
+        procedure: "",
+        duration: "",
+        minimum_players: "",
+        minimum_age: "",
+        water_exercise: "",
+        equipment: "",
+        skills: [],
+      };
     },
     async loadOptions() {
       try {
