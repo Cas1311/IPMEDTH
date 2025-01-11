@@ -2,6 +2,7 @@ import './assets/main.css'
 
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
 import PrimeVue from 'primevue/config';
@@ -90,12 +91,16 @@ const MyPreset = definePreset(Aura, {
     }
   });
 
+const pinia = createPinia()
 const app = createApp(App)
+app.use(pinia)
 app.use(PrimeVue, {theme: {preset: MyPreset}});
 app.use(router)
 
 
 app.mount('#app')
+
+
 
 app.config.globalProperties.$axios = axios
 axios.defaults.baseURL = import.meta.env.VITE_API_URL

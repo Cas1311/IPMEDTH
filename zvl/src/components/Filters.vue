@@ -7,7 +7,7 @@
 
             <div class="filter-item-container">
                 <h3>Selecteer categorie of onderdelen</h3>
-                <multiselect v-model="skillValue" :options="options" :multiple="true" group-values="skill"
+                <multiselect v-model="exerciseStore.exerciseFilters.skillValue" :options="options" :multiple="true" group-values="skill"
                     group-label="category" :group-select="true" placeholder="Typ om te zoeken" track-by="name"
                     label="name"><span slot="noResult">Geen resultaten gevonden voor je zoekopdracht</span>
                 </multiselect>
@@ -15,14 +15,14 @@
 
             <div class="filter-item-container">
                 <h3>Vanaf leeftijd</h3>
-                <SelectButton v-model="minimumAge" :options="ageOptions" :allowEmpty="false" />
+                <SelectButton v-model="exerciseStore.exerciseFilters.minimumAge" :options="ageOptions" :allowEmpty="false" />
                 
 
             </div>
 
             <div class="filter-item-container">
                 <h3>Type oefening</h3>
-                <SelectButton v-model="waterValue" :options="waterExerciseOptions" optionLabel="name" optionValue="value" :allowEmpty="false" />
+                <SelectButton v-model="exerciseStore.exerciseFilters.waterExercise" :options="waterExerciseOptions" optionLabel="name" optionValue="value" :allowEmpty="false" />
 
           
                
@@ -30,16 +30,16 @@
 
             <div class="filter-item-container">
                 <h3>Minimum aantal spelers</h3>
-                <InputText class="durationinput" v-model.number="playerSliderValue" />
-                <Slider class="slider" v-model="playerSliderValue" :min="1" :max="10" />
+                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.minimumPlayers" />
+                <Slider class="slider" v-model.number="exerciseStore.exerciseFilters.minimumPlayers" :min="1" :max="10" />
             </div>
 
 
             <div class="filter-item-container">
                 <h3>Benodigde tijd</h3>
-                <InputText class="durationinput" v-model.number="durationSliderValue[0]" />
-                <InputText class="durationinput" v-model.number="durationSliderValue[1]" />
-                <Slider class="slider" v-model="durationSliderValue" range :min="1" :max="60" />
+                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.durationSliderValue[0]" />
+                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.durationSliderValue[1]" />
+                <Slider class="slider" v-model="exerciseStore.exerciseFilters.durationSliderValue" range :min="1" :max="60" />
             </div>
 
             
@@ -61,16 +61,28 @@ import Accordion from 'primevue/accordion';
 import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
+import { mapWritableState } from 'pinia';
+import { useExerciseStore } from '../stores/exercises';
+
 
 export default {
+
+    setup(){
+        const exerciseStore = useExerciseStore()
+        return { exerciseStore };
+    },
+    
     data() {
         return {
             options: [],
-            skillValue: [],
+            
+            // skillValue: [],
             durationSliderValue: [1, 60],
-            playerSliderValue: '',
-            minimumAge: '',
-            waterValue: '',
+            // playerSliderValue: '',
+            // minimumAge: '',
+            // waterExercise: '',
             waterExerciseOptions: [{ name: 'Alles', value:''}, { name: 'In het water', value: 1 }, { name: 'Niet in het water', value: 0 }],
             ageOptions: [8, 10, 12, 14, 16, 18]
 
@@ -80,43 +92,18 @@ export default {
         this.loadOptions();
     },
 
-    watch: {
-        skillValue: {
+    watch:{
+        'exerciseStore.exerciseFilters.skillValue':  {
             handler(newValue) {
                 this.$emit('skill-filter-changed', newValue);
             },
             deep: true
         },
-        durationSliderValue: {
-            handler(newValue) {
-                this.$emit('duration-slider-changed', newValue);
-            },
-            deep: true
-        },
-        playerSliderValue: {
-            handler(newValue) {
-                this.$emit('player-slider-changed', newValue);
-            },
-            deep: true
-        },
-        minimumAge: {
-            handler(newValue) {
-                this.$emit('age-changed', newValue);
-            },
-            deep: true
-        },
-        waterValue: {
-            handler(newValue) {
-                this.$emit('water-changed', newValue);
-            },
-            deep: true
-        }
+        
     },
 
-
-
-
     methods: {
+        
         loadOptions() {
             Promise.all([
                 this.$axios
@@ -147,6 +134,10 @@ export default {
         
 
     },
+    computed: {
+        // ...mapWritableState(useExerciseStore, ['exerciseFilters']),
+        
+    },
 
     components: {
         Multiselect,
@@ -163,7 +154,6 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>\
 <style scoped>
-.filter-container {}
 
 .filter-panel {
 

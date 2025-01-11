@@ -1,6 +1,6 @@
 <template>
   <h1>Alle trainingen</h1>
-  <div class="">
+  <div class="container">
     <router-link :to="'/training/create'">
       <Button label="Nieuwe training maken" />
         </router-link>
@@ -8,7 +8,7 @@
     <div v-if="loading">
       <p>Loading...</p>
     </div>
-    <div v-else class="exercise-list">
+    <div v-else class="trainings-list">
     
       <TrainingCard v-for="training in trainings" :key="training.id" :training="training" :show-extra="true" />
     </div>
@@ -71,12 +71,8 @@ export default {
 };
 </script>
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+<style scoped>
+.container{
+  min-width: 80%;
 }
 </style>

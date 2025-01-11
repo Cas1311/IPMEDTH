@@ -1,21 +1,19 @@
 <template>
   <div>
-   
 
-    <Filter 
-    @skill-filter-changed="applySkillFilters" 
-    @duration-slider-changed="updateDurationSliderValue" 
-    @player-slider-changed="updatePlayerSliderValue"
-    @age-changed="updateAgeValue" 
-    @water-changed="updateWaterValue" />
 
+    <Filter @skill-filter-changed="handleFilterChange" />
+
+      {{ exerciseFilters }}
+      
     <div v-if="loading">
       <p>Loading...</p>
     </div>
 
     <div v-else class="exercise-list">
       <!-- Loop through exercises and display each as a ShowData card -->
-      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="false" @add-exercise="handleAddExercise"/>
+      <ShowData v-for="exercise in getFilteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="false"
+        @add-exercise="handleAddExercise" />
     </div>
   </div>
 </template>
@@ -24,12 +22,24 @@
 
 import ShowData from '@/components/ShowData.vue';
 import Filter from '@/components/Filters.vue';
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
+import { mapWritableState } from 'pinia';
+import { useExerciseStore } from '../stores/exercises';
+
+
+
 
 export default {
+
+  setup(){
+        const exerciseStore = useExerciseStore()
+        return { exerciseStore };
+    },
   data() {
     return {
-      exercises: [], // Holds all exercises
-      loading: true, // Loading state
+      //exercises: [],// Holds all exercises
+      loading: false, // Loading state
       durationSliderValue: [1, 60],
       playerSliderValue: '',
       ageValue: 18,
@@ -37,89 +47,37 @@ export default {
     };
   },
   mounted() {
-    // Fetch all exercises from the API
-    this.$axios
-      .get('/exercises?filter[skills]=all') // Update the URL if needed
-      .then((response) => {
-        this.exercises = response.data; // Populate exercises array
-      })
-      .catch((error) => {
-        console.error('Error fetching exercises:', error);
-      })
-      .finally(() => {
-        this.loading = false; // Stop loading
-      });
+    
+    this.exerciseStore.fetchExercisesFromApi()
+    
   },
 
 
   methods: {
-    getFilteredExercises(params = {}) {
-      this.loading = true;
+    ...mapActions(useExerciseStore, ['fetchExercises','setExerciseFilters']),
 
-      this.$axios
-        .get('/exercises', {
-          params
-
-        })
-        .then((response) => {
-          this.exercises = response.data; // Populate exercises array
-        })
-        .catch((error) => {
-          console.error('Error fetching exercises:', error);
-        })
-        .finally(() => {
-          this.loading = false; // Stop loading
-        });
-    },
-
-    applySkillFilters(selectedFilters) {
-      let params = {};
-
-      if (selectedFilters.length > 0) {
-        const skillIds = selectedFilters.map(skill => skill.id).join(',');
-        params['filter[skills]'] = skillIds;
-      } else {
-        params['filter[skills]'] = 'all';
-      }
-
-      this.getFilteredExercises(params);
-    },
-
-    updateDurationSliderValue(value) {
-      this.durationSliderValue = value;
-    },
-
-    updatePlayerSliderValue(value) {
-      this.playerSliderValue = value;
-    },
-
-    updateAgeValue(value) {
-      this.ageValue = value;
-    },
-
-    updateWaterValue(value) {
-      this.waterValue = value;
+    handleFilterChange(newFilters) {
+      
+      // Update the filters and refetch exercises based on skill filters
+      this.setExerciseFilters(newFilters);
     },
 
     handleAddExercise(exerciseId) {
-    this.$emit('exercise-added', exerciseId);
-  },
+      this.$emit('exercise-added', exerciseId);
+    },
 
   },
 
   computed: {
-    // Filter exercises locally based on slider values
-    filteredExercises() {
-      const [min, max] = this.durationSliderValue;
-      return this.exercises.filter(exercise => {
-        const matchesDuration = exercise.duration >= min && exercise.duration <= max;
-        const matchesPlayers = this.playerSliderValue === '' || exercise.minimum_players >= this.playerSliderValue;
-        const matchesAge = this.ageValue === '' || exercise.minimum_age <= this.ageValue;
-        const matchesWater = this.waterValue === '' || Number(exercise.water_exercise) === this.waterValue;
+    ...mapWritableState(useExerciseStore, ['exercises']),
+    ...mapWritableState(useExerciseStore, ['loading']),
+    ...mapWritableState(useExerciseStore, ['exerciseFilters']),
+    ...mapState(useExerciseStore, ['getFilteredExercises']),
 
-        return matchesDuration &&matchesPlayers && matchesAge && matchesWater;
-      });
-    }
+    getFilteredExercises() {
+      return this.exerciseStore.getFilteredExercises
+    },
+
   },
 
   components: {
