@@ -18,49 +18,40 @@
 <script>
 import Button from 'primevue/button';
 import TrainingCard from '@/components/TrainingCard.vue';
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
+import { mapWritableState } from 'pinia';
+import { useTrainingStore } from '../stores/trainings';
 
 
 export default {
+
+  setup(){
+        const trainingStore = useTrainingStore()
+        return { trainingStore };
+    },
   data() {
     return {
-      trainings: [],
+      
       exercises: [], // Holds all exercises
-      loading: true, // Loading state
+      loading: false, // Loading state
       
     };
   },
   mounted() {
 
-    this.getTrainings();
+    this.trainingStore.fetchTrainingsFromApi()
   },
 
 
   methods: {
-    getTrainings() {
-      this.loading = true;
-
-      this.$axios
-        .get('/trainings?filter[exercises]=all', {
-          
-
-        })
-        .then((response) => {
-          this.trainings = response.data; // Populate exercises array
-        })
-        .catch((error) => {
-          console.error('Error fetching exercises:', error);
-        })
-        .finally(() => {
-          this.loading = false; // Stop loading
-        });
-    },
-
+  
 
 
   },
 
   computed: {
-    
+    ...mapState(useTrainingStore, ['trainings'])
   },
 
   components: {
