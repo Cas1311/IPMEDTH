@@ -1,7 +1,9 @@
 <template>
   <h1>Alle trainingen</h1>
   <div class="">
-    
+    <router-link :to="'/training/create'">
+      <Button label="Nieuwe training maken" />
+        </router-link>
     
     <div v-if="loading">
       <p>Loading...</p>
@@ -14,8 +16,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+import Button from 'primevue/button';
 import TrainingCard from '@/components/TrainingCard.vue';
+
 
 export default {
   data() {
@@ -23,6 +26,7 @@ export default {
       trainings: [],
       exercises: [], // Holds all exercises
       loading: true, // Loading state
+      
     };
   },
   mounted() {
@@ -60,7 +64,9 @@ export default {
   },
 
   components: {
-    TrainingCard
+    TrainingCard,
+    Button,
+
   },
 };
 </script>

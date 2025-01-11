@@ -27,6 +27,11 @@ const router = createRouter({
       name: 'exerciseDetail',
       component: () => import('../views/ExerciseDetailView.vue'),
       props: true,
+    },
+    {
+      path: '/training/create',
+      name: 'trainingCreation',
+      component: () => import('../views/CreateTrainingView.vue'),
     }
   ],
 })

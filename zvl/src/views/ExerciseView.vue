@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>All Exercises</h1>
+   
 
     <Filter 
     @skill-filter-changed="applySkillFilters" 
@@ -15,7 +15,7 @@
 
     <div v-else class="exercise-list">
       <!-- Loop through exercises and display each as a ShowData card -->
-      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="false" />
+      <ShowData v-for="exercise in filteredExercises" :key="exercise.id" :exercise="exercise" :show-extra="false" @add-exercise="handleAddExercise"/>
     </div>
   </div>
 </template>
@@ -99,7 +99,11 @@ export default {
 
     updateWaterValue(value) {
       this.waterValue = value;
-    }
+    },
+
+    handleAddExercise(exerciseId) {
+    this.$emit('exercise-added', exerciseId);
+  },
 
   },
 

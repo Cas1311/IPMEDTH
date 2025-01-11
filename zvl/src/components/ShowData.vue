@@ -38,11 +38,16 @@
         
 
       </div>
+      <Button v-if="showButton" @click="addExercise" type="submit" label="Toevoegen" />
+      
     </div>
   </div>
 </template>
 
 <script>
+import Button from 'primevue/button' 
+
+
 export default {
   props: {
     exercise: {
@@ -53,7 +58,22 @@ export default {
       type: Boolean,
       default: false, // Default to not showing extra details
     },
+    showButton: {
+      type: Boolean,
+      default: true,
+    }
   },
+
+  methods: {
+    addExercise() {
+      this.$emit('add-exercise', this.exercise.id);
+    },
+  },
+
+  components: {
+        Button,
+  
+    },
 };
 </script>
 
