@@ -23,6 +23,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1em;
+  margin-top: 2em;
 }
 
 .navBar {

@@ -61,7 +61,7 @@
           <div>
             <form @submit.prevent>
               <div>
-                <h3>Procedure</h3>
+                <h3>Uitvoering</h3>
                 <Message
                   class="message"
                   size="small"

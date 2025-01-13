@@ -6,47 +6,91 @@
         <router-link :to="'/exercise/' + exercise.id">
           <h2 class="title">{{ exercise.name }}</h2>
         </router-link>
-        <p class="duration"> {{ exercise.duration }} Minuten </p>
+        <p class="duration">{{ exercise.duration }} Minuten</p>
       </div>
 
       <!-- Categories -->
-      <div>
-        <ul class="categoryContainer">
-          <li class="category" v-for="category in exercise.categories || []" :key="category.id">
-            {{ category.name }}
-          </li>
-        </ul>
+      <ul class="categoryContainer">
+        <li class="category" v-for="category in uniqueCategories" :key="category.id">
+          {{ category.name }}
+        </li>
+      </ul>
+
+      <!-- Skills and Requirements on the same line -->
+      <div class="row">
+        <!-- Skills -->
+        <div class="sectionContainer column">
+          <h3>Skills</h3>
+          <ul class="skillContainer">
+            <li class="skill" v-for="skill in exercise.skills || []" :key="skill.id">
+              {{ skill.name }}
+            </li>
+          </ul>
+        </div>
+
+        <!-- Requirements -->
+        <div class="sectionContainer column">
+          <h3>Benodigdheden</h3>
+          <ul class="requirementsContainer">
+            <li
+              v-for="requirement in exercise.requirements || []"
+              :key="requirement.id"
+              class="requirement"
+            >
+              <span>{{ requirement.description }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <img v-if="showExtra" class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
+      <div class="showExtra" v-if="showExtra">
+        <!-- Description and Procedure on the same line -->
+        <div class="row">
+          <div class="sectionContainer column">
+            <h3>Beschrijving</h3>
+            <p>{{ exercise.description }}</p>
+          </div>
 
-      <!-- Skills -->
-      <div>
-        <ul class="skillContainer">
-          <li class="skill" v-for="skill in exercise.skills || []" :key="skill.id">
-            {{ skill.name }}
-          </li>
-        </ul>
-      </div>
-      <div v-if="showExtra">
-        <p class="description">{{ exercise.description }}</p>
-        <p>min age: {{ exercise.minimum_age }}</p>
-        <p>max age: {{ exercise.maximum_age }}</p>
-        <p>min players: {{ exercise.minimum_players }}</p>
-        <p>water: {{ exercise.water_exercise }}</p>
-        <p>procedure: {{ exercise.procedure }}</p>
-        
+          <div class="sectionContainer column">
+            <h3>Uitvoering:</h3>
+            <p>{{ exercise.procedure }}</p>
+          </div>
+        </div>
 
+        <!-- Age, Players, and Location on the same line -->
+        <div class="row">
+          <div class="sectionContainer column">
+            <h3>Aangeraden Leeftijd:</h3>
+            <p>O{{ exercise.minimum_age }}</p>
+          </div>
+
+          <div class="sectionContainer column">
+            <h3>Minimum aantal benodigde spelers:</h3>
+            <p>{{ exercise.minimum_players }}</p>
+          </div>
+
+          <div class="sectionContainer column">
+            <h3>Locatie:</h3>
+            <p>{{ waterExerciseLocation }}</p>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <img
+          v-if="showExtra"
+          class="exerciseImage"
+          :src="exercise.image_url"
+          alt="Exercise Image"
+        />
       </div>
       <Button v-if="showButton" @click="addExercise" type="submit" label="Toevoegen" />
-      
     </div>
   </div>
 </template>
 
-<script>
-import Button from 'primevue/button' 
 
+<script>
+import Button from "primevue/button";
 
 export default {
   props: {
@@ -60,41 +104,61 @@ export default {
     },
     showButton: {
       type: Boolean,
-      default: true,
-    }
+      default: false,
+    },
   },
 
   methods: {
     addExercise() {
-      this.$emit('add-exercise', this.exercise.id);
+      this.$emit("add-exercise", this.exercise.id);
+    },
+  },
+  computed: {
+    uniqueCategories() {
+      // Extract unique categories from the skills array
+      if (!this.exercise.skills) return [];
+
+      const categories = this.exercise.skills
+        .map((skill) => skill.category) // Extract the category object from each skill
+        .filter(
+          (category, index, self) =>
+            category && self.findIndex((c) => c.id === category.id) === index // Deduplicate by ID
+        );
+
+      return categories;
+    },
+    waterExerciseLocation() {
+      return this.exercise.water_exercise === 1 ? "In het water" : "Op de kant";
     },
   },
 
   components: {
-        Button,
-  
-    },
+    Button,
+  },
 };
 </script>
-
-
 
 <style scoped>
 .exerciseContainer {
   display: flex;
   flex-direction: column;
-  width: min(100%, 100ch);
+  width: 90vw;
   margin-inline: auto;
   margin-bottom: 2em;
+  align-items: center;
 }
 
 .exercise {
+  display: flex;
+  flex-direction: column;
   border-radius: 0.4em;
   background: var(--theme-secondary);
   box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
-  min-width: 100%;
+  width: min(90vw, 70em);
   padding: 1em;
   position: relative;
+  justify-content: space-between;
+  /* gap: 1em; */
 }
 
 .exercise-header {
@@ -114,7 +178,7 @@ export default {
   display: flex;
   gap: 0.5em;
   border-bottom: 0.125em solid var(--theme-primary);
-  
+  margin-bottom: 1em;
 }
 
 .category {
@@ -138,14 +202,6 @@ export default {
   font-weight: 400;
 }
 
-
-
-.skillContainer {
-  padding-top: 0.5em;
-  /* margin-top: 1em; */
-  border-top: 0.125em solid var(--theme-primary);
-}
-
 .skill {
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -154,5 +210,32 @@ export default {
 
 .description {
   margin-top: 1em;
+}
+
+.requirementsContainer {
+  list-style: none;
+}
+.sectionContainer{
+  background-color: var(--theme-primary);
+  padding: 1em;
+  border-radius: 0.6em;
+}
+
+.showExtra{
+  display: flex;
+  flex-direction: column;
+  /* gap: 1em; */
+}
+
+.row {
+  display: flex;
+  gap: 1em; /* Space between columns */
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  margin-bottom: 1.5em; /* Spacing between rows */
+}
+
+.column {
+  flex: 1; /* Equal width columns */
+  min-width: 15em; /* Minimum width for responsiveness */
 }
 </style>

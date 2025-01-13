@@ -86,3 +86,11 @@ export default {
   },
 };
 </script>
+
+<style>
+.exercise-list{
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 100vw);
+}
+</style>

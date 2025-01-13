@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Exercise Detail</h1>
+    <!-- <h1>Exercise Detail</h1> -->
 
     <div v-if="loading">
       <p>Loading...</p>
@@ -14,14 +14,13 @@
 </template>
 
 <script>
-import axios from 'axios';
-import ShowData from '@/components/ShowData.vue';
+import ShowData from "@/components/ShowData.vue";
 
 export default {
   data() {
     return {
       exercise: null, // Holds the specific exercise
-      loading: true,  // Loading state
+      loading: true, // Loading state
     };
   },
   mounted() {
@@ -29,12 +28,12 @@ export default {
 
     // Fetch the specific exercise from the API
     this.$axios
-      .get(`/exercises/${exerciseId}`) // Update the URL if needed
+      .get(`/exercises/${exerciseId}?incl=requirements,skills,category`) // Update the URL if needed
       .then((response) => {
         this.exercise = response.data; // Store the fetched exercise
       })
       .catch((error) => {
-        console.error('Error fetching exercise:', error);
+        console.error("Error fetching exercise:", error);
       })
       .finally(() => {
         this.loading = false; // Stop loading
@@ -50,7 +49,7 @@ export default {
 .exercisecontainer {
   display: flex;
   flex-direction: column;
-  width: min(100%, 100ch);
+  width: 100%;
   margin-inline: auto;
   gap: 0.75em;
 }
