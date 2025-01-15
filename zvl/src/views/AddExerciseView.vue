@@ -3,14 +3,14 @@ import AddDataForm from "@/components/AddDataForm.vue";
 </script>
 
 <template>
-  <main class="addDataView">
+  <main class="addExerciseView">
     <h1>Voeg Oefening Toe</h1>
     <AddDataForm class="addDataForm"/>
   </main>
 </template>
 
 <style scoped>
-.addDataView {
+.addExerciseView {
   width: min(90%, 50em);
   margin: 1em;
   padding: 1em;
