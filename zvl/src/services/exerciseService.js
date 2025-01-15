@@ -11,7 +11,7 @@ import axios from 'axios';
             query.append("filter[skills]", "all");
           }
           
-        const response = await axios.get(`${baseUrl}/exercises?${query.toString()}`);
+        const response = await axios.get(`/exercises?${query.toString()}&filter[categories]=all&filter[requirements]=all`);
         exercises = response.data;
         return exercises;
     }
