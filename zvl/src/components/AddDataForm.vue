@@ -107,6 +107,7 @@
                   class="durationinput"
                   v-model="formData.minimum_players"
                   :class="{ 'error-input': showErrors.step2 && !formData.procedure }"
+                  :min="1"
                 />
                 <Slider
                   class="slider"
@@ -154,11 +155,30 @@
               </div>
               <div class="filter-item-container">
                 <h3>Benodigdheden</h3>
-                <Textarea
-                  class="bigText"
-                  rows="4"
-                  id="benodigdheden"
-                  v-model="formData.equipment"
+                <ul class="requirements-list">
+                  <li
+                    class="requirement-line"
+                    v-for="(requirement, index) in formData.requirements"
+                    :key="index"
+                  >
+                    <InputText
+                      class="requirement-input"
+                      v-model="formData.requirements[index].description"
+                      placeholder="Voer benodigdheid in"
+                    />
+                    <Button
+                      icon="pi pi-times"
+                      severity="danger"
+                      aria-label="Cancel"
+                      @click="removeRequirement(index)"
+                    >x</Button>
+                  </li>
+                </ul>
+                <Button
+                  label="Voeg benodigdheid toe"
+                  icon="pi pi-plus"
+                  class="addButton"
+                  @click="addRequirement"
                 />
               </div>
             </form>
@@ -253,11 +273,12 @@ export default {
         description: "",
         procedure: "",
         duration: "",
-        minimum_players: "",
+        minimum_players: 1,
         minimum_age: "",
         water_exercise: "",
         equipment: "",
         skills: [],
+        requirements: [],
       },
       showErrors: {
         step1: false,
@@ -292,6 +313,7 @@ export default {
         const payload = {
           ...this.formData,
           skills: [], // Laat de skills tijdelijk leeg in de aanmaak request
+          requirements: [],
         };
 
         // Stap 1: Maak de oefening aan
@@ -307,6 +329,16 @@ export default {
           const skillIds = this.formData.skills.map((skill) => skill.id).join(",");
           await this.$axios.post(`/exercises/${exerciseId}/linkToSkill/${skillIds}`);
           console.log("Skills linked successfully");
+        }
+
+        // Stap 4: Koppel de benodigdheden aan de oefening
+        if (this.formData.requirements.length > 0) {
+          const requirementsPayload = this.formData.requirements.map((req) => ({
+            description: req.description,
+          }));
+          await this.$axios.post(`/exercises/${exerciseId}/linkToRequirements`, {
+            requirements: requirementsPayload,
+          });
         }
 
         // Toon een succesbericht
@@ -329,12 +361,19 @@ export default {
         description: "",
         procedure: "",
         duration: "",
-        minimum_players: "",
+        minimum_players: 1,
         minimum_age: "",
         water_exercise: "",
         equipment: "",
         skills: [],
+        requirements: [],
       };
+    },
+    addRequirement() {
+      this.formData.requirements.push({ description: "" });
+    },
+    removeRequirement(index) {
+      this.formData.requirements.splice(index, 1);
     },
     async loadOptions() {
       try {
@@ -424,6 +463,12 @@ export default {
   width: 100%;
 }
 
+.p-button-danger{
+  background-color: var(--color-warning)!important;
+  color: white!important;
+  font-size: 1rem!important;
+}
+
 .durationinput {
   width: 100%;
 }
@@ -488,5 +533,26 @@ h3 {
   color: red;
   font-size: 0.9em;
   margin-top: 0.25em;
+}
+
+.requirement-input {
+  width: 100%;
+}
+
+.requirements-list {
+  list-style: none;
+}
+
+.requirement-line {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  margin: 1vh 0;
+}
+
+.addButton {
+  width: fit-content;
+  font-size: min(1em, 4vw);
+  margin-top: 1.5em;
 }
 </style>
