@@ -1,13 +1,14 @@
 <template>
-  <nav class="navBar">
-    <RouterLink class="link" to="/"
-      ><img
+  <nav class="navBar" v-if="!isHomepage">
+    <RouterLink class="link" to="/">
+      <img
         alt="Vue logo"
         class="logo"
         src="./assets/zvllogo.png"
         width="125"
         height="125"
-    /></RouterLink>
+      />
+    </RouterLink>
 
     <RouterLink class="link" to="/exercise/create">Voeg Oefening Toe</RouterLink>
     <RouterLink class="link" to="/trainings">Trainingen</RouterLink>
@@ -19,13 +20,23 @@
   </main>
 </template>
 
+<script>
+export default {
+  computed: {
+    isHomepage() {
+      // Return true if current route is homepage or login page
+      return this.$route.path === "/";
+    },
+  },
+};
+</script>
+
 <style scoped>
 .router {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1em;
-  margin-top: 2em;
 }
 
 .navBar {
