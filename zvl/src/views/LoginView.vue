@@ -34,14 +34,14 @@
 
     <div class="register-link">
       <p>
-        Don't have an account? <router-link to="/register">Register here</router-link>
+        Don't have an account?
+        <router-link class="register-link" to="/register">Register here</router-link>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
 import Button from "primevue/button"; // Assuming you're using PrimeVue for buttons
 
 export default {
@@ -82,3 +82,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.register-link{
+    color: var(--text-color);
+}
+</style>
