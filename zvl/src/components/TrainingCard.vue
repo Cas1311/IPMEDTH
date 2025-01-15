@@ -1,18 +1,43 @@
 <template>
+  <Toast />
+  <ConfirmPopup></ConfirmPopup>
   <Accordion :value="['0']" multiple>
     <AccordionPanel>
-    <AccordionHeader class="title">{{ training.name }}</AccordionHeader>
-    <AccordionContent  v-for="exercise in training.exercises || []" :key="exercise.id">{{ exercise.name }}</AccordionContent>
-    
-  </AccordionPanel>
+      <AccordionHeader class="title">{{ training.name }}</AccordionHeader>
+
+      <AccordionContent>
+
+        <h3>Oefeningen:</h3>
+        <div class="exercise-container">
+          <div class="exercise" v-for="exercise in training.exercises || []" :key="exercise.id">
+            <router-link :to="'/exercise/' + exercise.id" class="exercise-link">
+              <p class="exercise-name">{{ exercise.name }}</p>
+            </router-link>
+          </div>
+        </div>
+
+        <Divider type="solid" />
+        <Button icon="pi pi-info-circle" label="Bekijken" severity="primary" />
+        <router-link :to="'/training/edit/' + training.id">
+          <Button icon="pi pi-file-edit" class="training-panel-button" label="Training bewerken" severity="secondary" />
+        </router-link>
+        <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Training verwijderen"
+          severity="danger" />
+      </AccordionContent>
+    </AccordionPanel>
   </Accordion>
 </template>
+
 
 <script>
 import Accordion from 'primevue/accordion';
 import AccordionPanel from 'primevue/accordionpanel';
 import AccordionHeader from 'primevue/accordionheader';
 import AccordionContent from 'primevue/accordioncontent';
+import Button from 'primevue/button';
+import Divider from 'primevue/divider';
+import ConfirmPopup from 'primevue/confirmpopup';
+import Toast from 'primevue/toast';
 
 export default {
   props: {
@@ -30,11 +55,39 @@ export default {
     },
   },
 
+  methods: {
+    confirm(event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Weet je zeker dat je de training wilt verwijderen?',
+        rejectProps: {
+          label: 'Annuleren',
+          severity: 'secondary',
+          outlined: true
+        },
+        acceptProps: {
+          label: 'Verwijderen',
+          severity: 'danger'
+        },
+        accept: () => {
+          this.$toast.add({ severity: 'secondary', summary: 'Verwijderd', detail: 'Training verwijderd', life: 3000 });
+          this.$emit("delete-training", this.training.id);
+        },
+
+      });
+    },
+
+  },
+
   components: {
     Accordion,
     AccordionPanel,
     AccordionHeader,
-    AccordionContent
+    AccordionContent,
+    Button,
+    Divider,
+    ConfirmPopup,
+    Toast
   },
 };
 </script>
@@ -42,10 +95,10 @@ export default {
 
 
 <style scoped>
-.exerciseContainer {
+.exercise-container {
   display: flex;
   flex-direction: column;
-  width: min(100%, 100ch);
+  width: min(100%);
   margin-inline: auto;
   margin-bottom: 2em;
 }
@@ -56,43 +109,21 @@ export default {
   box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
   min-width: 100%;
   padding: 1em;
+  margin-bottom: 0.2em;
+  margin-top: 0.2em;
   position: relative;
 }
 
-.exercise-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.exerciseImage {
+.exercise-link {
+  display: block;
   width: 100%;
-  height: auto;
-  padding: 1em 0;
-  border-radius: 0.4em;
+  height: 100%;
+  text-decoration: none; /* Remove default link styling */
+  color: inherit; /* Ensure the text color matches the rest */
 }
 
-.categoryContainer {
-  display: flex;
-  gap: 0.5em;
-  border-bottom: 0.125em solid var(--theme-primary);
-
-}
-
-.category {
-  font-size: 0.8rem;
-  border-radius: 0.5em;
-  background: var(--theme-primary);
-  box-shadow: 0px 0.125em 0.25em 0px rgba(0, 0, 0, 0.25);
-  display: flex;
-  flex-direction: row;
-  padding: 0.3em 0.8em;
-  margin-bottom: 0.5em;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  max-width: 20em;
-  font-size: min(1rem, 4vw);
+.exercise-name{
+  color: var(--theme-primary);
 }
 
 .title {
@@ -100,21 +131,14 @@ export default {
   font-weight: 400;
 }
 
-
-
 .p-accordionpanel {
   padding-top: 0.5em;
   /* margin-top: 1em; */
   border-top: 0.125em solid var(--theme-primary);
 }
 
-.skill {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  list-style: none;
-}
 
-.description {
-  margin-top: 1em;
+.training-panel-button {
+  margin: 0.25em;
 }
 </style>

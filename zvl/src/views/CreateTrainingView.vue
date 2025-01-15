@@ -5,34 +5,22 @@
 
       <template #title></template>
       <template #content>
-        <form v-if="!nameSubmitted" @submit.prevent="submitNameForm">
+        <form v-if="!nameSubmitted" @submit.prevent="addTraining">
           <FloatLabel>
             <InputText type="text" v-model="formData.name" />
             <label for="over_label">Naam van de training</label>
-            <Button type="submit" label="Opslaan" />
+            <Button type="submit" label="Opslaan" :disabled="!formData.name" />
           </FloatLabel>
 
         </form>
-        <div v-else>
-          <p><strong>Naam van de training:</strong> {{ formData.name }}</p>
+        <div v-if="this.errorMessage" class="error-message">
+          <p>Er is al een training met deze naam.</p>
         </div>
-        <p v-if="message">{{ message }}</p>
       </template>
 
     </Card>
 
-    <div v-if="nameSubmitted">
-      <h2>Oefeningen toevoegen</h2>
-      {{  selectedExerciseIds }}
-      <ScrollPanel style="width: 100%; height: 50em">
-        <ExerciseView @exercise-added="addExerciseToTraining"></ExerciseView>
-      </ScrollPanel>
-      <form @submit.prevent="submitFullForm">
 
-        <Button type="submit" label="Training opslaan" />
-        </form>
-
-    </div>
   </div>
 </template>
 
@@ -43,6 +31,10 @@ import InputText from 'primevue/inputtext';
 import FloatLabel from 'primevue/floatlabel';
 import ExerciseView from './ExerciseView.vue';
 import ScrollPanel from 'primevue/scrollpanel';
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
+import { mapWritableState } from 'pinia';
+import { useTrainingStore } from '../stores/trainings';
 
 
 export default {
@@ -59,68 +51,38 @@ export default {
   },
 
 
-
   methods: {
-    addExerciseToTraining(exerciseId) {
-    if (!this.selectedExerciseIds.includes(exerciseId)) {
-      this.selectedExerciseIds.push(exerciseId);
-      console.log('Exercise added with ID:', exerciseId);
-    } else {
-      console.log('Exercise with ID already added:', exerciseId);
-    }
+    ...mapActions(useTrainingStore, ['addTrainingApi']),
 
-    console.log('Selected exercise IDs:', this.selectedExerciseIds);
-  },
-
-    async submitNameForm() {
+    async addTraining() {
       try {
-        const response = await this.$axios.post(
-          "/trainings",
-          this.formData
-        );
 
-        this.responseData = response.data;
-        this.receivedId = response.data.data.id;
-        
-        this.message = response.data.message;
+        const response = await this.addTrainingApi(this.formData);
 
-        this.nameSubmitted = true;
+        // Ensure that response.data and response.data.data exist
+        if (response && response.data && response.data.data && response.data.data.id) {
+          this.receivedId = response.data.data.id;  // Retrieve the training ID
+          this.message = response.data.message;     // Get the success message
 
-    
-        console.log('Training ID:', this.receivedId);
+          // Redirect to the edit page
+          this.$router.push(`/training/edit/${this.receivedId}`);
+        } else {
+          console.error('Invalid response structure:', response);
+          this.message = "Training creation failed. Please try again.";
+        }
 
       } catch (error) {
-        console.error(error.response?.data || error.message);
-        this.message = "An error occurred while submitting the form.";
+        console.error("Error while adding training:", error);
+        this.message = "An error occurred while adding the training.";
       }
-    },
-
-    async submitFullForm() {
- 
-    if (this.selectedExerciseIds.length === 0) {
-      console.log("No exercises selected.");
-      return;
     }
 
-    try {
-    
-      
-      const exercisesIdsString = this.selectedExerciseIds.join(',');
-      const url = `http://127.0.0.1:8000/api/trainings/${this.receivedId}/exercises/${exercisesIdsString}`;
 
- 
-      const response = await this.$axios.post(url);
-
-
-      console.log('Exercises added to training:', response.data);
-      this.message = response.data.message;
-
-    } catch (error) {
-      console.error(error.response?.data || error.message);
-      this.message = "An error occurred while adding exercises to the training.";
-    }
   },
-},
+
+  computed: {
+    ...mapState(useTrainingStore, ['errorMessage'])
+  },
 
   components: {
     Button,

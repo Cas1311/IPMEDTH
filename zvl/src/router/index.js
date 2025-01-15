@@ -44,6 +44,11 @@ const router = createRouter({
       path: '/training/create',
       name: 'trainingCreation',
       component: () => import('../views/CreateTrainingView.vue'),
+    },
+    {
+      path: '/training/edit/:id',
+      name: 'trainingEdit',
+      component: () => import('../views/EditTrainingView.vue'),
     }
   ],
 })

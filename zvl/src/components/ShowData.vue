@@ -32,11 +32,7 @@
         <div class="sectionContainer column">
           <h3>Benodigdheden</h3>
           <ul class="requirementsContainer">
-            <li
-              v-for="requirement in exercise.requirements || []"
-              :key="requirement.id"
-              class="requirement"
-            >
+            <li v-for="requirement in exercise.requirements || []" :key="requirement.id" class="requirement">
               <span>{{ requirement.description }}</span>
             </li>
           </ul>
@@ -76,14 +72,11 @@
         </div>
 
         <!-- Image -->
-        <img
-          v-if="showExtra"
-          class="exerciseImage"
-          :src="exercise.image_url"
-          alt="Exercise Image"
-        />
+        <img v-if="showExtra" class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
       </div>
-      <Button v-if="showButton" @click="addExercise" type="submit" label="Toevoegen" />
+      <div v-if="showButton"></div>
+      <Button v-if="!isExerciseSelected" @click="toggleExercise" type="submit" label="Toevoegen" severity="primary"/>
+      <Button v-else @click="toggleExercise" label="Verwijderen" severity="secondary" />
     </div>
   </div>
 </template>
@@ -93,6 +86,11 @@
 import Button from "primevue/button";
 
 export default {
+  data() {
+    return {
+
+    }
+  },
   props: {
     exercise: {
       type: Object,
@@ -106,14 +104,35 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectedExerciseIds: {
+      type: Array,
+      default: () => []  // Provide a default empty array if not passed
+  },
+    showAddButton: {
+      type: Boolean,
+      default: false,
+    }
+
   },
 
   methods: {
-    addExercise() {
-      this.$emit("add-exercise", this.exercise.id);
+    toggleExercise() {
+      this.isAdded = !this.isAdded;
+    },
+    toggleExercise() {
+      this.$emit("toggle-exercise", this.exercise.id);
+    },
+    removeExercise() {
+      this.$emit("remove-exercise", this.exercise.id);
     },
   },
   computed: {
+    
+  isExerciseSelected() {
+    return this.selectedExerciseIds.includes(this.exercise.id);
+  
+},
+
     uniqueCategories() {
       // Extract unique categories from the skills array
       if (!this.exercise.skills) return [];
@@ -215,13 +234,14 @@ export default {
 .requirementsContainer {
   list-style: none;
 }
-.sectionContainer{
+
+.sectionContainer {
   background-color: var(--theme-primary);
   padding: 1em;
   border-radius: 0.6em;
 }
 
-.showExtra{
+.showExtra {
   display: flex;
   flex-direction: column;
   /* gap: 1em; */
@@ -229,13 +249,18 @@ export default {
 
 .row {
   display: flex;
-  gap: 1em; /* Space between columns */
-  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
-  margin-bottom: 1.5em; /* Spacing between rows */
+  gap: 1em;
+  /* Space between columns */
+  flex-wrap: wrap;
+  /* Allow items to wrap on smaller screens */
+  margin-bottom: 1.5em;
+  /* Spacing between rows */
 }
 
 .column {
-  flex: 1; /* Equal width columns */
-  min-width: 15em; /* Minimum width for responsiveness */
+  flex: 1;
+  /* Equal width columns */
+  min-width: 15em;
+  /* Minimum width for responsiveness */
 }
 </style>

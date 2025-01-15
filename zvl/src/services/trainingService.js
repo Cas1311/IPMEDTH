@@ -12,4 +12,26 @@ import axios from 'axios';
         return trainings; 
     }
 
+    export async function addTraining(formData) {
+        
+        try {
+            const response = await axios.post(`${baseUrl}/trainings/`, formData);
+
+            return response; 
+        } catch (error) {
+            console.error('Error adding training:', error);
+            throw error;  
+        }
+    }
+
+    export async function deleteTraining(trainingId) {
+        try {
+            console.log(trainingId)
+            await axios.delete(`${baseUrl}/trainings/${trainingId}`);
+        } catch (error) {
+            console.error('Error deleting training:', error);
+        }
+        
+    }
+
 

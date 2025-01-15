@@ -9,8 +9,9 @@
       <p>Loading...</p>
     </div>
     <div v-else class="trainings-list">
-    
-      <TrainingCard v-for="training in trainings" :key="training.id" :training="training" :show-extra="true" />
+     
+      <TrainingCard v-for="training in trainings" :key="training.id" :training="training" :show-extra="true" @delete-training="deleteTraining"/>
+      
     </div>
   </div>
 </template>
@@ -45,7 +46,13 @@ export default {
 
 
   methods: {
-  
+  ...mapActions(useTrainingStore, ['deleteTrainingApi']),
+
+  deleteTraining(trainingId){
+    this.deleteTrainingApi(trainingId)
+    
+  }
+    
 
 
   },

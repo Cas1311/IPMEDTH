@@ -9,7 +9,8 @@ import PrimeVue from 'primevue/config';
 import { definePreset } from '@primevue/themes';
 import Aura from '@primevue/themes/aura';
 import axios from 'axios'
-
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -96,7 +97,8 @@ const app = createApp(App)
 app.use(pinia)
 app.use(PrimeVue, {theme: {preset: MyPreset}});
 app.use(router)
-
+app.use(ConfirmationService);
+app.use(ToastService);
 
 app.mount('#app')
 
