@@ -74,9 +74,10 @@
         <!-- Image -->
         <img v-if="showExtra" class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
       </div>
-      <div v-if="showButton"></div>
-      <Button v-if="!isExerciseSelected" @click="toggleExercise" type="submit" label="Toevoegen" severity="primary"/>
-      <Button v-else @click="toggleExercise" label="Verwijderen" severity="secondary" />
+      <div v-if="showButton">
+      <Button v-if="!isExerciseSelected" @click="toggleExercise" type="submit" label="Toevoegen" severity="primary" size="large" class="exerciseButton"/>
+      <Button v-else @click="toggleExercise" label="Verwijderen" severity="secondary" size="large" class="exerciseButton"/>
+    </div>
     </div>
   </div>
 </template>
@@ -262,5 +263,9 @@ export default {
   /* Equal width columns */
   min-width: 15em;
   /* Minimum width for responsiveness */
+}
+
+.exerciseButton{
+  min-width: 10em;
 }
 </style>

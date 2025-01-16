@@ -1,6 +1,6 @@
 <template>
   <h1>Alle trainingen</h1>
-  <div class="container">
+  <div class="training-container">
     <router-link :to="'/training/create'">
       <Button label="Nieuwe training maken" />
         </router-link>
@@ -70,7 +70,8 @@ export default {
 </script>
 
 <style scoped>
-.container{
+.training-container{
   min-width: 80%;
+  max-width: 80%;
 }
 </style>

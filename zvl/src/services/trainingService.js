@@ -12,6 +12,19 @@ import axios from 'axios';
         return trainings; 
     }
 
+    export async function fetchTrainingById(trainingId) {
+        let training = [];
+        try {
+            const response = await axios.get(`${baseUrl}/trainings/${trainingId}?incl=exercises`);
+            training = response.data;
+            
+        } catch (error) {
+            console.error('Error fetching training:', error);
+        }
+        return training; 
+    }
+
+
     export async function addTraining(formData) {
         
         try {

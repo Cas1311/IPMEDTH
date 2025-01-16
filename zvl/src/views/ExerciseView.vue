@@ -13,6 +13,8 @@
         :key="exercise.id"
         :exercise="exercise"
         :show-extra="false"
+        :show-button="false"
+        :show-add-button="false"
         @add-exercise="handleAddExercise"
       />
     </div>

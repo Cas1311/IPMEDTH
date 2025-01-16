@@ -1,11 +1,13 @@
 import { defineStore } from 'pinia'
 import { fetchTrainings } from '@/services/trainingService';
+import { fetchTrainingById } from '@/services/trainingService';
 import { addTraining } from '@/services/trainingService';
 import { deleteTraining } from '@/services/trainingService';
 
 export const useTrainingStore = defineStore("training", {
     state: () => ({
         trainings: [],
+        training: [],
         loading: false,
         errorMessage: '',
     }),
@@ -22,6 +24,22 @@ export const useTrainingStore = defineStore("training", {
                 this.trainings = trainings;
             } catch (error) {
                 console.error("Failed to fetch trainings:", error);
+            } finally {
+
+                this.loading = false; 
+
+            }
+        },
+
+        async fetchTrainingByIdFromApi(trainingId) {
+            this.loading = true; 
+            
+            try {
+                const training = await fetchTrainingById(trainingId);
+                this.training = training;
+                
+            } catch (error) {
+                console.error("Failed to fetch training:", error);
             } finally {
 
                 this.loading = false; 

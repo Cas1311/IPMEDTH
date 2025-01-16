@@ -49,7 +49,13 @@ const router = createRouter({
       path: '/training/edit/:id',
       name: 'trainingEdit',
       component: () => import('../views/EditTrainingView.vue'),
-    }
+    },
+    {
+      path: '/training/:id',
+      name: 'trainingDetail',
+      component: () => import('../views/TrainingDetailView.vue'),
+      props: true,
+    },
   ],
 })
 

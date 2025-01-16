@@ -17,10 +17,14 @@
         </div>
 
         <Divider type="solid" />
-        <Button icon="pi pi-info-circle" label="Bekijken" severity="primary" />
+        <router-link :to="'/training/' + training.id">
+          <Button icon="pi pi-info-circle" label="Bekijken" severity="primary" />
+        </router-link>
+        
         <router-link :to="'/training/edit/' + training.id">
           <Button icon="pi pi-file-edit" class="training-panel-button" label="Training bewerken" severity="secondary" />
         </router-link>
+        
         <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Training verwijderen"
           severity="danger" />
       </AccordionContent>
