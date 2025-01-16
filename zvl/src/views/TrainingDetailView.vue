@@ -11,8 +11,11 @@
 
         </div>
         <h2>Oefeningen</h2>
-        <p>Details</p>
+        <div class="detail-toggle-container">
+            <p>Details</p>
         <ToggleSwitch v-model="checked" />
+        </div>
+        
         <div v-if="this.loading">
             <p>Loading...</p>
         </div>
@@ -114,8 +117,13 @@ export default {
   display: flex;
   flex-direction: column; 
   justify-content: center; 
-  margin: 1em;
-  
- 
+  margin: 1em; 
 }
+
+.detail-toggle-container{
+    margin: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
 </style>

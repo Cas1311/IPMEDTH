@@ -1,18 +1,24 @@
 <template>
-  <div>
+  <div class="container">
     <Filter @skill-filter-changed="handleFilterChange" />
 
+      
     <div v-if="loading">
       <p>Loading...</p>
     </div>
 
     <div v-else class="exercise-list">
+      <div class="detail-toggle-container">
+            <p>Toon meer informatie</p>
+        <ToggleSwitch v-model="checked" />
+
+        </div>
       <!-- Loop through exercises and display each as a ShowData card -->
       <ShowData
         v-for="exercise in getFilteredExercises"
         :key="exercise.id"
         :exercise="exercise"
-        :show-extra="false"
+        :show-extra="checked"
         :show-button="false"
         :show-add-button="false"
         @add-exercise="handleAddExercise"
@@ -24,6 +30,7 @@
 <script>
 import ShowData from "@/components/ShowData.vue";
 import Filter from "@/components/Filters.vue";
+import ToggleSwitch from 'primevue/toggleswitch';
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
@@ -42,6 +49,7 @@ export default {
       playerSliderValue: "",
       ageValue: 18,
       waterValue: "",
+      checked: false,
     };
   },
   mounted() {
@@ -75,14 +83,23 @@ export default {
   components: {
     ShowData, // Use the ShowData component
     Filter,
+    ToggleSwitch
   },
 };
 </script>
 
 <style>
+
 .exercise-list {
   display: flex;
   flex-direction: column;
   width: min(100%, 100vw);
+}
+.detail-toggle-container{
+    align-items: center;
+    margin-bottom: 2em;
+    gap: 1em;
+    display: flex;
+    flex-direction: column;
 }
 </style>

@@ -76,7 +76,7 @@ export default {
 .training-container {
   display: flex;
   flex-direction: column; 
-  justify-content: center; 
+  justify-content: top; 
   align-items: center; 
   min-height: 100vh; 
   padding: 1rem;

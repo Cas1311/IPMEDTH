@@ -38,7 +38,7 @@
           </ul>
         </div>
       </div>
-
+      <transition name="expand">
       <div class="showExtra" v-if="showExtra">
         <!-- Description and Procedure on the same line -->
         <div class="row">
@@ -74,6 +74,7 @@
         <!-- Image -->
         <img v-if="showExtra" class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
       </div>
+      </transition>
       <div v-if="showButton">
       <Button v-if="!isExerciseSelected" @click="toggleExercise" type="submit" label="Toevoegen" severity="primary" size="large" class="exerciseButton"/>
       <Button v-else @click="toggleExercise" label="Verwijderen" severity="secondary" size="large" class="exerciseButton"/>
@@ -159,6 +160,24 @@ export default {
 </script>
 
 <style scoped>
+.expand-enter-active,
+.expand-leave-active {
+    transition: max-height 0.6s ease, opacity 0.6s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+    max-height: 0;
+    opacity: 0;
+}
+
+.expand-enter-to,
+.expand-leave-from {
+    max-height: 1000px;
+    /* Set to a sufficiently large value */
+    opacity: 1;
+}
+
 .exerciseContainer {
   display: flex;
   flex-direction: column;

@@ -28,7 +28,7 @@ import axios from 'axios';
     export async function addTraining(formData) {
         
         try {
-            const response = await axios.post(`${baseUrl}/trainings/`, formData);
+            const response = await axios.post(`${baseUrl}/trainings`, formData);
 
             return response; 
         } catch (error) {
