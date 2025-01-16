@@ -1,65 +1,115 @@
 <template>
-  <nav class="navBar" v-if="!isHomepage">
-    <RouterLink class="link" to="/">
-      <img
-        alt="Vue logo"
-        class="logo"
-        src="./assets/zvllogo.png"
-        width="125"
-        height="125"
-      />
-    </RouterLink>
-
-    <RouterLink class="link" to="/exercise/create">Voeg Oefening Toe</RouterLink>
-    <RouterLink class="link" to="/trainings">Trainingen</RouterLink>
-    <RouterLink class="link" to="/exercises">Go to Exercises</RouterLink>
-  </nav>
-
-  <main class="router">
-    <RouterView />
-  </main>
+  <div>
+    <Menubar v-if="!isHomepage" :model="items" :class="{ hidden: isHidden }">
+      <template #end>
+        <!-- Add the logo with a link to the homepage -->
+        <RouterLink class="link logo-container" to="/">
+          <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" />
+        </RouterLink>
+      </template>
+      <template #item="{ item, props, hasSubmenu }">
+        <router-link
+          v-if="item.route"
+          v-slot="{ href, navigate }"
+          :to="item.route"
+          custom
+        >
+          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+            <span :class="item.icon" />
+            <span>{{ item.label }}</span>
+          </a>
+        </router-link>
+        <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+          <span :class="item.icon" />
+          <span>{{ item.label }}</span>
+          <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down" />
+        </a>
+      </template>
+    </Menubar>
+    <router-view />
+  </div>
 </template>
 
 <script>
+import Menubar from "primevue/menubar";
+
 export default {
+  components: {
+    Menubar,
+  },
+  data() {
+    return {
+      items: [
+        { label: "Home", icon: "pi pi-home", route: "/" },
+        { label: "Voeg Oefening Toe", icon: "pi pi-plus", route: "/exercise/create" },
+        { label: "Trainingen", icon: "pi pi-calendar", route: "/trainings" },
+        { label: "Oefeningen", icon: "pi pi-list", route: "/exercises" },
+      ],
+      isHidden: false,
+      lastScrollPosition: 0,
+    };
+  },
   computed: {
     isHomepage() {
-      // Return true if current route is homepage or login page
-      return this.$route.path === "/";
+      return this.$route.path === "/" || this.$route.path === "/login";
     },
+  },
+  watch: {
+    $route() {
+      this.resetScroll();
+    },
+  },
+  methods: {
+    resetScroll() {
+      this.isHidden = false;
+    },
+    handleScroll() {
+      const currentScroll = window.scrollY;
+      if (currentScroll > this.lastScrollPosition && currentScroll > 50) {
+        this.isHidden = true;
+      } else {
+        this.isHidden = false;
+      }
+      this.lastScrollPosition = currentScroll;
+    },
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-.router {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1em;
+.hidden {
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
 }
 
-.navBar {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 1em;
+.menubar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
   background: var(--theme-secondary);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  margin-left: 1em;
 }
 
 .logo {
-  /* border-radius: 50%; */
-  border: 2px solid var(--theme-primary);
-  box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
-  padding: 0.25em;
-  margin: 0.5em;
-  width: 3em;
-  height: 3em;
+  height: 2.5em; /* Adjust size as needed */
+  width: auto;
+  object-fit: contain;
 }
 
-.link {
-  color: var(--theme-primary);
-  text-decoration: none;
-  font-size: 1.25em;
+body {
+  padding-top: 4em; /* Adjust to prevent content overlap with Menubar */
 }
 </style>
