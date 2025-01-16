@@ -2,9 +2,9 @@
     <Card class="exercise-card">
         <template #title>
             <div class="cardHeader"><router-link :to="'/exercise/' + exercise.id">
-                <p class="exercise-name">{{ exercise.name }}</p>
-        </router-link>
-                
+                    <p class="exercise-name">{{ exercise.name }}</p>
+                </router-link>
+
                 <Tag icon="pi pi-stopwatch" class="duration-tag" severity="secondary">
                     <p>{{ exercise.duration }} Minuten</p>
                 </Tag>
@@ -23,74 +23,81 @@
         <template #content>
 
             <div class="tags">
-                    <Tag class="players-tag" severity="secondary">
-                        <template #icon><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                width="24px" fill="#002C53">
-                                <path
-                                    d="M80-120v-80q38 0 57-20t75-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 75 20t57 20v80q-59 0-77.5-20T748-160q-36 0-57 20t-77 20q-56 0-77-20t-57-20q-36 0-57 20t-77 20q-56 0-77-20t-57-20q-36 0-54.5 20T80-120Zm0-180v-80q38 0 57-20t75-20q56 0 77.5 20t56.5 20q36 0 57-20t77-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 75 20t57 20v80q-59 0-77.5-20T748-340q-36 0-55.5 20T614-300q-57 0-77.5-20T480-340q-38 0-56.5 20T346-300q-59 0-78.5-20T212-340q-36 0-54.5 20T80-300Zm196-204 133-133-40-40q-33-33-70-48t-91-15v-100q75 0 124 16.5t96 63.5l256 256q-17 11-33 17.5t-37 6.5q-36 0-57-20t-77-20q-56 0-77 20t-57 20q-21 0-37-6.5T276-504Zm392-336q42 0 71 29.5t29 70.5q0 42-29 71t-71 29q-42 0-71-29t-29-71q0-41 29-70.5t71-29.5Z" />
-                            </svg></template>
-                        <p>{{ waterExerciseLocation }}</p>
-                    </Tag>
-                    <Tag icon="pi pi-users" class="players-tag" severity="secondary">
-                        <p>Minimaal {{ exercise.minimum_players }} Spelers</p>
-                    </Tag>
+                <Tag class="players-tag" severity="secondary">
+                    <template #icon><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                            width="24px" fill="#002C53">
+                            <path
+                                d="M80-120v-80q38 0 57-20t75-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 75 20t57 20v80q-59 0-77.5-20T748-160q-36 0-57 20t-77 20q-56 0-77-20t-57-20q-36 0-57 20t-77 20q-56 0-77-20t-57-20q-36 0-54.5 20T80-120Zm0-180v-80q38 0 57-20t75-20q56 0 77.5 20t56.5 20q36 0 57-20t77-20q56 0 77 20t57 20q36 0 57-20t77-20q56 0 75 20t57 20v80q-59 0-77.5-20T748-340q-36 0-55.5 20T614-300q-57 0-77.5-20T480-340q-38 0-56.5 20T346-300q-59 0-78.5-20T212-340q-36 0-54.5 20T80-300Zm196-204 133-133-40-40q-33-33-70-48t-91-15v-100q75 0 124 16.5t96 63.5l256 256q-17 11-33 17.5t-37 6.5q-36 0-57-20t-77-20q-56 0-77 20t-57 20q-21 0-37-6.5T276-504Zm392-336q42 0 71 29.5t29 70.5q0 42-29 71t-71 29q-42 0-71-29t-29-71q0-41 29-70.5t71-29.5Z" />
+                        </svg></template>
+                    <p>{{ waterExerciseLocation }}</p>
+                </Tag>
+                <Tag icon="pi pi-users" class="players-tag" severity="secondary">
+                    <p>Minimaal {{ exercise.minimum_players }} Spelers</p>
+                </Tag>
 
-                    <Tag icon="pi pi-user" class="players-tag" severity="secondary">
-                        <p>O{{ exercise.minimum_age }}</p>
-                    </Tag>
+                <Tag icon="pi pi-user" class="players-tag" severity="secondary">
+                    <p>O{{ exercise.minimum_age }}</p>
+                </Tag>
 
-                </div>
-                
-                <transition name="expand">
-            <div v-if="showExtra" class="content-container">
-
-
-
-
-                
-
-                <div class="skill-tag-container">
-                    <p>Onderdelen</p>
-                    <div class="tags">
-                        <Tag class="skill-tag" v-for="skill in exercise.skills" :key="skill.id">
-                            <p> {{ skill.name }}</p>
-                        </Tag>
-                    </div>
-
-                </div>
-
-                <div v-if="exercise.requirements.length">
-                    <p>Benodigdheden</p>
-                    <div class="tags">
-                        <Tag class="requirement-tag" v-for="requirement in exercise.requirements" :key="requirement.id">
-                            <p> {{ requirement.description }}</p>
-                        </Tag>
-                    </div>
-                </div>
-
-
-                <p class="divider"></p>
-
-
-
-                <Panel header="Beschrijving" toggleable collapsed="true">
-
-                    <p> {{ exercise.description }}</p>
-
-                </Panel>
-                <Panel header="Procedure" toggleable collapsed="true">
-
-                    <p> {{ exercise.procedure }}</p>
-
-                </Panel>
-                <Panel header="Afbeelding" toggleable collapsed="true">
-
-                    <img class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
-
-                </Panel>
-           
             </div>
-        </transition>
+
+            <transition name="expand">
+                <div v-if="showExtra" class="content-container">
+
+
+
+
+
+
+                    <div class="skill-tag-container">
+                        <p>Onderdelen</p>
+                        <div class="tags">
+                            <Tag class="skill-tag" v-for="skill in exercise.skills" :key="skill.id">
+                                <p> {{ skill.name }}</p>
+                            </Tag>
+                        </div>
+
+                    </div>
+
+                    <div v-if="exercise.requirements.length">
+                        <p>Benodigdheden</p>
+                        <div class="tags">
+                            <Tag class="requirement-tag" v-for="requirement in exercise.requirements"
+                                :key="requirement.id">
+                                <p> {{ requirement.description }}</p>
+                            </Tag>
+                        </div>
+                    </div>
+
+
+                    <p class="divider"></p>
+
+
+
+                    <Panel header="Beschrijving" toggleable collapsed="true">
+                        <template #toggleicon="data">
+                            <Button :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')" severity="primary"/>
+                        </template>
+                        <p> {{ exercise.description }}</p>
+
+                    </Panel>
+                    <Panel header="Procedure" toggleable collapsed="true">
+                        <template #toggleicon="data">
+                            <Button :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')" severity="primary"/>
+                        </template>
+                        <p> {{ exercise.procedure }}</p>
+
+                    </Panel>
+                    <Panel header="Afbeelding" toggleable collapsed="true">
+                        <template #toggleicon="data">
+                            <Button :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')" severity="primary"/>
+                        </template>
+                        <img class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
+
+                    </Panel>
+
+                </div>
+            </transition>
         </template>
     </Card>
 </template>
@@ -166,9 +173,11 @@ export default {
 
 .expand-enter-to,
 .expand-leave-from {
-    max-height: 1000px; /* Set to a sufficiently large value */
+    max-height: 1000px;
+    /* Set to a sufficiently large value */
     opacity: 1;
 }
+
 .exercise-card {
     background-color: var(--theme-secondary);
     color: var(--theme-primary);

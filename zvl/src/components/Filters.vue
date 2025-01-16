@@ -2,9 +2,16 @@
     <div class="filter-container">
         <Accordion  value="0">
             <AccordionPanel class="filter-panel">
-                <AccordionHeader>Filters</AccordionHeader>
+                <AccordionHeader>
+                    <div class="filter-header">
+                        <p>Filters</p>
+                        <Button @click.stop="resetFilters" label="Reset Filters" severity="secondary" class="reset-button-header" />
+                    </div>
+                </AccordionHeader>
                     <AccordionContent>
-
+                        
+                        
+                   
             <div class="filter-item-container">
                 <h3>Selecteer categorie of onderdelen</h3>
                 <multiselect v-model="exerciseStore.exerciseFilters.skillValue" :options="options" :multiple="true" group-values="skill"
@@ -131,7 +138,16 @@ export default {
                 });
         },
 
-        
+        resetFilters() {
+            
+            this.exerciseStore.exerciseFilters = {
+                skillValue: [],
+                minimumAge: 18,
+                waterExercise: '',
+                minimumPlayers: null,
+                durationSliderValue: [1, 60]
+            };
+        },
 
     },
     computed: {
@@ -160,7 +176,16 @@ export default {
     margin: 1em;
 }
 
+.filter-header {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 95%;
+}
 
+.reset-button-header {
+    margin-left: 1em;
+}
 
 .filter-item-container {
     padding: 1em;
