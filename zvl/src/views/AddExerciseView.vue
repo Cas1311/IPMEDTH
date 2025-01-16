@@ -12,7 +12,7 @@ import AddDataForm from "@/components/AddDataForm.vue";
 <style scoped>
 .addExerciseView {
   width: min(90%, 50em);
-  margin: 1em;
+  margin: 1em auto;
   padding: 1em;
   display: flex;
   flex-direction: column;

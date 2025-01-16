@@ -4,7 +4,7 @@
       <template #end>
         <!-- Add the logo with a link to the homepage -->
         <RouterLink class="link logo-container" to="/">
-          <img alt="Vue logo" class="logo" src="./assets/zvllogo.png" />
+          <img alt="ZVL logo" class="logo" src="./assets/zvllogo.png" />
         </RouterLink>
       </template>
       <template #item="{ item, props, hasSubmenu }">
@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     isHomepage() {
-      return this.$route.path === "/" || this.$route.path === "/login";
+      return this.$route.path === "/";
     },
   },
   watch: {
@@ -104,12 +104,12 @@ export default {
 }
 
 .logo {
-  height: 2.5em; /* Adjust size as needed */
+  height: 2.5em;
   width: auto;
   object-fit: contain;
 }
 
 body {
-  padding-top: 4em; /* Adjust to prevent content overlap with Menubar */
+  padding-top: 4em;
 }
 </style>

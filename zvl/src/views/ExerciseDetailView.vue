@@ -6,7 +6,7 @@
       <p>Loading...</p>
     </div>
 
-    <div v-else>
+    <div class="exercisecontainer" v-else>
       <!-- Display a single ShowData card -->
       <ShowData :exercise="exercise" :show-extra="true" />
     </div>
@@ -52,14 +52,6 @@ export default {
   width: 100%;
   margin-inline: auto;
   gap: 0.75em;
-}
-
-.exercise {
-  border-radius: 0.4em;
-  background: var(--theme-secondary);
-  box-shadow: 0px 0.25em 0.25em 0px rgba(0, 0, 0, 0.25);
-  min-width: 100%;
-  padding: 1em;
-  position: relative;
+  margin-top: 1em;
 }
 </style>
