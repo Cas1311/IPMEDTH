@@ -18,32 +18,6 @@
         </template> 
     </Card>
     
- 
-    <!-- <Accordion :value="['0']" multiple>
-      <AccordionPanel>
-        <AccordionHeader class="title">{{ training.name }}</AccordionHeader>
-  
-        <AccordionContent>
-  
-          <h3>Oefeningen:</h3>
-          <div class="exercise-container">
-            <div class="exercise" v-for="exercise in training.exercises || []" :key="exercise.id">
-              <router-link :to="'/exercise/' + exercise.id" class="exercise-link">
-                <p class="exercise-name">{{ exercise.name }}</p>
-              </router-link>
-            </div>
-          </div>
-  
-          <!-- <Divider type="solid" />
-          <Button icon="pi pi-info-circle" label="Bekijken" severity="primary" />
-          <router-link :to="'/training/edit/' + training.id">
-            <Button icon="pi pi-file-edit" class="training-panel-button" label="Training bewerken" severity="secondary" />
-          </router-link>
-          <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Training verwijderen"
-            severity="danger" /> -->
-    <!-- </AccordionContent>
-      </AccordionPanel>
-    </Accordion> --> 
 </template>
 
 
@@ -82,7 +56,28 @@ export default {
             const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); // 24-hour time
             return `${formattedDate} ${formattedTime}`;
         },
+        
+        confirm(event) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Weet je zeker dat je de training wilt verwijderen?',
+        rejectProps: {
+          label: 'Annuleren',
+          severity: 'secondary',
+          outlined: true
+        },
+        acceptProps: {
+          label: 'Verwijderen',
+          severity: 'danger'
+        },
+        accept: () => {
+          this.$toast.add({ severity: 'secondary', summary: 'Verwijderd', detail: 'Training verwijderd', life: 3000 });
+          this.$emit("delete-training", this.training.id);
+          this.$router.push('/trainings');
+        },
 
+      });
+    },
     },
 
     components: {

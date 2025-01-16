@@ -183,12 +183,7 @@ export default {
     justify-content: space-between;
 }
 
-@media only screen and (max-width: 600px) {
-    .cardHeader {
-        display: block;
-        font-size: 1em;
-    }
-}
+
 
 .content-container {
     min-width: 100%;

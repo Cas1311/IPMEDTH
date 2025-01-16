@@ -1,6 +1,8 @@
 <template>
-  <h1>Alle trainingen</h1>
+ 
   <div class="training-container">
+    
+    <h1>Alle trainingen</h1>
     <router-link :to="'/training/create'">
       <Button label="Nieuwe training maken" />
         </router-link>
@@ -8,12 +10,13 @@
     <div v-if="loading">
       <p>Loading...</p>
     </div>
+
     <div v-else class="trainings-list">
-     
       <TrainingCard v-for="training in trainings" :key="training.id" :training="training" :show-extra="true" @delete-training="deleteTraining"/>
-      
     </div>
+
   </div>
+  
 </template>
 
 <script>
@@ -70,8 +73,20 @@ export default {
 </script>
 
 <style scoped>
-.training-container{
-  min-width: 80%;
-  max-width: 80%;
+.training-container {
+  display: flex;
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  padding: 1rem;
+}
+
+.trainings-list {
+  display: flex; 
+  flex-direction: column; 
+  
+  width: 100%; 
+  max-width: 80rem; 
 }
 </style>

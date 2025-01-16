@@ -1,14 +1,14 @@
 <template>
     <div class="card">
         <h2>Naam van de training</h2>
-        <Card class="nameinputcard">
+        <Card class="name-card">
             <template #title></template>
             <template #content>
                 <div v-if="loading">
                     <p>Loading...</p>
                 </div>
                 <div v-else-if="training">
-                    <p>Naam van de training: {{ training.name }}</p>
+                    <h2>{{ training.name }}</h2>
                 </div>
                 <div v-else>
                     <p>Geen training gevonden</p>
@@ -18,9 +18,10 @@
         </Card>
 
         <h2>Oefeningen toevoegen</h2>
+        <Filter @skill-filter-changed="handleFilterChange" />
         <ScrollPanel style="width: 100%; height: 30em">
             <div>
-                <Filter @skill-filter-changed="handleFilterChange" />
+
 
                 <div v-if="loading">
                     <p>Loading...</p>
@@ -34,10 +35,17 @@
                 </div>
             </div>
         </ScrollPanel>
-        <form @submit.prevent="submitFullForm">
+        <div class="button-container">
+            <form @submit.prevent="submitFullForm">
 
-            <Button type="submit" label="Training opslaan" />
-        </form>
+                <Button icon="pi pi-save" class="save-button" type="submit" label="Training opslaan" />
+            </form>
+            <router-link :to="'/trainings/'">
+                <Button icon="pi pi-times" class="save-button" label="Annuleren" severity="secondary" />
+            </router-link>
+
+        </div>
+
 
     </div>
 
@@ -138,6 +146,7 @@ export default {
                 // Check if the arrays are not empty before submitting
                 if (this.selectedExerciseIds.length === 0 && this.selectedRemoveExerciseIds.length === 0) {
                     this.message = "No exercises to add or remove.";
+                    this.$router.push(`/training/${this.training.id}`);
                     return; // Exit early if both arrays are empty
                 }
 
@@ -194,5 +203,26 @@ export default {
 :deep(.p-steppanel) {
 
     border-radius: 1em;
+}
+
+.name-card{
+    background-color: var(--theme-secondary);
+}
+
+.card{
+    margin: 1em;
+}
+
+.button-container{
+    margin: 1em;
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+button, .p-button {
+    min-height: 3em; 
 }
 </style>
