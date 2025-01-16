@@ -1,6 +1,12 @@
 <template>
   <div>
     <Menubar v-if="!isHomepage" :model="items" :class="{ hidden: isHidden }">
+      <template #start>
+        <!-- Back button for small screens -->
+        <Button class="back-button" @click="goBack">
+          <i class="pi pi-arrow-left"></i>Back
+        </Button>
+      </template>
       <template #end>
         <!-- Add the logo with a link to the homepage -->
         <RouterLink class="link logo-container" to="/">
@@ -32,10 +38,12 @@
 
 <script>
 import Menubar from "primevue/menubar";
+import Button from "primevue/button";
 
 export default {
   components: {
     Menubar,
+    Button,
   },
   data() {
     return {
@@ -52,6 +60,11 @@ export default {
   computed: {
     isHomepage() {
       return this.$route.path === "/";
+    },
+    currentPageLabel() {
+      // Find the label of the current route from items
+      const currentItem = this.items.find((item) => item.route === this.$route.path);
+      return currentItem ? currentItem.label : "";
     },
   },
   watch: {
@@ -72,6 +85,10 @@ export default {
       }
       this.lastScrollPosition = currentScroll;
     },
+    goBack() {
+      // Navigate to the previous page
+      this.$router.back();
+    },
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
@@ -82,10 +99,24 @@ export default {
 };
 </script>
 
+<style>
+.p-menubar-button{
+  color: var(--text-color)!important;
+}
+</style>
+
 <style scoped>
 .hidden {
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
+}
+
+.back-button {
+  border: none;
+  background: none;
+  color: var(--text-color);
+  font-size: 1em;
+  cursor: pointer;
 }
 
 .menubar {
