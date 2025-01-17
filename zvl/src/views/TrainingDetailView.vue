@@ -122,7 +122,7 @@ export default {
 }
 
 .detail-toggle-container{
-    margin: 1em;
+    margin-bottom: 1em;
     display: flex;
     flex-direction: column;
 }

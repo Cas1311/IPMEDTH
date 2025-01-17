@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <Filter @skill-filter-changed="handleFilterChange" />
-
+    <div class="detail-toggle-container">
+      <p>Details</p>
+      <ToggleSwitch v-model="checked" />
+    </div>
     <div v-if="loading">
       <p>Loading...</p>
     </div>
@@ -98,6 +101,5 @@ export default {
   margin-bottom: 2em;
   gap: 1em;
   display: flex;
-  flex-direction: column;
 }
 </style>
