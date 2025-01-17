@@ -2,27 +2,20 @@
   <div class="container">
     <Filter @skill-filter-changed="handleFilterChange" />
 
-      
     <div v-if="loading">
       <p>Loading...</p>
     </div>
 
     <div v-else class="exercise-list">
-      <div class="detail-toggle-container">
-            <p>Toon meer informatie</p>
-        <ToggleSwitch v-model="checked" />
-
-        </div>
-      <!-- Loop through exercises and display each as a ShowData card -->
-      <ShowData
-        v-for="exercise in getFilteredExercises"
-        :key="exercise.id"
-        :exercise="exercise"
-        :show-extra="checked"
-        :show-button="false"
-        :show-add-button="false"
-        @add-exercise="handleAddExercise"
-      />
+      <div class="exercise-list">
+        <!-- Loop through exercises and display each as a ShowData card -->
+        <SmallExerciseCard
+          v-for="exercise in getFilteredExercises"
+          :key="exercise.id"
+          :exercise="exercise"
+          :show-extra="checked"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -30,11 +23,12 @@
 <script>
 import ShowData from "@/components/ShowData.vue";
 import Filter from "@/components/Filters.vue";
-import ToggleSwitch from 'primevue/toggleswitch';
+import ToggleSwitch from "primevue/toggleswitch";
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useExerciseStore } from "../stores/exercises";
+import SmallExerciseCard from "@/components/SmallExerciseCard.vue";
 
 export default {
   setup() {
@@ -60,7 +54,6 @@ export default {
     ...mapActions(useExerciseStore, ["fetchExercises", "setExerciseFilters"]),
 
     handleFilterChange(newFilters) {
-      
       // Update the filters and refetch exercises based on skill filters
       this.setExerciseFilters(newFilters);
     },
@@ -84,23 +77,27 @@ export default {
   components: {
     ShowData, // Use the ShowData component
     Filter,
-    ToggleSwitch
+    ToggleSwitch,
+    SmallExerciseCard,
   },
 };
 </script>
 
-<style>
+<style scoped>
+.container {
+  margin: 1em;
+}
 
 .exercise-list {
   display: flex;
   flex-direction: column;
   width: min(100%, 100vw);
 }
-.detail-toggle-container{
-    align-items: center;
-    margin-bottom: 2em;
-    gap: 1em;
-    display: flex;
-    flex-direction: column;
+.detail-toggle-container {
+  align-items: center;
+  margin-bottom: 2em;
+  gap: 1em;
+  display: flex;
+  flex-direction: column;
 }
 </style>
