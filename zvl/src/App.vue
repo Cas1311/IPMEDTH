@@ -48,10 +48,11 @@ export default {
   data() {
     return {
       items: [
-        { label: "Home", icon: "pi pi-home", route: "/" },
-        { label: "Voeg Oefening Toe", icon: "pi pi-plus", route: "/exercise/create" },
-        { label: "Trainingen", icon: "pi pi-calendar", route: "/trainings" },
-        { label: "Oefeningen", icon: "pi pi-list", route: "/exercises" },
+        // { label: "Home", icon: "pi pi-home", route: "/" },
+        { label: "Oefening Toevoegen", icon: "pi pi-plus", route: "/exercise/create" },
+        { label: "Oefeningen Overzicht", icon: "pi pi-list", route: "/exercises" },
+        { label: "Training Maken", icon: "pi pi-plus", route: "/training/create" },
+        { label: "Trainingen Overzicht", icon: "pi pi-calendar", route: "/trainings" },
       ],
       isHidden: false,
       lastScrollPosition: 0,
@@ -100,8 +101,8 @@ export default {
 </script>
 
 <style>
-.p-menubar-button{
-  color: var(--text-color)!important;
+.p-menubar-button {
+  color: var(--text-color) !important;
 }
 </style>
 

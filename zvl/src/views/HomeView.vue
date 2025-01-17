@@ -38,24 +38,24 @@ export default defineComponent({
     return {
       items: [
         {
-          label: "Voeg Oefening Toe",
+          label: "Oefening Toevoegen",
           icon: "pi pi-plus",
           route: "/exercise/create",
         },
         {
-          label: "Bekijk Overzicht Oefeningen",
+          label: "Oefeningen Overzicht",
           icon: "pi pi-list",
           route: "/exercises",
         },
         {
-          label: "Bekijk Trainingen",
-          icon: "pi pi-calendar",
-          route: "/trainings",
+          label: "Training Maken",
+          icon: "pi pi-plus",
+          route: "/training/create",
         },
         {
-          label: "Maak Training",
-          icon: "pi pi-file",
-          route: "/training/create",
+          label: "Trainingen Overzicht", 
+          icon: "pi pi-calendar",
+          route: "/trainings",
         },
         {
           label: "Inloggen",
