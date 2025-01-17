@@ -43,14 +43,14 @@ export default defineComponent({
           route: "/exercise/create",
         },
         {
+          label: "Bekijk Overzicht Oefeningen",
+          icon: "pi pi-list",
+          route: "/exercises",
+        },
+        {
           label: "Bekijk Trainingen",
           icon: "pi pi-calendar",
           route: "/trainings",
-        },
-        {
-          label: "Bekijk Oefeningen",
-          icon: "pi pi-list",
-          route: "/exercises",
         },
         {
           label: "Maak Training",
@@ -80,7 +80,8 @@ export default defineComponent({
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  margin-top: 5vh;
+  /* justify-content: center; */
   align-items: center;
   width: 100%;
   gap: 1em;
@@ -93,11 +94,31 @@ export default defineComponent({
 
 .ml-2 {
   margin-left: 8px; /* Add some margin for spacing */
+  text-align: left;
 }
 
 .logo {
   background-color: var(--theme-secondary);
   border-radius: 1em;
   width: min(30vw, 20em);
+}
+
+/* Responsive font sizes with clamp */
+h1 {
+  font-size: clamp(
+    2rem,
+    4vw,
+    3.5rem
+  ); /* Minimum 2rem, scales with viewport, max 3.5rem */
+  margin: 0 1em ;
+}
+
+h3 {
+  font-size: clamp(
+    1rem,
+    2vw,
+    1.5rem
+  ); /* Minimum 1rem, scales with viewport, max 1.5rem */
+  margin: 0 1em;
 }
 </style>
