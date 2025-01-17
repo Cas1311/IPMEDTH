@@ -1,21 +1,25 @@
 <template>
-  <div class="card">
-    <h2>Naam van de training</h2>
-    <Card class="nameinputcard">
+  <div class="card-container">
+    <h2>Nieuwe training maken</h2>
+    <Card class="card">
 
       <template #title></template>
       <template #content>
-        <form v-if="!nameSubmitted" @submit.prevent="addTraining">
+        
+          
+          <form class="name-card" v-if="!nameSubmitted" @submit.prevent="addTraining">
           <FloatLabel>
             <InputText type="text" v-model="formData.name" />
             <label for="over_label">Naam van de training</label>
-            <Button type="submit" label="Opslaan" :disabled="!formData.name" />
+           
           </FloatLabel>
-
-        </form>
-        <div v-if="this.errorMessage" class="error-message">
+          <div v-if="this.errorMessage" class="error-message">
           <p>Er is al een training met deze naam.</p>
         </div>
+          <Button type="submit" label="Opslaan" :disabled="!formData.name" />
+        </form>
+        
+       
       </template>
 
     </Card>
@@ -96,8 +100,22 @@ export default {
 </script>
 
 <style scoped>
-:deep(.p-steppanel) {
+.card-container{
+  display: flex;
+  flex-direction: column; 
+  justify-content: top; 
+  align-items: center; 
+  min-height: 100vh; 
+  padding: 1rem;
+}
 
-  border-radius: 1em;
+
+.name-card{
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  gap: 1em;
+ 
+  
 }
 </style>
