@@ -2,12 +2,12 @@
     <div class="training-container">
     <h2>Training informatie</h2>
     
-        <div v-if="this.loading">
+        <div v-if="trainingLoading">
             <p>Loading...</p>
         </div>
         <div v-else class="trainings-list">
 
-            <TrainingDetailCard :training="training" @delete-training="deleteTraining" />
+            <TrainingDetailCard :training="training" @delete-training="deleteTraining" :show-extra="true"/>
 
         </div>
         <h2>Oefeningen</h2>
@@ -81,6 +81,7 @@ export default {
         ...mapState(useTrainingStore, ['training']),
         ...mapState(useExerciseStore, ['exercises']),
         ...mapState(useExerciseStore, ['loading']),
+        ...mapState(useTrainingStore, {trainingLoading: 'loading'}),
 
         mergedExercises() {
             if (!this.training || !Array.isArray(this.training.exercises) || !this.exercises) {

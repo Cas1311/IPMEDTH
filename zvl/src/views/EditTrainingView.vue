@@ -1,21 +1,16 @@
 <template>
     <div class="card">
-        <h2>Naam van de training</h2>
-        <Card class="name-card">
-            <template #title></template>
-            <template #content>
-                <div v-if="loading">
-                    <p>Loading...</p>
-                </div>
-                <div v-else-if="training">
-                    <h2>{{ training.name }}</h2>
-                </div>
-                <div v-else>
-                    <p>Geen training gevonden</p>
-                </div>
-            </template>
-            <p v-if="message">{{ message }}</p>
-        </Card>
+        
+
+        <div v-if="trainingLoading">
+            <p>Loading...</p>
+        </div>
+        <div v-else class="trainings-list">
+
+            <TrainingDetailCard :training="training" :show-extra="false"/>
+
+
+        </div>
 
         <h2>Oefeningen toevoegen</h2>
         <Filter @skill-filter-changed="handleFilterChange" />
@@ -60,11 +55,12 @@ import ExerciseView from './ExerciseView.vue';
 import ScrollPanel from 'primevue/scrollpanel';
 import ShowData from "@/components/ShowData.vue";
 import Filter from "@/components/Filters.vue";
+import TrainingDetailCard from '@/components/TrainingDetailCard.vue';
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useExerciseStore } from "../stores/exercises";
-
+import { useTrainingStore } from "../stores/trainings";
 
 export default {
 
@@ -72,10 +68,10 @@ export default {
         return {
             currentTrainingId: null,
             exercises: [],
-            training: null,
-            loading: false,
+            // training: null,
+            // loading: false,
             selectedExerciseIds: [],
-            exercisesInTrainingIds: [],
+            // exercisesInTrainingIds: [],
             selectedRemoveExerciseIds: [],
 
         }
@@ -87,11 +83,12 @@ export default {
         this.currentTrainingId = trainingId;
 
         this.loading = true;
-        this.fetchTrainingData(trainingId);
+        this.fetchTrainingByIdFromApi(trainingId);
     },
 
     methods: {
         ...mapActions(useExerciseStore, ['fetchExercisesFromApi', 'setExerciseFilters']),
+        ...mapActions(useTrainingStore, ['fetchTrainingByIdFromApi']),
 
         getExercises() {
             this.fetchExercisesFromApi()
@@ -102,20 +99,7 @@ export default {
             this.setExerciseFilters(newFilters);
         },
 
-        fetchTrainingData(trainingId) {
-            this.$axios
-                .get(`/trainings/${trainingId}?incl=exercises`)
-                .then(response => {
-                    this.training = response.data;
-                    this.exercisesInTrainingIds = response.data.exercises.map(exercise => exercise.id);
-                })
-                .catch(error => {
-                    console.error('Error fetching exercise:', error);
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
-        },
+
 
         toggleExerciseInTraining(exerciseId) {
             const isAdded = this.exercisesInTrainingIds.includes(exerciseId);
@@ -181,7 +165,10 @@ export default {
         ...mapWritableState(useExerciseStore, ["exercises"]),
         ...mapWritableState(useExerciseStore, ["loading"]),
         ...mapWritableState(useExerciseStore, ["exerciseFilters"]),
+        ...mapWritableState(useTrainingStore, ["exercisesInTrainingIds"]),
         ...mapState(useExerciseStore, ["getFilteredExercises"]),
+        ...mapState(useTrainingStore, ["training"]),
+        ...mapState(useTrainingStore, {trainingLoading: 'loading'}),
 
     },
 
@@ -193,7 +180,8 @@ export default {
         ExerciseView,
         Card,
         Filter,
-        ShowData
+        ShowData,
+        TrainingDetailCard
 
     },
 };
@@ -205,15 +193,15 @@ export default {
     border-radius: 1em;
 }
 
-.name-card{
+.name-card {
     background-color: var(--theme-secondary);
 }
 
-.card{
+.card {
     margin: 1em;
 }
 
-.button-container{
+.button-container {
     margin: 1em;
     display: flex;
     gap: 0.5em;
@@ -222,7 +210,8 @@ export default {
     flex-wrap: wrap;
 }
 
-button, .p-button {
-    min-height: 3em; 
+button,
+.p-button {
+    min-height: 3em;
 }
 </style>

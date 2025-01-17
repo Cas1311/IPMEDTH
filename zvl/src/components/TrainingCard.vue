@@ -22,10 +22,10 @@
         </router-link>
         
         <router-link :to="'/training/edit/' + training.id">
-          <Button icon="pi pi-file-edit" class="training-panel-button" label="Training bewerken" severity="secondary" />
+          <Button icon="pi pi-file-edit" class="training-panel-button" label="Bewerken" severity="secondary" />
         </router-link>
         
-        <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Training verwijderen"
+        <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Verwijderen"
           severity="danger" />
       </AccordionContent>
     </AccordionPanel>

@@ -92,7 +92,7 @@
                         <template #toggleicon="data">
                             <Button :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')" severity="primary"/>
                         </template>
-                        <img class="exerciseImage" :src="exercise.image_url" alt="Exercise Image" />
+                        <img class="exercise-image" :src="exercise.image_url" alt="Exercise Image" />
 
                     </Panel>
 
@@ -289,6 +289,16 @@ export default {
 
 }
 
+.exercise-image {
+    max-width: 100%; 
+    max-height: 250px; 
+    object-fit: cover;
+    display: block; 
+    margin: 0 auto; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+ 
 @media only screen and (max-width: 768px) {
     .panel-container {
         flex-direction: column;

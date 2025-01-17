@@ -10,6 +10,7 @@ export const useTrainingStore = defineStore("training", {
         training: [],
         loading: false,
         errorMessage: '',
+        exercisesInTrainingIds: [],
     }),
     getters: {
        
@@ -32,20 +33,25 @@ export const useTrainingStore = defineStore("training", {
         },
 
         async fetchTrainingByIdFromApi(trainingId) {
-            this.loading = true; 
-            
+            this.loading = true;
             try {
-                const training = await fetchTrainingById(trainingId);
-                this.training = training;
-                
+                const response = await fetchTrainingById(trainingId);
+                if (response) {
+                    this.training = response; // Set training data from the service response
+                    // Store the exercise IDs
+                    this.exercisesInTrainingIds = response.exercises.map(exercise => exercise.id);
+                    this.message = '';
+                } else {
+                    this.message = 'Failed to fetch training data.';
+                }
             } catch (error) {
-                console.error("Failed to fetch training:", error);
+                console.error("Error fetching training data:", error);
+                this.message = 'An error occurred while fetching training data.';
             } finally {
-
-                this.loading = false; 
-
+                this.loading = false;
             }
-        },
+        }
+        ,
 
         async addTrainingApi(formData) {
             

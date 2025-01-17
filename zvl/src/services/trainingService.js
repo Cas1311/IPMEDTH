@@ -13,15 +13,14 @@ import axios from 'axios';
     }
 
     export async function fetchTrainingById(trainingId) {
-        let training = [];
         try {
             const response = await axios.get(`${baseUrl}/trainings/${trainingId}?incl=exercises`);
-            training = response.data;
+            return response.data;
             
         } catch (error) {
             console.error('Error fetching training:', error);
+            return null;
         }
-        return training; 
     }
 
 
