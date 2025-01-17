@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import Multiselect from "vue-multiselect";
 import TreeSelect from "primevue/treeselect";
 import Slider from "primevue/slider";
 import InputText from "primevue/inputtext";
@@ -102,7 +100,6 @@ import AccordionPanel from "primevue/accordionpanel";
 import AccordionHeader from "primevue/accordionheader";
 import AccordionContent from "primevue/accordioncontent";
 import { mapActions } from "pinia";
-import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useExerciseStore } from "../stores/exercises";
 
@@ -111,12 +108,7 @@ export default {
     return {
       selectedSkillIds: [],
       options: [],
-
-      // skillValue: [],
       durationSliderValue: [1, 60],
-      // playerSliderValue: '',
-      // minimumAge: '',
-      // waterExercise: '',
       waterExerciseOptions: [
         { name: "Alles", value: "" },
         { name: "In het water", value: 1 },
@@ -137,18 +129,6 @@ export default {
       console.log("Updated skill values:", this.exerciseFilters.skillValue);
       this.fetchExercisesFromApi();
     },
-    // 'exerciseFilters.skillValue': {
-    //     handler(newValue, oldValue) {
-    //         // Emit only if the value actually changes
-    //         if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-    //             this.$emit('skill-filter-changed', newValue);
-    //             console.log('Skill filter changed, this message is from watcher:', JSON.stringify(newValue, null, 2));
-    //             console.log('Skill filter changed, this message is from watcher, this is state:', this.exerciseFilters.skillValue);
-    //             this.fetchExercisesFromApi();
-    //         }
-    //     },
-    //     deep: true
-    // }
   },
 
   methods: {
@@ -194,7 +174,6 @@ export default {
   },
 
   components: {
-    Multiselect,
     Slider,
     InputText,
     SelectButton,
@@ -207,8 +186,7 @@ export default {
   },
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
-\
+
 <style scoped>
 .filter-panel {
   margin: 1em 0;

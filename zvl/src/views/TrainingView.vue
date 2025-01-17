@@ -24,7 +24,6 @@ import Button from 'primevue/button';
 import TrainingCard from '@/components/TrainingCard.vue';
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
-import { mapWritableState } from 'pinia';
 import { useTrainingStore } from '../stores/trainings';
 
 

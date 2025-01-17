@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { fetchExercises } from '@/services/exerciseService';
-import { deleteTraining } from '@/services/trainingService';
+import { deleteExercise } from '@/services/exerciseService';
 
 
 export const useExerciseStore = defineStore("exercise", {
@@ -78,7 +78,14 @@ export const useExerciseStore = defineStore("exercise", {
           }, 300);  // Debounce delay of 300ms
       },
       
-      
+      async deleteExerciseApi(exerciseId){
+        try {
+            deleteExercise(exerciseId);
+            this.exercises = this.exercises.filter(exercises => exercises.id !== exerciseId);
+        } catch (error) {
+            console.error("Failed to delete exercise:", error);
+        } 
+    }
         
     },
 });

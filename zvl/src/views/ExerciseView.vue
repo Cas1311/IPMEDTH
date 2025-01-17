@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Filter @skill-filter-changed="handleFilterChange" />
+    <ExerciseFilters @skill-filter-changed="handleFilterChange" />
     <div class="detail-toggle-container">
       <p>Details</p>
       <ToggleSwitch v-model="checked" />
@@ -24,8 +24,7 @@
 </template>
 
 <script>
-import ShowData from "@/components/ShowData.vue";
-import Filter from "@/components/Filters.vue";
+import ExerciseFilters from "@/components/ExerciseFilters.vue";
 import ToggleSwitch from "primevue/toggleswitch";
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
@@ -78,8 +77,7 @@ export default {
   },
 
   components: {
-    ShowData, // Use the ShowData component
-    Filter,
+    ExerciseFilters,
     ToggleSwitch,
     SmallExerciseCard,
   },

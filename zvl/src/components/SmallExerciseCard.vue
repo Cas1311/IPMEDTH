@@ -128,7 +128,7 @@ import Button from "primevue/button";
 import Card from "primevue/card";
 import Tag from "primevue/tag";
 import Panel from "primevue/panel";
-import Divider from "primevue/divider";
+
 
 export default {
   data() {
@@ -193,7 +193,6 @@ export default {
   },
 
   components: {
-    Divider,
     Button,
     Card,
     Tag,
@@ -306,20 +305,16 @@ export default {
   margin-top: 0.2em;
 }
 
-/* New styles for panels layout */
 .panel-container {
   display: flex;
   gap: 1em;
   align-items: flex-start;
   flex-wrap: wrap;
-  /* Allows the panels to wrap to the next line on smaller screens */
 }
 
 .panel-container .p-panel {
   flex: 1;
-  /* Make panels take equal space */
   min-width: 250px;
-  /* Set a minimum width for each panel */
 }
 
 .exercise-image {

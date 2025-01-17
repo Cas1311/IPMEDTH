@@ -25,7 +25,7 @@
       </router-link>
     </div>
     <h2>Oefeningen toevoegen</h2>
-    <Filter @skill-filter-changed="handleFilterChange" />
+    <ExerciseFilters @skill-filter-changed="handleFilterChange" />
     <ScrollPanel style="width: 100%; height: 30em">
       <div>
         <div v-if="loading">
@@ -51,13 +51,8 @@
 
 <script>
 import Button from "primevue/button";
-import Card from "primevue/card";
-import InputText from "primevue/inputtext";
-import FloatLabel from "primevue/floatlabel";
-import ExerciseView from "./ExerciseView.vue";
 import ScrollPanel from "primevue/scrollpanel";
-import ShowData from "@/components/ShowData.vue";
-import Filter from "@/components/Filters.vue";
+import ExerciseFilters from "@/components/ExerciseFilters.vue";
 import TrainingDetailCard from "@/components/TrainingDetailCard.vue";
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
@@ -187,13 +182,8 @@ export default {
 
   components: {
     Button,
-    InputText,
-    FloatLabel,
     ScrollPanel,
-    ExerciseView,
-    Card,
-    Filter,
-    ShowData,
+    ExerciseFilters,
     TrainingDetailCard,
     SmallExerciseCard,
   },

@@ -22,7 +22,6 @@
 
 
         <div v-else class="exercise-list">
-            <!-- Loop through exercises and display each as a ShowData card -->
             <SmallExerciseCard v-for="exercise in mergedExercises" :key="exercise.id" :exercise="exercise"
                 :show-extra="checked" />
         </div>
@@ -34,10 +33,8 @@ import Button from 'primevue/button';
 import TrainingDetailCard from '@/components/TrainingDetailCard.vue';
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
-import { mapWritableState } from 'pinia';
 import { useTrainingStore } from '../stores/trainings';
 import { useExerciseStore } from "../stores/exercises";
-import ShowData from '@/components/ShowData.vue';
 import SmallExerciseCard from '@/components/SmallExerciseCard.vue';
 import ToggleSwitch from 'primevue/toggleswitch';
 
@@ -47,7 +44,7 @@ export default {
 
     data() {
         return {
-            mergedExercises: [],
+            // mergedExercises: [],
             checked: false,
 
 
@@ -105,7 +102,6 @@ export default {
     components: {
         TrainingDetailCard,
         Button,
-        ShowData,
         SmallExerciseCard,
         ToggleSwitch
 
