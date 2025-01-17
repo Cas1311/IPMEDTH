@@ -34,3 +34,13 @@ export async function fetchExercises(filters = {}) {
 
     return exercises;
 }
+
+export async function deleteExercise(exerciseId) {
+    try {
+        console.log(exerciseId)
+        await axios.delete(`${baseUrl}/exercises/${exerciseId}`);
+    } catch (error) {
+        console.error('Error deleting training:', error);
+    }
+    
+}

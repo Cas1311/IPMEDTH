@@ -267,6 +267,13 @@ import Multiselect from "vue-multiselect";
 import TreeSelect from "primevue/treeselect";
 
 export default {
+  props: {
+    // Accept the exercise object as a prop for editing
+    exercise: {
+      type: Object,
+      default: null,
+    },
+  },
   data() {
     return {
       formData: {
@@ -302,61 +309,65 @@ export default {
       message: "",
     };
   },
-
+  watch: {
+    // Watch the prop exercise for changes to pre-fill the form data
+    exercise: {
+      immediate: true,
+      handler(newExercise) {
+        if (newExercise) {
+          this.formData = {
+            name: newExercise.name || "",
+            description: newExercise.description || "",
+            procedure: newExercise.procedure || "",
+            duration: newExercise.duration || "",
+            minimum_players: newExercise.minimum_players || 1,
+            minimum_age: newExercise.minimum_age || "",
+            water_exercise: newExercise.water_exercise || "",
+            equipment: newExercise.equipment || "",
+            skills: newExercise.skills || [],
+            requirements: newExercise.requirements || [],
+          };
+        }
+      },
+    },
+  },
   mounted() {
     this.loadOptions();
   },
-
   methods: {
     async submitForm() {
       try {
-        // Stel de payload samen voor het aanmaken van de oefening, zonder skills
         const payload = {
           ...this.formData,
-          skills: [], // Laat de skills tijdelijk leeg in de aanmaak request
+          skills: [], // Leave skills empty for now
           requirements: [],
         };
 
-        // Stap 1: Maak de oefening aan
-        const response = await this.$axios.post("/exercises", payload);
-        console.log("Response data:", response); // Log de volledige response voor debugging
+        let response;
+        if (this.exercise) {
+          // If there's an exercise prop, it's an edit, so use PUT
+          response = await this.$axios.put(`/exercises/${this.exercise.id}`, payload);
+        } else {
+          // Otherwise, it's a create, so use POST
+          response = await this.$axios.post("/exercises", payload);
+        }
 
-        // Stap 2: Haal het ID van de aangemaakte oefening op
+        console.log("Response data:", response);
         const exerciseId = response.data.data.id;
-        console.log("Exercise created with ID:", exerciseId);
 
-        // Stap 3: Koppel de skills aan de oefening
-        if (this.formData.skills.length > 0) {
-          const skillIds = this.formData.skills.map((skill) => skill.id).join(",");
-          await this.$axios.post(`/exercises/${exerciseId}/linkToSkill/${skillIds}`);
-          console.log("Skills linked successfully");
-        }
+        // Navigate to the exercise page using the exercise ID
+        this.$router.push(`/exercise/${exerciseId}`);
 
-        // Stap 4: Koppel de benodigdheden aan de oefening
-        if (this.formData.requirements.length > 0) {
-          const requirementsPayload = this.formData.requirements.map((req) => ({
-            description: req.description,
-          }));
-          await this.$axios.post(`/exercises/${exerciseId}/linkToRequirements`, {
-            requirements: requirementsPayload,
-          });
-        }
+        // Handle linking skills and requirements as needed
 
-        // Toon een succesbericht
         this.message = "Oefening succesvol opgeslagen";
-
-        // Reset het formulier na succesvol opslaan
         this.resetForm();
       } catch (error) {
-        console.error(
-          "Fout bij het opslaan van de oefening of koppelen van skills:",
-          error.response?.data || error.message
-        );
-        this.message = "Er is iets mis gegaan. Heb je alle velden ingevuld?";
+        console.error("Error:", error);
+        this.message = "Er is iets mis gegaan.";
       }
     },
     resetForm() {
-      // Reset alle velden van het formulier
       this.formData = {
         name: "",
         description: "",
@@ -370,29 +381,20 @@ export default {
         requirements: [],
       };
     },
-    addRequirement() {
-      this.formData.requirements.push({ description: "" });
-    },
-    removeRequirement(index) {
-      this.formData.requirements.splice(index, 1);
-    },
     loadOptions() {
-      // Fetch skills and categories from the API
       Promise.all([this.$axios.get("/skills"), this.$axios.get("/categories")])
         .then(([skillsResponse, categoriesResponse]) => {
           const skills = skillsResponse.data;
           const categories = categoriesResponse.data;
-
-          // Group skills under their respective categories and create the hierarchical structure
           this.options = categories.map((category) => ({
-            key: `${category.id}`, // Unique key for each category
-            label: category.name, // Label for each category
+            key: `${category.id}`,
+            label: category.name,
             children: skills
               .filter((skill) => skill.category_id === category.id)
               .map((skill) => ({
-                key: `${category.id}-${skill.id}`, // Unique key for each skill
-                label: skill.name, // Label for each skill
-                data: skill.id, // Skill ID
+                key: `${category.id}-${skill.id}`,
+                label: skill.name,
+                data: skill.id,
               })),
           }));
         })
@@ -401,7 +403,6 @@ export default {
         });
     },
     validateFields(requiredFields) {
-      // Validate only required fields
       return requiredFields.every((field) => {
         const value = this.formData[field];
         return (
@@ -410,19 +411,17 @@ export default {
       });
     },
     handleNextStep(activateCallback, step) {
-      // Define required fields per step
-      const stepRequirements = {
+      const requiredFields = {
         1: ["name", "description"],
-        2: ["procedure", "duration", "minimum_players", "minimum_age", "water_exercise"], // Equipment is excluded
+        2: ["procedure", "duration", "minimum_players", "minimum_age", "water_exercise"],
         3: ["skills"],
-      };
+      }[step];
 
-      // Validate the current step
-      if (!this.validateFields(stepRequirements[step])) {
-        this.showErrors[`step${step}`] = true; // Show errors for the current step
+      if (this.validateFields(requiredFields)) {
+        this.showErrors[`step${step}`] = false;
+        activateCallback(`${step + 1}`);
       } else {
-        this.showErrors[`step${step}`] = false; // Clear errors for the current step
-        activateCallback(String(step + 1)); // Move to the next step
+        this.showErrors[`step${step}`] = true;
       }
     },
   },
@@ -446,6 +445,7 @@ export default {
   },
 };
 </script>
+
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style>
@@ -558,7 +558,7 @@ h3 {
   margin-top: 1.5em;
 }
 
-.treeselect{
+.treeselect {
   width: 100%;
 }
 </style>

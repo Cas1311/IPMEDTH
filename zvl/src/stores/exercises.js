@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { fetchExercises } from '@/services/exerciseService';
+import { deleteTraining } from '@/services/trainingService';
 
 
 export const useExerciseStore = defineStore("exercise", {
@@ -75,7 +76,7 @@ export const useExerciseStore = defineStore("exercise", {
               // After filters are set, fetch exercises based on the updated filters
               this.fetchExercisesFromApi();  // Fetch exercises after updating the filters
           }, 300);  // Debounce delay of 300ms
-      }
+      },
       
       
         
