@@ -1,58 +1,57 @@
 <template>
     <div class="filter-container">
-        <Accordion  value="0">
+        <Accordion value="0">
             <AccordionPanel class="filter-panel">
                 <AccordionHeader>
                     <div class="filter-header">
                         <p>Filters</p>
-                        <Button @click.stop="resetFilters" label="Reset Filters" severity="secondary" class="reset-button-header" />
+                        <Button @click.stop="resetFilters" label="Reset Filters" severity="secondary"
+                            class="reset-button-header" />
                     </div>
                 </AccordionHeader>
-                    <AccordionContent>
-                        
-                        
-                   
-            <div class="filter-item-container">
-                <h3>Selecteer categorie of onderdelen</h3>
-                <multiselect v-model="exerciseStore.exerciseFilters.skillValue" :options="options" :multiple="true" group-values="skill"
-                    group-label="category" :group-select="true" placeholder="Typ om te zoeken" track-by="name"
-                    label="name"><span slot="noResult">Geen resultaten gevonden voor je zoekopdracht</span>
-                </multiselect>
-            </div>
+                <AccordionContent>
 
-            <div class="filter-item-container">
-                <h3>Vanaf leeftijd</h3>
-                <SelectButton v-model="exerciseStore.exerciseFilters.minimumAge" :options="ageOptions" :allowEmpty="false" />
-                
+                    <div class="filter-item-container">
+                        <h3>Categorie en onderdelen</h3>
+                        <TreeSelect filter filterMode="lenient" v-model="selectedSkillIds" :options="options"
+                            selectionMode="checkbox" selectedItemsLabel="" maxSelectedLabels="5" fluid display="chip" placeholder="Selecteer categorie of onderdelen" :nodeKey="key" />
 
-            </div>
+                    </div>
 
-            <div class="filter-item-container">
-                <h3>Type oefening</h3>
-                <SelectButton v-model="exerciseStore.exerciseFilters.waterExercise" :options="waterExerciseOptions" optionLabel="name" optionValue="value" :allowEmpty="false" />
-
-          
-               
-            </div>
-
-            <div class="filter-item-container">
-                <h3>Minimum aantal spelers</h3>
-                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.minimumPlayers" />
-                <Slider class="slider" v-model.number="exerciseStore.exerciseFilters.minimumPlayers" :min="1" :max="10" />
-            </div>
+                    <div class="filter-item-container">
+                        <h3>Vanaf leeftijd</h3>
+                        <SelectButton v-model="exerciseFilters.minimumAge" :options="ageOptions" :allowEmpty="false" />
 
 
-            <div class="filter-item-container">
-                <h3>Benodigde tijd</h3>
-                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.durationSliderValue[0]" />
-                <InputText class="durationinput" v-model.number="exerciseStore.exerciseFilters.durationSliderValue[1]" />
-                <Slider class="slider" v-model="exerciseStore.exerciseFilters.durationSliderValue" range :min="1" :max="60" />
-            </div>
+                    </div>
 
-            
-        </AccordionContent>
-        
-        </AccordionPanel>
+                    <div class="filter-item-container">
+                        <h3>Type oefening</h3>
+                        <SelectButton v-model="exerciseFilters.waterExercise" :options="waterExerciseOptions"
+                            optionLabel="name" optionValue="value" :allowEmpty="false" />
+
+
+
+                    </div>
+
+                    <div class="filter-item-container">
+                        <h3>Minimum aantal spelers</h3>
+                        <InputText class="durationinput" v-model.number="exerciseFilters.minimumPlayers" />
+                        <Slider class="slider" v-model.number="exerciseFilters.minimumPlayers" :min="1" :max="10" />
+                    </div>
+
+
+                    <div class="filter-item-container">
+                        <h3>Benodigde tijd</h3>
+                        <InputText class="durationinput" v-model.number="exerciseFilters.durationSliderValue[0]" />
+                        <InputText class="durationinput" v-model.number="exerciseFilters.durationSliderValue[1]" />
+                        <Slider class="slider" v-model="exerciseFilters.durationSliderValue" range :min="1" :max="60" />
+                    </div>
+
+
+                </AccordionContent>
+
+            </AccordionPanel>
         </Accordion>
     </div>
 </template>
@@ -60,6 +59,7 @@
 <script>
 import axios from 'axios';
 import Multiselect from 'vue-multiselect';
+import TreeSelect from 'primevue/treeselect';
 import Slider from 'primevue/slider';
 import InputText from 'primevue/inputtext';
 import SelectButton from 'primevue/selectbutton';
@@ -76,60 +76,71 @@ import { useExerciseStore } from '../stores/exercises';
 
 export default {
 
-    setup(){
-        const exerciseStore = useExerciseStore()
-        return { exerciseStore };
-    },
-    
+
     data() {
         return {
+            selectedSkillIds: [],
             options: [],
-            
+
             // skillValue: [],
             durationSliderValue: [1, 60],
             // playerSliderValue: '',
             // minimumAge: '',
             // waterExercise: '',
-            waterExerciseOptions: [{ name: 'Alles', value:''}, { name: 'In het water', value: 1 }, { name: 'Niet in het water', value: 0 }],
-            ageOptions: [8, 10, 12, 14, 16, 18]
+            waterExerciseOptions: [{ name: 'Alles', value: '' }, { name: 'In het water', value: 1 }, { name: 'Niet in het water', value: 0 }],
+            ageOptions: [8, 10, 12, 14, 16, 18],
 
         };
     },
     mounted() {
         this.loadOptions();
+        this.exerciseFilters.skillValue = [];
     },
 
-    watch:{
-        'exerciseStore.exerciseFilters.skillValue':  {
-            handler(newValue) {
-                this.$emit('skill-filter-changed', newValue);
-            },
-            deep: true
+    watch: {
+        selectedSkillIds(newValue) {
+            // Sync with exerciseFilters
+            this.exerciseFilters.skillValue = newValue;
+            console.log('Updated skill values:', this.exerciseFilters.skillValue);
+            this.fetchExercisesFromApi();
         },
-        
+        // 'exerciseFilters.skillValue': {
+        //     handler(newValue, oldValue) {
+        //         // Emit only if the value actually changes
+        //         if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+        //             this.$emit('skill-filter-changed', newValue);
+        //             console.log('Skill filter changed, this message is from watcher:', JSON.stringify(newValue, null, 2));
+        //             console.log('Skill filter changed, this message is from watcher, this is state:', this.exerciseFilters.skillValue);
+        //             this.fetchExercisesFromApi();
+        //         }
+        //     },
+        //     deep: true
+        // }
     },
+
 
     methods: {
-        
+
+        ...mapActions(useExerciseStore, ['setExerciseFilters', 'fetchExercisesFromApi']),
         loadOptions() {
             Promise.all([
-                this.$axios
-                    .get('/skills'),
-                this.$axios
-                    .get('/categories')
+                this.$axios.get('/skills'),
+                this.$axios.get('/categories')
             ])
                 .then(([skillsResponse, categoriesResponse]) => {
                     const skills = skillsResponse.data;
                     const categories = categoriesResponse.data;
 
-                    // Group skills under their respective categories
+                    // Group skills under their respective categories and add unique keys
                     this.options = categories.map(category => ({
-                        category: category.name,
-                        skill: skills
+                        key: `${category.id}`, // Unique key for the category
+                        label: category.name, // Label for the category
+                        children: skills
                             .filter(skill => skill.category_id === category.id)
                             .map(skill => ({
-                                id: skill.id,
-                                name: skill.name
+                                key: `${category.id}-${skill.id}`, // Combine category ID and skill ID
+                                label: skill.name, // Label for each skill
+                                data: skill.id // Additional data field for skill
                             }))
                     }));
                 })
@@ -138,21 +149,26 @@ export default {
                 });
         },
 
+
+
+
         resetFilters() {
-            
-            this.exerciseStore.exerciseFilters = {
+
+            this.exerciseFilters = {
                 skillValue: [],
                 minimumAge: 18,
                 waterExercise: '',
                 minimumPlayers: null,
                 durationSliderValue: [1, 60]
             };
+            this.selectedSkillIds = [];
+            this.fetchExercisesFromApi();
         },
 
     },
     computed: {
-        // ...mapWritableState(useExerciseStore, ['exerciseFilters']),
-        
+        ...mapWritableState(useExerciseStore, ['exerciseFilters']),
+
     },
 
     components: {
@@ -164,13 +180,13 @@ export default {
         Accordion,
         AccordionPanel,
         AccordionHeader,
-        AccordionContent
+        AccordionContent,
+        TreeSelect
     },
 };
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>\
 <style scoped>
-
 .filter-panel {
 
     margin: 1em;
@@ -178,8 +194,8 @@ export default {
 
 .filter-header {
     display: flex;
-    justify-content: space-between; 
-    align-items: center; 
+    justify-content: space-between;
+    align-items: center;
     width: 90%;
 }
 

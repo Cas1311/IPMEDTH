@@ -51,24 +51,33 @@ export const useExerciseStore = defineStore("exercise", {
         },
 
         setExerciseFilters(newFilters) {
-            // Check if the filters have actually changed before proceeding
-            const filtersChanged = Object.keys(newFilters).some(key => this.exerciseFilters[key] !== newFilters[key]);
-            if (!filtersChanged) {
-              return;  // Don't do anything if filters have not changed
-            }
-      
-            // Clear the previous debounce timer if it exists
-            if (this.debounceTimer) {
-              clearTimeout(this.debounceTimer);
-            }
-      
-            // Set the new filters after the debounce delay
-            this.debounceTimer = setTimeout(() => {
-              console.log('Setting new filters:', newFilters);
-              this.exerciseFilters = { ...this.exerciseFilters, ...newFilters };
-              this.fetchExercisesFromApi();  // Fetch exercises after updating the filters
-            }, 300);  // Debounce delay of 300ms
+          // Check if the filters have actually changed before proceeding
+          const filtersChanged = Object.keys(newFilters).some(key => {
+              return JSON.stringify(this.exerciseFilters[key]) !== JSON.stringify(newFilters[key]);
+          });
+          
+          // If no filters have changed, do nothing
+          if (!filtersChanged) {
+              return;
           }
+      
+          // Clear the previous debounce timer if it exists
+          if (this.debounceTimer) {
+              clearTimeout(this.debounceTimer);
+          }
+      
+          // Set the new filters after the debounce delay
+          this.debounceTimer = setTimeout(() => {
+            console.log('setting new filters!')
+              console.log('Setting new filters from store:', newFilters);
+              this.exerciseFilters = { ...this.exerciseFilters, ...newFilters };
+      
+              // After filters are set, fetch exercises based on the updated filters
+              this.fetchExercisesFromApi();  // Fetch exercises after updating the filters
+          }, 300);  // Debounce delay of 300ms
+      }
+      
+      
         
     },
 });

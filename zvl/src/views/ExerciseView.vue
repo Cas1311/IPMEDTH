@@ -60,6 +60,7 @@ export default {
     ...mapActions(useExerciseStore, ["fetchExercises", "setExerciseFilters"]),
 
     handleFilterChange(newFilters) {
+      
       // Update the filters and refetch exercises based on skill filters
       this.setExerciseFilters(newFilters);
     },
