@@ -171,7 +171,8 @@
                       severity="danger"
                       aria-label="Cancel"
                       @click="removeRequirement(index)"
-                    >x</Button>
+                      >x</Button
+                    >
                   </li>
                 </ul>
                 <Button
@@ -205,24 +206,22 @@
             <form @submit.prevent="submitForm">
               <div class="filter-item-container">
                 <h3>Welke vaardigheden worden getraind?</h3>
-                <multiselect
+                <TreeSelect
+                  class="treeselect"
+                  filter
+                  filterMode="lenient"
                   v-model="formData.skills"
                   :options="options"
-                  :multiple="true"
-                  group-values="skill"
-                  group-label="category"
-                  :group-select="true"
-                  placeholder="Typ om te zoeken"
-                  track-by="name"
-                  label="name"
+                  selectionMode="checkbox"
+                  selectedItemsLabel=""
+                  maxSelectedLabels="5"
+                  display="chip"
+                  placeholder="Selecteer vaardigheden"
+                  :nodeKey="'key'"
                   :class="{
                     'error-input': showErrors.step3 && formData.skills.length === 0,
                   }"
-                >
-                  <span slot="noResult"
-                    >Geen resultaten gevonden voor je zoekopdracht</span
-                  >
-                </multiselect>
+                />
                 <p
                   v-if="showErrors.step3 && formData.skills.length === 0"
                   class="error-message"
@@ -232,6 +231,7 @@
               </div>
             </form>
           </div>
+
           <div class="button-container">
             <Button
               label="Terug"
@@ -264,6 +264,7 @@ import Step from "primevue/step";
 import StepPanel from "primevue/steppanel";
 import Textarea from "primevue/textarea";
 import Multiselect from "vue-multiselect";
+import TreeSelect from "primevue/treeselect";
 
 export default {
   data() {
@@ -375,29 +376,29 @@ export default {
     removeRequirement(index) {
       this.formData.requirements.splice(index, 1);
     },
-    async loadOptions() {
-      try {
-        const [skillsResponse, categoriesResponse] = await Promise.all([
-          this.$axios.get("/skills"),
-          this.$axios.get("/categories"),
-        ]);
+    loadOptions() {
+      // Fetch skills and categories from the API
+      Promise.all([this.$axios.get("/skills"), this.$axios.get("/categories")])
+        .then(([skillsResponse, categoriesResponse]) => {
+          const skills = skillsResponse.data;
+          const categories = categoriesResponse.data;
 
-        const skills = skillsResponse.data;
-        const categories = categoriesResponse.data;
-
-        // Group skills under their respective categories
-        this.options = categories.map((category) => ({
-          category: category.name,
-          skill: skills
-            .filter((skill) => skill.category_id === category.id)
-            .map((skill) => ({
-              id: skill.id,
-              name: skill.name,
-            })),
-        }));
-      } catch (error) {
-        console.error("Error fetching skills or categories:", error);
-      }
+          // Group skills under their respective categories and create the hierarchical structure
+          this.options = categories.map((category) => ({
+            key: `${category.id}`, // Unique key for each category
+            label: category.name, // Label for each category
+            children: skills
+              .filter((skill) => skill.category_id === category.id)
+              .map((skill) => ({
+                key: `${category.id}-${skill.id}`, // Unique key for each skill
+                label: skill.name, // Label for each skill
+                data: skill.id, // Skill ID
+              })),
+          }));
+        })
+        .catch((error) => {
+          console.error("Error loading skills or categories:", error);
+        });
     },
     validateFields(requiredFields) {
       // Validate only required fields
@@ -441,6 +442,7 @@ export default {
     StepPanel,
     Textarea,
     Multiselect,
+    TreeSelect,
   },
 };
 </script>
@@ -463,10 +465,10 @@ export default {
   width: 100%;
 }
 
-.p-button-danger{
-  background-color: var(--color-warning)!important;
-  color: white!important;
-  font-size: 1rem!important;
+.p-button-danger {
+  background-color: var(--color-warning) !important;
+  color: white !important;
+  font-size: 1rem !important;
 }
 
 .durationinput {
@@ -554,5 +556,9 @@ h3 {
   width: fit-content;
   font-size: min(1em, 4vw);
   margin-top: 1.5em;
+}
+
+.treeselect{
+  width: 100%;
 }
 </style>
