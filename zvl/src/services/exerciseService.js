@@ -27,7 +27,6 @@ export async function fetchExercises(filters = {}) {
     try {
         const response = await axios.get(`${baseUrl}/exercises?${query.toString()}`);
         exercises = response.data;
-        console.log('Fetched exercises with filters:', filters);
     } catch (error) {
         console.error('Error fetching exercises:', error);
     }

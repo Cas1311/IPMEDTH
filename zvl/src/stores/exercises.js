@@ -69,8 +69,7 @@ export const useExerciseStore = defineStore("exercise", {
       
           // Set the new filters after the debounce delay
           this.debounceTimer = setTimeout(() => {
-            console.log('setting new filters!')
-              console.log('Setting new filters from store:', newFilters);
+
               this.exerciseFilters = { ...this.exerciseFilters, ...newFilters };
       
               // After filters are set, fetch exercises based on the updated filters

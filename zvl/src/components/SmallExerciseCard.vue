@@ -162,13 +162,7 @@ export default {
       this.isAdded = !this.isAdded;
       this.$emit("toggle-exercise", this.exercise.id);
     },
-    // Ensure that this is used correctly
-    addExercise() {
-      this.$emit("add-exercise", this.exercise.id); // Example of adding exercise
-    },
-    removeExercise() {
-      this.$emit("remove-exercise", this.exercise.id); // Example of removing exercise
-    },
+    
   },
   computed: {
     waterExerciseLocation() {

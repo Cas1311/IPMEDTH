@@ -85,7 +85,7 @@ export default {
 
   methods: {
     ...mapActions(useExerciseStore, ["fetchExercisesFromApi", "setExerciseFilters"]),
-    ...mapActions(useTrainingStore, ["fetchTrainingByIdFromApi"]),
+    ...mapActions(useTrainingStore, ["fetchTrainingByIdFromApi", "addExercisesToTrainingApi", "removeExercisesFromTrainingApi"]),
 
     getExercises() {
       this.fetchExercisesFromApi();
@@ -148,20 +148,16 @@ export default {
 
         // If there's something to add
         if (addExercises) {
-          const addUrl = `/trainings/${this.currentTrainingId}/exercises/${addExercises}`;
-          await this.$axios.post(addUrl);
-          console.log("Exercises added to training");
+          await this.addExercisesToTrainingApi(this.currentTrainingId,this.selectedExerciseIds);
         }
 
         // If there's something to remove
         if (removeExercises) {
-          const removeUrl = `/trainings/${this.currentTrainingId}/exercises/${removeExercises}`;
-          await this.$axios.delete(removeUrl);
-          console.log("Exercises removed from training");
+          await this.addExercisesToTrainingApi(this.currentTrainingId, this.selectedRemoveExerciseIds)
         }
 
         this.message = "Training updated successfully!";
-        this.$router.push(`/trainings`);
+        this.$router.push(`/training/${this.training.id}`);
       } catch (error) {
         console.error(error.response?.data || error.message);
         this.message =

@@ -46,4 +46,22 @@ import axios from 'axios';
         
     }
 
+    export const addExercisesToTraining = async (trainingId, exerciseIds) => {
+        try {
+          
+          await axios.post(`${baseUrl}/trainings/${trainingId}/exercises/${exerciseIds.join(',')}`);
+        } catch (error) {
+          throw new Error('Error adding exercises: ' + error.message);
+        }
+      }
+      
+      export const removeExercisesFromTraining = async (trainingId, exerciseIds) => {
+        try {
+          
+          await axios.delete(`${baseUrl}/trainings/${trainingId}/exercises/${exerciseIds.join(',')}`);
+        } catch (error) {
+          throw new Error('Error removing exercises: ' + error.message);
+        }
+      }
+
 

@@ -102,12 +102,13 @@ import AccordionContent from "primevue/accordioncontent";
 import { mapActions } from "pinia";
 import { mapWritableState } from "pinia";
 import { useExerciseStore } from "../stores/exercises";
+import { useFilterOptionStore } from "../stores/filteroptions";
 
 export default {
   data() {
     return {
       selectedSkillIds: [],
-      options: [],
+      //options: [],
       durationSliderValue: [1, 60],
       waterExerciseOptions: [
         { name: "Alles", value: "" },
@@ -118,7 +119,7 @@ export default {
     };
   },
   mounted() {
-    this.loadOptions();
+    this.loadOptionsFromApi();
     this.exerciseFilters.skillValue = [];
   },
 
@@ -126,36 +127,14 @@ export default {
     selectedSkillIds(newValue) {
       // Sync with exerciseFilters
       this.exerciseFilters.skillValue = newValue;
-      console.log("Updated skill values:", this.exerciseFilters.skillValue);
+      
       this.fetchExercisesFromApi();
     },
   },
 
   methods: {
     ...mapActions(useExerciseStore, ["setExerciseFilters", "fetchExercisesFromApi"]),
-    loadOptions() {
-      Promise.all([this.$axios.get("/skills"), this.$axios.get("/categories")])
-        .then(([skillsResponse, categoriesResponse]) => {
-          const skills = skillsResponse.data;
-          const categories = categoriesResponse.data;
-
-          // Group skills under their respective categories and add unique keys
-          this.options = categories.map((category) => ({
-            key: `${category.id}`, // Unique key for the category
-            label: category.name, // Label for the category
-            children: skills
-              .filter((skill) => skill.category_id === category.id)
-              .map((skill) => ({
-                key: `${category.id}-${skill.id}`, // Combine category ID and skill ID
-                label: skill.name, // Label for each skill
-                data: skill.id, // Additional data field for skill
-              })),
-          }));
-        })
-        .catch((error) => {
-          console.error("Error fetching skills or categories:", error);
-        });
-    },
+    ...mapActions(useFilterOptionStore, ["loadOptionsFromApi"]),
 
     resetFilters() {
       this.exerciseFilters = {
@@ -166,11 +145,12 @@ export default {
         durationSliderValue: [1, 60],
       };
       this.selectedSkillIds = [];
-      this.fetchExercisesFromApi();
+      
     },
   },
   computed: {
     ...mapWritableState(useExerciseStore, ["exerciseFilters"]),
+    ...mapWritableState(useFilterOptionStore, ["options"]),
   },
 
   components: {

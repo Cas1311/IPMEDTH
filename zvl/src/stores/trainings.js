@@ -3,6 +3,8 @@ import { fetchTrainings } from '@/services/trainingService';
 import { fetchTrainingById } from '@/services/trainingService';
 import { addTraining } from '@/services/trainingService';
 import { deleteTraining } from '@/services/trainingService';
+import { addExercisesToTraining } from '@/services/trainingService';
+import { removeExercisesFromTraining } from '@/services/trainingService';
 
 export const useTrainingStore = defineStore("training", {
     state: () => ({
@@ -50,9 +52,8 @@ export const useTrainingStore = defineStore("training", {
             } finally {
                 this.loading = false;
             }
-        }
-        ,
-
+        },
+        
         async addTrainingApi(formData) {
             
             try {
@@ -67,7 +68,6 @@ export const useTrainingStore = defineStore("training", {
             }
         },
     
-        
         async deleteTrainingApi(trainingId){
             try {
                 deleteTraining(trainingId);
@@ -75,7 +75,23 @@ export const useTrainingStore = defineStore("training", {
             } catch (error) {
                 console.error("Failed to delete trainings:", error);
             } 
-        }
+        },
+
+        async addExercisesToTrainingApi(trainingId, exerciseIds) {
+            try {
+              await addExercisesToTraining(trainingId, exerciseIds);
+            } catch (error) {
+              console.error('Error adding exercises:', error);
+            }
+          },
+      
+          async removeExercisesFromTrainingApi(trainingId, exerciseIds) {
+            try {
+              await removeExercisesFromTraining(trainingId, exerciseIds);
+            } catch (error) {
+              console.error('Error removing exercises:', error);
+            }
+          },
     },
 });
 
