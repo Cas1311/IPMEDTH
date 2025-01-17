@@ -1,121 +1,119 @@
 <template>
   <div class="card-container">
-    <h2>Nieuwe training maken</h2>
+    <h2 class="title">Nieuwe training maken</h2>
     <Card class="card">
-
-      <template #title></template>
       <template #content>
-        
-          
-          <form class="name-card" v-if="!nameSubmitted" @submit.prevent="addTraining">
+        <form class="form-container" v-if="!nameSubmitted" @submit.prevent="addTraining">
           <FloatLabel>
-            <InputText type="text" v-model="formData.name" />
+            <InputText type="text" v-model="formData.name" class="input-field" />
             <label for="over_label">Naam van de training</label>
-           
           </FloatLabel>
-          <div v-if="this.errorMessage" class="error-message">
-          <p>Er is al een training met deze naam.</p>
-        </div>
-          <Button type="submit" label="Opslaan" :disabled="!formData.name" />
+
+          <div v-if="errorMessage" class="error-message">
+            <p>Er is al een training met deze naam.</p>
+          </div>
+
+          <Button
+            type="submit"
+            label="Opslaan"
+            class="submit-button"
+            :disabled="!formData.name"
+          />
         </form>
-        
-       
       </template>
-
     </Card>
-
-
   </div>
 </template>
 
 <script>
-import Button from 'primevue/button';
-import Card from 'primevue/card';
-import InputText from 'primevue/inputtext';
-import FloatLabel from 'primevue/floatlabel';
-import ExerciseView from './ExerciseView.vue';
-import ScrollPanel from 'primevue/scrollpanel';
+import Button from "primevue/button";
+import Card from "primevue/card";
+import InputText from "primevue/inputtext";
+import FloatLabel from "primevue/floatlabel";
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
-import { mapWritableState } from 'pinia';
-import { useTrainingStore } from '../stores/trainings';
-
+import { useTrainingStore } from "../stores/trainings";
 
 export default {
   data() {
     return {
       formData: {
-        name: ''
+        name: "",
       },
-      selectedExerciseIds: [],
-      message: '',
       nameSubmitted: false,
-      receivedId: '',
-    }
+      receivedId: "",
+    };
   },
 
-
   methods: {
-    ...mapActions(useTrainingStore, ['addTrainingApi']),
-
+    ...mapActions(useTrainingStore, ["addTrainingApi"]),
     async addTraining() {
       try {
-
         const response = await this.addTrainingApi(this.formData);
-
-        // Ensure that response.data and response.data.data exist
-        if (response && response.data && response.data.data && response.data.data.id) {
-          this.receivedId = response.data.data.id;  // Retrieve the training ID
-          this.message = response.data.message;     // Get the success message
-
-          // Redirect to the edit page
+        if (response?.data?.data?.id) {
+          this.receivedId = response.data.data.id;
           this.$router.push(`/training/edit/${this.receivedId}`);
         } else {
-          console.error('Invalid response structure:', response);
           this.message = "Training creation failed. Please try again.";
         }
-
       } catch (error) {
-        console.error("Error while adding training:", error);
         this.message = "An error occurred while adding the training.";
       }
-    }
-
-
+    },
   },
 
   computed: {
-    ...mapState(useTrainingStore, ['errorMessage'])
+    ...mapState(useTrainingStore, ["errorMessage"]),
   },
 
   components: {
     Button,
     InputText,
     FloatLabel,
-    ScrollPanel,
-    ExerciseView,
-    Card
+    Card,
   },
 };
 </script>
 
 <style scoped>
-.card-container{
+.card-container {
   display: flex;
-  flex-direction: column; 
-  justify-content: top; 
-  align-items: center; 
-  min-height: 100vh; 
-  padding: 1rem;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
 }
 
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 
-.name-card{
+.card {
+  width: 100%;
+  max-width: 500px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
   display: flex;
-  flex-direction: column; 
-  align-items: center; 
-  gap: 1em;
- 
-  
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+.error-message {
+  color: #e63946;
+  font-size: 0.875rem;
+  /* text-align: center; */
 }
 </style>
