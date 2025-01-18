@@ -103,7 +103,7 @@ export default {
                 accept: () => {
                     this.$toast.add({ severity: 'secondary', summary: 'Uitgelogd', detail: 'Je bent uitgelogd', life: 3000 });
                     this.logout();
-                    this.$router.push('/home');
+                    this.$router.push('/');
                 },
 
             });
