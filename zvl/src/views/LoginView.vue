@@ -4,11 +4,11 @@
 
     <form @submit.prevent="handleLogin">
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">email</label>
         <input
           type="text"
           id="username"
-          v-model="username"
+          v-model="email"
           placeholder="Enter your username"
           required
         />
@@ -43,6 +43,11 @@
 
 <script>
 import Button from "primevue/button"; // Assuming you're using PrimeVue for buttons
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
+import { useAuthStore } from "../stores/auth";
+
 
 export default {
   components: {
@@ -50,26 +55,29 @@ export default {
   },
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       errorMessage: "", // To display error message if login fails
     };
   },
   methods: {
+    ...mapActions(useAuthStore, ["login"]),
+
+   
     async handleLogin() {
       // Reset error message
       this.errorMessage = "";
 
       try {
-        // Make the API call to authenticate the user
-        // Replace this with your actual login logic
-        const response = await this.$axios.post("/login", {
-          username: this.username,
+        const credentials = {
+          email: this.email,
           password: this.password,
-        });
+        };
+
+        const response = await this.login(credentials);
 
         // Handle successful login
-        if (response.data.success) {
+        if (response.success) {
           this.$router.push("/dashboard"); // Redirect to a different page (e.g., dashboard)
         } else {
           this.errorMessage = "Invalid credentials. Please try again.";
