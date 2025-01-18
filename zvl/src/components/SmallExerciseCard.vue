@@ -1,16 +1,21 @@
 <template>
-  <router-link :to="'/exercise/' + exercise.id">
+  
     <Card class="exercise-card">
+      
       <template #title>
+        
         <div class="cardHeader">
+          <router-link :to="'/exercise/' + exercise.id" >
           <p class="exercise-name">{{ exercise.name }}</p>
 
           <Tag icon="pi pi-stopwatch" class="duration-tag" severity="secondary">
             <p>{{ exercise.duration }} Minuten</p>
           </Tag>
+        </router-link>
         </div>
+      
       </template>
-
+    
       <template #subtitle>
         <div class="category-container">
           <Tag class="category" v-for="category in uniqueCategories" :key="category.id">
@@ -108,7 +113,7 @@
         <div v-if="showButton">
           <Button
             v-if="!isExerciseSelected"
-            @click="toggleExercise"
+            @click.stop="toggleExercise"
             type="submit"
             label="Toevoegen"
             severity="primary"
@@ -117,7 +122,7 @@
           />
           <Button
             v-else
-            @click="toggleExercise"
+            @click.stop="toggleExercise"
             label="Verwijderen"
             severity="secondary"
             size="large"
@@ -126,7 +131,6 @@
         </div>
       </template>
     </Card>
-  </router-link>
 </template>
 <script>
 import Button from "primevue/button";
