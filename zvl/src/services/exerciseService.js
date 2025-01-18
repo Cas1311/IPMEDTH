@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const baseUrl = import.meta.env.VITE_API_URL;
+import axiosInstance from './axiosInstance'; 
 
 export async function fetchExercises(filters = {}) {
     let exercises = [];
@@ -16,16 +14,14 @@ export async function fetchExercises(filters = {}) {
     if (selectedSkills.length > 0) {
         query.append("filter[skills]", selectedSkills);
     } else {
-        query.append("filter[skills]", "all");  // Default to 'all' if no skills are selected
+        query.append("filter[skills]", "all");  
     }
 
-    // Handle other filters (like categories, requirements, etc.)
     query.append("filter[categories]", "all");
     query.append("filter[requirements]", "all");
 
-    // Perform the API request
     try {
-        const response = await axios.get(`${baseUrl}/exercises?${query.toString()}`);
+        const response = await axiosInstance.get(`/exercises?${query.toString()}`);
         exercises = response.data;
     } catch (error) {
         console.error('Error fetching exercises:', error);
@@ -37,7 +33,7 @@ export async function fetchExercises(filters = {}) {
 export async function deleteExercise(exerciseId) {
     try {
         console.log(exerciseId)
-        await axios.delete(`${baseUrl}/exercises/${exerciseId}`);
+        await axiosInstance.delete(`/exercises/${exerciseId}`);
     } catch (error) {
         console.error('Error deleting training:', error);
     }

@@ -1,14 +1,9 @@
-import axios from 'axios';
-
-const instance = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
-    
-  });
+import axiosInstance from './axiosInstance'; 
 
 
   export async function login(credentials) {
     try {
-        const response = await instance.post('/login', credentials);
+        const response = await axiosInstance.post('/login', credentials);
         return response
     } catch (error) {
         console.error('Error logging in:', error);

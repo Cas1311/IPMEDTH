@@ -25,6 +25,7 @@ export const useTrainingStore = defineStore("training", {
             try {
                 const trainings = await fetchTrainings();
                 this.trainings = trainings;
+                return trainings;
             } catch (error) {
                 console.error("Failed to fetch trainings:", error);
             } finally {

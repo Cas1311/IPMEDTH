@@ -9,15 +9,15 @@
             <label for="over_label">Naam van de training</label>
           </FloatLabel>
 
-          <div v-if="errorMessage" class="error-message">
-            <p>Er is al een training met deze naam.</p>
+          <div v-if="isNameDuplicate" class="error-message">
+            <p>{{ errorMessage }}</p>
           </div>
 
           <Button
             type="submit"
             label="Opslaan"
             class="submit-button"
-            :disabled="!formData.name"
+            :disabled="!formData.name || isNameDuplicate"
           />
         </form>
       </template>
@@ -42,11 +42,27 @@ export default {
       },
       nameSubmitted: false,
       receivedId: "",
+      existingTrainingNames: [],
     };
   },
 
+  async mounted(){
+    await this.fetchExistingTrainings();
+  },
+
   methods: {
-    ...mapActions(useTrainingStore, ["addTrainingApi"]),
+    ...mapActions(useTrainingStore, ["addTrainingApi", "fetchTrainingsFromApi"]),
+
+    async fetchExistingTrainings() {
+      try {
+        const response = await this.fetchTrainingsFromApi();
+        this.existingTrainingNames = response.map((training) => training.name.toLowerCase());
+      } catch (error) {
+        console.error("Error fetching existing trainings:", error);
+      }
+    },
+
+    
     async addTraining() {
       try {
         const response = await this.addTrainingApi(this.formData);
@@ -64,6 +80,15 @@ export default {
 
   computed: {
     ...mapState(useTrainingStore, ["errorMessage"]),
+
+    isNameDuplicate() {
+      const enteredName = this.formData.name.trim().toLowerCase();
+      return this.existingTrainingNames.includes(enteredName);
+    },
+
+    errorMessage() {
+      return this.isNameDuplicate ? "Er is al een training met deze naam." : "";
+    },
   },
 
   components: {

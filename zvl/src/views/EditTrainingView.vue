@@ -1,32 +1,19 @@
 <template>
   <div class="card">
-    <div v-if="trainingLoading">
+    
+    
+    <h2>Training bewerken</h2>
+    
+    <ScrollPanel style="width: 100%; height: 80vh">
+      <div v-if="trainingLoading">
       <p>Loading...</p>
     </div>
     <div v-else class="trainings-list">
       <TrainingDetailCard :training="training" :show-extra="false" />
     </div>
-    <div class="button-container">
-      <form @submit.prevent="submitFullForm">
-        <Button
-          icon="pi pi-save"
-          class="save-button"
-          type="submit"
-          label="Opslaan"
-        />
-      </form>
-      <router-link :to="'/trainings/'">
-        <Button
-          icon="pi pi-times"
-          class="save-button"
-          label="Annuleren"
-          severity="secondary"
-        />
-      </router-link>
-    </div>
-    <h2>Oefeningen toevoegen</h2>
+
     <ExerciseFilters @skill-filter-changed="handleFilterChange" />
-    <ScrollPanel style="width: 100%; height: 30em">
+
       <div>
         <div v-if="loading">
           <p>Loading...</p>
@@ -46,6 +33,26 @@
         </div>
       </div>
     </ScrollPanel>
+
+    <div class="button-container">
+      <form @submit.prevent="submitFullForm">
+        <Button
+          icon="pi pi-save"
+          class="save-button"
+          type="submit"
+          label="Opslaan"
+        />
+      </form>
+      <router-link :to="'/trainings/'">
+        <Button
+          icon="pi pi-times"
+          class="save-button"
+          label="Annuleren"
+          severity="secondary"
+        />
+      </router-link>
+    </div>
+
   </div>
 </template>
 
@@ -153,7 +160,7 @@ export default {
 
         // If there's something to remove
         if (removeExercises) {
-          await this.addExercisesToTrainingApi(this.currentTrainingId, this.selectedRemoveExerciseIds)
+          await this.removeExercisesFromTrainingApi(this.currentTrainingId, this.selectedRemoveExerciseIds)
         }
 
         this.message = "Training updated successfully!";
