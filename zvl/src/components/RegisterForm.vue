@@ -1,39 +1,65 @@
 <template>
   <div class="register-container">
-    <h1>Registreer</h1>
+    <h1>Registreer een nieuwe gebruiker</h1>
     <div class="formfields">
       <form @submit.prevent="handleRegister" class="register-form">
-        <h2>Gebruikersnaam</h2>
+        <h2>Rol</h2>
         <div class="field">
-          <InputText name="username" type="text" v-model="username" class="input-field" />
+          <Select v-model="formData.role" :options="roles" placeholder="Selecteer rol" class="input-field" />
+          <p v-if="!formData.role" class="error-message">
+            Dit veld is verplicht.
+          </p>
         </div>
 
-        <!-- Email kan toegoevoegd worden indien nodig -->
-        <!-- <h2>Email</h2>
+
+        <h2>Voornaam</h2>
         <div class="field">
-          <InputText name="email" type="email" v-model="email" class="input-field" />
-        </div> -->
+          <InputText name="first_name" type="text" v-model="formData.first_name" class="input-field" />
+          <p v-if="!formData.first_name" class="error-message">
+            Dit veld is verplicht.
+          </p>
+
+        </div>
+
+
+        <h2>Tweede naam (optioneel)</h2>
+        <div class="field">
+          <InputText name="middle_name" type="text" v-model="formData.middle_name" class="input-field" />
+        </div>
+
+        <h2>Achternaam</h2>
+        <div class="field">
+          <InputText name="last_name" type="text" v-model="formData.last_name" class="input-field" />
+          <p v-if="!formData.last_name" class="error-message">
+            Dit veld is verplicht.
+          </p>
+        </div>
+
+
+        <h2>Email</h2>
+        <div class="field">
+          <InputText name="email" type="email" v-model="formData.email" class="input-field" />
+          <p v-if="!formData.email" class="error-message">
+            Dit veld is verplicht.
+          </p>
+        </div>
+
 
         <h2>Wachtwoord</h2>
         <div class="field">
-          <Password
-            name="password"
-            :feedback="false"
-            fluid
-            v-model="password"
-            class="input-field"
-          />
+          <Password name="password" :feedback="false" fluid v-model="formData.password" class="input-field" />
+          <p v-if="!formData.password" class="error-message">
+            Dit veld is verplicht.
+          </p>
         </div>
 
         <h2>Bevestig Wachtwoord</h2>
         <div class="field">
-          <Password
-            name="confirmPassword"
-            :feedback="false"
-            fluid
-            v-model="confirmPassword"
-            class="input-field"
-          />
+          <Password name="confirmPassword" :feedback="false" fluid v-model="formData.confirmPassword"
+            class="input-field" />
+          <p v-if="!formData.confirmPassword" class="error-message">
+            Dit veld is verplicht.
+          </p>
         </div>
 
         <Button label="Registreren" type="submit" class="register-button" />
@@ -50,6 +76,87 @@
     </div>
   </div>
 </template>
+
+
+<script>
+import Button from "primevue/button";
+import Select from "primevue/select";
+import InputText from "primevue/inputtext";
+import Password from "primevue/password";
+import { mapActions } from "pinia";
+import { useAuthStore } from "../stores/auth";
+
+export default {
+  components: {
+    Button,
+    InputText,
+    Password,
+    Select
+  },
+
+  data() {
+    return {
+      roles: [
+        'Admin', 'Trainer', 'Guest'
+      ],
+      errorMessage: "",
+      formData:
+      {
+        role: "",
+        disabled: false,
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      }
+
+    };
+  },
+  methods: {
+    ...mapActions(useAuthStore, ["register"]),
+
+    async handleRegister() {
+      this.errorMessage = "";
+
+      if (
+        !this.formData.role ||
+        !this.formData.first_name ||
+        !this.formData.last_name ||
+        !this.formData.email ||
+        !this.formData.password ||
+        !this.formData.confirmPassword
+      ) {
+        this.errorMessage = "Alle verplichte velden moeten worden ingevuld.";
+        return;
+      }
+
+      if (this.formData.password !== this.formData.confirmPassword) {
+        this.errorMessage = "Wachtwoorden komen niet overeen!";
+        return;
+      }
+
+      try {
+        const credentials = {
+          role: this.formData.role,
+          disabled: this.formData.disabled,
+          first_name: this.formData.first_name,
+          last_name: this.formData.last_name,
+          email: this.formData.email,
+          password: this.formData.password,
+
+        }
+        await this.register(credentials);
+        this.$router.push("/login");
+      } catch (error) {
+        this.errorMessage = "Registratie mislukt. Probeer het opnieuw.";
+      }
+    },
+  },
+};
+</script>
+
 
 <style scoped>
 .register-container {
@@ -96,7 +203,7 @@ h2 {
 
 .register-button {
   width: 100%;
-  background-color: var(--theme-secondary);
+  background-color: var(--theme-primary);
   color: var(--color-text);
 }
 
@@ -115,50 +222,3 @@ h2 {
   text-decoration: underline;
 }
 </style>
-
-<script>
-import Button from "primevue/button";
-import InputText from "primevue/inputtext";
-import Password from "primevue/password";
-import { mapActions } from "pinia";
-import { useAuthStore } from "../stores/auth";
-
-export default {
-  components: {
-    Button,
-    InputText,
-    Password,
-  },
-  data() {
-    return {
-      username: "",
-    //   email: "",
-      password: "",
-      confirmPassword: "",
-      errorMessage: "",
-    };
-  },
-  methods: {
-    ...mapActions(useAuthStore, ["register"]),
-    async handleRegister() {
-      this.errorMessage = "";
-
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = "Wachtwoorden komen niet overeen!";
-        return;
-      }
-
-      try {
-        await this.register({
-          username: this.username,
-        //   email: this.email,
-          password: this.password,
-        });
-        this.$router.push("/login");
-      } catch (error) {
-        this.errorMessage = "Registratie mislukt. Probeer het opnieuw.";
-      }
-    },
-  },
-};
-</script>
