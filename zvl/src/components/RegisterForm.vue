@@ -148,7 +148,7 @@ export default {
 
         }
         await this.register(credentials);
-        this.$router.push("/login");
+        this.$router.push("/users");
       } catch (error) {
         this.errorMessage = "Registratie mislukt. Probeer het opnieuw.";
       }

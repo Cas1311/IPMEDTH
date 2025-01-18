@@ -33,6 +33,7 @@ export function isAuthenticated() {
     return !!localStorage.getItem('token');
 }
 
+// gets own profile
 export async function getUserInfo() {
     try {
         const response = await axiosInstance.get('/user');
@@ -41,4 +42,16 @@ export async function getUserInfo() {
         console.error('Error getting user information:', error);
         throw error;
     }
+}
+
+// only available to admin, gets all users
+export async function fetchAllUsers(){
+    let users = [];
+      try {
+        const response = await axiosInstance.get('/users');
+        users = response.data;
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+      return users;
 }

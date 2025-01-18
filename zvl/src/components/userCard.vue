@@ -12,17 +12,17 @@
                 <div class="avatar-container">
                     <Avatar class="icon-avatar" icon="pi pi-user" size="xlarge" shape="circle" />
                 </div>
-                <p class="user-name">{{ userInfo.first_name }} {{ userInfo.middle_name }} {{ userInfo.last_name }}</p>
+                <p class="user-name">{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</p>
             </template>
 
             <template #subtitle>
-                <p class="user-role">{{ userInfo.role }}</p>
+                <p class="user-role">{{ user.role }}</p>
             </template>
 
 
             <template #content>
                 <Divider />
-                <p class="user-email">{{ userInfo.email }}</p>
+                <p class="user-email">{{ user.email }}</p>
             </template>
 
 
@@ -65,27 +65,23 @@ import { mapActions } from 'pinia'
 import { mapState } from 'pinia'
 
 export default {
+    props: {
+        user: {
+            type: Object,
+            required: true,
+        },
+    },
+
     data() {
+        
         return {
             loading: false,
         };
     },
-    async mounted() {
-        try {
-
-            this.loading = true;
-            await this.getInfo();
-
-        } catch (error) {
-            console.error('Error fetching user info:', error);
-        } finally {
-            this.loading = false;
-        }
-    },
 
 
     methods: {
-        ...mapActions(useAuthStore, ['getInfo', 'logout']),
+        
 
         confirm(event) {
             this.$confirm.require({
@@ -103,7 +99,7 @@ export default {
                 accept: () => {
                     this.$toast.add({ severity: 'secondary', summary: 'Uitgelogd', detail: 'Je bent uitgelogd', life: 3000 });
                     this.logout();
-                    this.$router.push('/home');
+                    this.$router.push('/login');
                 },
 
             });
@@ -191,14 +187,5 @@ export default {
     text-align: center;
 }
 
-.logout-button {
-    margin: 1em;
-    
-    
-}
 
-.signin-button{
-    margin: 1em;
-    
-}
 </style>

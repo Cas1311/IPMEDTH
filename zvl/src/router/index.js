@@ -26,6 +26,7 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: () => import('../views/RegisterView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
     },
     {
       path: '/trainings',
@@ -73,6 +74,13 @@ const router = createRouter({
       name: 'Profile',
       component: () => import('../views/ProfileView.vue'),
     },
+    {
+      path: '/users',
+      name: 'UserList',
+      component: () => import('../views/UserView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true }
+    },
+
   ],
 });
 
@@ -82,9 +90,14 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     
     next({ name: "login" });
-  } else {
-    next(); 
+  } 
+  
+  if (to.meta.requiresAdmin && authStore.role !== 'Admin') {
+    
+    return next({ name: 'home' });
   }
+
+  next();
 });
 
 export default router
