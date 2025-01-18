@@ -1,121 +1,70 @@
 <template>
-  <Card class="exercise-card">
-    <template #title>
-      <div class="cardHeader">
-        <router-link :to="'/exercise/' + exercise.id">
+  <router-link :to="'/exercise/' + exercise.id" class="exercise-card-link" tag="div">
+    <Card class="exercise-card">
+      <template #title>
+        <div class="cardHeader">
           <p class="exercise-name">{{ exercise.name }}</p>
-        </router-link>
-
-        <Tag icon="pi pi-stopwatch" class="duration-tag" severity="secondary">
-          <p>{{ exercise.duration }} Minuten</p>
-        </Tag>
-      </div>
-    </template>
-
-    <template #subtitle>
-      <div class="category-container">
-        <Tag class="category" v-for="category in uniqueCategories" :key="category.id">
-          <p>{{ category.name }}</p>
-        </Tag>
-      </div>
-    </template>
-
-    <template #content>
-      <div class="tags">
-        <Tag class="players-tag" severity="secondary">
-          <template #icon>
-            <!-- Dynamically display icon based on water_exercise_location -->
-            <svg v-if="waterExerciseLocationIcon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#002C53">
-              <path :d="waterExerciseLocationIcon" />
-            </svg>
-          </template>
-          <p>{{ waterExerciseLocation }}</p>
-        </Tag>
-        <Tag icon="pi pi-users" class="players-tag" severity="secondary">
-          <p>Minimaal {{ exercise.minimum_players }} spelers</p>
-        </Tag>
-
-        <Tag icon="pi pi-user" class="players-tag" severity="secondary">
-          <p>O{{ exercise.minimum_age }}</p>
-        </Tag>
-      </div>
-
-      <transition name="expand">
-        <div v-if="showExtra" class="content-container">
-          <div class="skill-tag-container">
-            <p>Onderdelen</p>
-            <div class="tags">
-              <Tag class="skill-tag" v-for="skill in exercise.skills" :key="skill.id">
-                <p>{{ skill.name }}</p>
-              </Tag>
-            </div>
-          </div>
-
-          <div v-if="exercise.requirements.length">
-            <p>Benodigdheden</p>
-            <div class="tags">
-              <Tag
-                class="requirement-tag"
-                v-for="requirement in exercise.requirements"
-                :key="requirement.id"
-              >
-                <p>{{ requirement.description }}</p>
-              </Tag>
-            </div>
-          </div>
-
-          <p class="divider"></p>
-
-          <Panel header="Beschrijving" toggleable collapsed="true">
-            <template #toggleicon="data">
-              <Button
-                :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')"
-                severity="primary"
-              />
-            </template>
-            <p>{{ exercise.description }}</p>
-          </Panel>
-          <Panel header="Procedure" toggleable collapsed="true">
-            <template #toggleicon="data">
-              <Button
-                :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')"
-                severity="primary"
-              />
-            </template>
-            <p>{{ exercise.procedure }}</p>
-          </Panel>
-          <Panel header="Afbeelding" toggleable collapsed="true">
-            <template #toggleicon="data">
-              <Button
-                :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')"
-                severity="primary"
-              />
-            </template>
-            <img class="exercise-image" :src="exercise.image_url" alt="Exercise Image" />
-          </Panel>
+          <Tag icon="pi pi-stopwatch" class="duration-tag" severity="secondary">
+            <p>{{ exercise.duration }} Minuten</p>
+          </Tag>
         </div>
-      </transition>
-      <div v-if="showButton">
-        <Button
-          v-if="!isExerciseSelected"
-          @click="toggleExercise"
-          type="submit"
-          label="Toevoegen"
-          severity="primary"
-          size="large"
-          class="exerciseButton"
-        />
-        <Button
-          v-else
-          @click="toggleExercise"
-          label="Verwijderen"
-          severity="secondary"
-          size="large"
-          class="exerciseButton"
-        />
-      </div>
-    </template>
-  </Card>
+      </template>
+
+      <template #subtitle>
+        <div class="category-container">
+          <Tag class="category" v-for="category in uniqueCategories" :key="category.id">
+            <p>{{ category.name }}</p>
+          </Tag>
+        </div>
+      </template>
+
+      <template #content>
+        <div class="tags">
+          <Tag class="players-tag" severity="secondary">
+            <template #icon>
+              <!-- Dynamically display icon based on water_exercise_location -->
+              <svg v-if="waterExerciseLocationIcon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="24px" fill="#002C53">
+                <path :d="waterExerciseLocationIcon" />
+              </svg>
+            </template>
+            <p>{{ waterExerciseLocation }}</p>
+          </Tag>
+          <Tag icon="pi pi-users" class="players-tag" severity="secondary">
+            <p>Minimaal {{ exercise.minimum_players }} spelers</p>
+          </Tag>
+
+          <Tag icon="pi pi-user" class="players-tag" severity="secondary">
+            <p>O{{ exercise.minimum_age }}</p>
+          </Tag>
+        </div>
+
+        <transition name="expand">
+          <div v-if="showExtra" class="content-container">
+            <div class="skill-tag-container">
+              <p>Onderdelen</p>
+              <div class="tags">
+                <!-- Additional content here -->
+              </div>
+            </div>
+          </div>
+        </transition>
+      </template>
+
+      <template #footer>
+        <div v-if="showButton" class="button-container">
+          <Button
+            label="Toevoegen"
+            icon="pi pi-plus"
+            @click.stop="toggleExercise"
+            :class="{ 'p-button-success': isAdded, 'p-button-secondary': !isAdded }"
+            severity="secondary"
+            size="large"
+            class="exerciseButton"
+          />
+        </div>
+      </template>
+    </Card>
+  </router-link>
 </template>
 <script>
 import Button from "primevue/button";
