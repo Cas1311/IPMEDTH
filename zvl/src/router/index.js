@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,6 +14,8 @@ const router = createRouter({
       path: '/exercise/create',
       name: 'addExercise',
       component: () => import('../views/AddExerciseView.vue'),
+      meta: { requiresAuth: true }
+     
     },
     {
       path: '/login',
@@ -44,16 +48,19 @@ const router = createRouter({
       name: 'exerciseEdit',
       component: () => import('../views/EditExerciseView.vue'),
       props: true,
+      meta: { requiresAuth: true }
     },
     {
       path: '/training/create',
       name: 'trainingCreation',
       component: () => import('../views/CreateTrainingView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/training/edit/:id',
       name: 'trainingEdit',
       component: () => import('../views/EditTrainingView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/training/:id',
@@ -61,7 +68,23 @@ const router = createRouter({
       component: () => import('../views/TrainingDetailView.vue'),
       props: true,
     },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: () => import('../views/ProfileView.vue'),
+    },
   ],
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    
+    next({ name: "login" });
+  } else {
+    next(); 
+  }
+});
 
 export default router

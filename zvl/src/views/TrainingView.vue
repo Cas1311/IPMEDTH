@@ -3,9 +3,12 @@
   <div class="training-container">
     
     <h1>Alle trainingen</h1>
-    <router-link :to="'/training/create'">
+    <div v-if="isAuthenticated">
+      <router-link :to="'/training/create'">
       <Button label="Nieuwe training maken" />
         </router-link>
+    </div>
+    
     
     <div v-if="loading">
       <p>Loading...</p>
@@ -25,7 +28,7 @@ import TrainingCard from '@/components/TrainingCard.vue';
 import { mapActions } from "pinia";
 import { mapState } from "pinia";
 import { useTrainingStore } from '../stores/trainings';
-
+import { useAuthStore } from '../stores/auth';
 
 export default {
 
@@ -60,7 +63,8 @@ export default {
   },
 
   computed: {
-    ...mapState(useTrainingStore, ['trainings'])
+    ...mapState(useTrainingStore, ['trainings']),
+    ...mapState(useAuthStore, ['isAuthenticated'])
   },
 
   components: {

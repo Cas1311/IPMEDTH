@@ -4,7 +4,7 @@
     <h1>ZVL Waterpolo Trainingen</h1>
     <h3>Waar dromen werkelijkheid worden</h3>
 
-    <Menu :model="items">
+    <Menu :model="filteredItems">
       <template #item="{ item, props }">
         <router-link
           v-if="item.route"
@@ -29,6 +29,8 @@
 <script>
 import Menu from "primevue/menu"; // Import the Menu component from PrimeVue
 import { defineComponent } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { mapState } from 'pinia'
 
 export default defineComponent({
   components: {
@@ -41,6 +43,7 @@ export default defineComponent({
           label: "Oefening Toevoegen",
           icon: "pi pi-plus",
           route: "/exercise/create",
+          requiresAuth: true,
         },
         {
           label: "Oefeningen Overzicht",
@@ -51,6 +54,7 @@ export default defineComponent({
           label: "Training Maken",
           icon: "pi pi-plus",
           route: "/training/create",
+          requiresAuth: true,
         },
         {
           label: "Trainingen Overzicht", 
@@ -61,10 +65,29 @@ export default defineComponent({
           label: "Inloggen",
           icon: "pi pi-sign-in",
           route: "/login",
+          requiresAuth: false,
+        },
+        {
+          label: "Profiel",
+          icon: "pi pi-user",
+          route: "/profile",
+          requiresAuth: true,
         },
       ],
     };
   },
+
+  computed: {
+    ...mapState(useAuthStore, ['isAuthenticated']),
+    filteredItems() {
+      return this.items.filter(item => {
+        if (item.requiresAuth === undefined) return true; // No auth condition, show always
+        return this.isAuthenticated ? item.requiresAuth : !item.requiresAuth;
+      });
+    },
+  },
+  watch: {
+  }
 });
 </script>
 

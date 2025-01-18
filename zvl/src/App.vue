@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Menubar v-if="!isHomepage" :model="items" :class="{ hidden: isHidden }">
+    <Menubar v-if="!isHomepage" :model="filteredItems" :class="{ hidden: isHidden }">
       <template #start>
         <!-- Back button for small screens -->
         <Button class="back-button" @click="goBack">
@@ -8,6 +8,7 @@
         </Button>
       </template>
       <template #end>
+        
         <!-- Add the logo with a link to the homepage -->
         <RouterLink class="link logo-container" to="/">
           <img alt="ZVL logo" class="logo" src="./assets/zvllogo.png" />
@@ -39,6 +40,8 @@
 <script>
 import Menubar from "primevue/menubar";
 import Button from "primevue/button";
+import { mapState } from "pinia";
+import { useAuthStore } from "@/stores/auth";
 
 export default {
   components: {
@@ -49,16 +52,21 @@ export default {
     return {
       items: [
         // { label: "Home", icon: "pi pi-home", route: "/" },
-        { label: "Oefening Toevoegen", icon: "pi pi-plus", route: "/exercise/create" },
+        { label: "Oefening Toevoegen", icon: "pi pi-plus", route: "/exercise/create", requiresAuth: true,},
         { label: "Oefeningen Overzicht", icon: "pi pi-list", route: "/exercises" },
-        { label: "Training Maken", icon: "pi pi-plus", route: "/training/create" },
+        { label: "Training Maken", icon: "pi pi-plus", route: "/training/create",  requiresAuth: true,},
         { label: "Trainingen Overzicht", icon: "pi pi-calendar", route: "/trainings" },
+        {label: "Inloggen", icon: "pi pi-sign-in", route: "/login", requiresAuth: false},
+        {label: "Profiel", icon: "pi pi-user", route: "/profile", requiresAuth: true,},
       ],
       isHidden: false,
       lastScrollPosition: 0,
     };
   },
   computed: {
+    ...mapState(useAuthStore, ['isAuthenticated', 'role']),
+ 
+
     isHomepage() {
       return this.$route.path === "/";
     },
@@ -67,6 +75,14 @@ export default {
       const currentItem = this.items.find((item) => item.route === this.$route.path);
       return currentItem ? currentItem.label : "";
     },
+
+    filteredItems() {
+      return this.items.filter(item => {
+        if (item.requiresAuth === undefined) return true; // No auth condition, show always
+        return this.isAuthenticated ? item.requiresAuth : !item.requiresAuth;
+      });
+    },
+  
   },
   watch: {
     $route() {
@@ -90,6 +106,8 @@ export default {
       // Navigate to the previous page
       this.$router.back();
     },
+
+  
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
