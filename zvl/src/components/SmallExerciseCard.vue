@@ -1,23 +1,20 @@
 <template>
-  
+ 
     <Card class="exercise-card">
       
       <template #title>
-        
+      <div class="clickable-header" @click="goToDetailPage">
         <div class="cardHeader">
-          <router-link :to="'/exercise/' + exercise.id" >
           <p class="exercise-name">{{ exercise.name }}</p>
-
           <Tag icon="pi pi-stopwatch" class="duration-tag" severity="secondary">
             <p>{{ exercise.duration }} Minuten</p>
           </Tag>
-        </router-link>
         </div>
-      
-      </template>
+      </div>
+    </template>
     
       <template #subtitle>
-        <div class="category-container">
+        <div class="category-container" @click="goToDetailPage">
           <Tag class="category" v-for="category in uniqueCategories" :key="category.id">
             <p>{{ category.name }}</p>
           </Tag>
@@ -25,10 +22,10 @@
       </template>
 
       <template #content>
-        <div class="tags">
+        <div class="tags"@click="goToDetailPage">
           <Tag class="players-tag" severity="secondary">
             <template #icon>
-              <!-- Dynamically display icon based on water_exercise_location -->
+              
               <svg
                 v-if="waterExerciseLocationIcon"
                 xmlns="http://www.w3.org/2000/svg"
@@ -131,6 +128,7 @@
         </div>
       </template>
     </Card>
+  
 </template>
 <script>
 import Button from "primevue/button";
@@ -166,6 +164,9 @@ export default {
   },
 
   methods: {
+    goToDetailPage() {
+    this.$router.push(`/exercise/${this.exercise.id}`);
+  },
     toggleExercise() {
       this.isAdded = !this.isAdded;
       this.$emit("toggle-exercise", this.exercise.id);
@@ -343,6 +344,7 @@ export default {
   margin-top: 1em;
   width: 100%;
 }
+
 
 @media only screen and (max-width: 768px) {
   .panel-container {

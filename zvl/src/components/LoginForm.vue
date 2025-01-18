@@ -19,17 +19,12 @@
           />
         </div>
 
-        <Button label="Inloggen" type="submit" class="login-button" />
+        <Button label="Inloggen" type="submit" class="login-button" severity="primary"/>
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </form>
 
-      <div class="register-link">
-        <p>
-          Heb je nog geen account?
-          <router-link class="register-link" to="/register">Registreer hier</router-link>
-        </p>
-      </div>
+
     </div>
   </div>
 </template>
@@ -49,8 +44,11 @@
 }
 
 .formfields {
-  background-color: var(--p-stepper-steppanel-background);
-  padding: 1em;
+  background-color: #0f172a;
+  padding-left: 4em;
+  padding-right: 4em;
+  padding-top: 1.5em;
+  padding-bottom: 2.5em;
   border-radius: 0.5em;
 }
 
@@ -79,8 +77,8 @@ h2 {
 
 .login-button {
   width: 100%;
-  background-color: var(--theme-secondary);
-  color: var(--color-text);
+  
+  color: var(--theme-primary);
 }
 
 .error-message {

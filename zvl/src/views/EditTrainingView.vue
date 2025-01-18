@@ -3,7 +3,24 @@
     
     
     <h2>Training bewerken</h2>
-    
+    <div class="button-container">
+      <form @submit.prevent="submitFullForm">
+        <Button
+          icon="pi pi-save"
+          class="save-button"
+          type="submit"
+          label="Opslaan"
+        />
+      </form>
+      <router-link :to="'/trainings/'">
+        <Button
+          icon="pi pi-times"
+          class="save-button"
+          label="Annuleren"
+          severity="secondary"
+        />
+      </router-link>
+    </div>
     <ScrollPanel style="width: 100%; height: 80vh">
       <div v-if="trainingLoading">
       <p>Loading...</p>
@@ -34,24 +51,7 @@
       </div>
     </ScrollPanel>
 
-    <div class="button-container">
-      <form @submit.prevent="submitFullForm">
-        <Button
-          icon="pi pi-save"
-          class="save-button"
-          type="submit"
-          label="Opslaan"
-        />
-      </form>
-      <router-link :to="'/trainings/'">
-        <Button
-          icon="pi pi-times"
-          class="save-button"
-          label="Annuleren"
-          severity="secondary"
-        />
-      </router-link>
-    </div>
+    
 
   </div>
 </template>

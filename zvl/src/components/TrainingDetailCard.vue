@@ -7,8 +7,9 @@
         
         <template #subtitle>Gemaakt op: {{ formatDate(training.created_at) }}</template>
         
+        <div></div>
         <template #content>
-            <div v-if="showExtra">
+            <div v-if="isAuthenticated">
                 <Divider type="solid" />
           
           <router-link :to="'/training/edit/' + training.id">
@@ -30,6 +31,8 @@ import Divider from 'primevue/divider';
 import ConfirmPopup from 'primevue/confirmpopup';
 import Toast from 'primevue/toast';
 import Card from 'primevue/card';
+import { useAuthStore } from '../stores/auth';
+import { mapState } from "pinia";
 
 export default {
     props: {
@@ -43,7 +46,7 @@ export default {
         },
         showExtra: {
             type: Boolean,
-            default: false, // Default to not showing extra details
+            default: true, // Default to not showing extra details
         },
     },
 
@@ -77,6 +80,10 @@ export default {
 
       });
     },
+    },
+
+    computed:{
+      ...mapState(useAuthStore, ['isAuthenticated'])
     },
 
     components: {
