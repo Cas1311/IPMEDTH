@@ -3,10 +3,11 @@
     <h2 class="title">Nieuwe training maken</h2>
     <Card class="card">
       <template #content>
+        <h2 class="card-title">Naam van de training</h2>
         <form class="form-container" v-if="!nameSubmitted" @submit.prevent="addTraining">
           <FloatLabel>
             <InputText type="text" v-model="formData.name" class="input-field" />
-            <label for="over_label">Naam van de training</label>
+            
           </FloatLabel>
 
           <div v-if="isNameDuplicate" class="error-message">
@@ -125,6 +126,9 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.card-title{
+  margin-bottom: 0.5rem;
+}
 .form-container {
   display: flex;
   flex-direction: column;
@@ -135,6 +139,7 @@ export default {
   width: 100%;
   padding: 0.5rem;
   border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 .error-message {
   color: #e63946;

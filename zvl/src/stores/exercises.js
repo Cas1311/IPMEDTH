@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
 import { fetchExercises } from '@/services/exerciseService';
+import { fetchExerciseById } from '@/services/exerciseService';
 import { deleteExercise } from '@/services/exerciseService';
 
 
 export const useExerciseStore = defineStore("exercise", {
     state: () => ({
+        exercise: [],
         exercises: [],
         loading: false,
         exerciseFilters: {
@@ -77,6 +79,24 @@ export const useExerciseStore = defineStore("exercise", {
           }, 300);  // Debounce delay of 300ms
       },
       
+      async fetchExerciseByIdFromApi(exerciseId) {
+        this.loading = true;
+        try {
+            const response = await fetchExerciseById(exerciseId);
+            if (response) {
+                this.exercise = response; 
+                
+            } else {
+                this.message = 'Failed to fetch training data.';
+            }
+        } catch (error) {
+            console.error("Error fetching training data:", error);
+            this.message = 'An error occurred while fetching training data.';
+        } finally {
+            this.loading = false;
+        }
+    },
+
       async deleteExerciseApi(exerciseId){
         try {
             deleteExercise(exerciseId);

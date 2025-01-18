@@ -30,6 +30,18 @@ export async function fetchExercises(filters = {}) {
     return exercises;
 }
 
+export async function fetchExerciseById(exerciseId) {
+    try {
+        const response = await axiosInstance.get(`/exercises/${exerciseId}??incl=skills,requirements,category`);
+        return response.data;
+        
+    } catch (error) {
+        console.error('Error fetching training:', error);
+        return null;
+    }
+}
+
+
 export async function deleteExercise(exerciseId) {
     try {
         console.log(exerciseId)

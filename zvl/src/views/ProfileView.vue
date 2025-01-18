@@ -6,7 +6,7 @@
             <ProgressSpinner />
         </div>
 
-        <div v-if="userInfo">
+        <div v-if="userInfo" class="profile-card-container">
             <Card  class="user-card">
             <template #title>
                 <div class="avatar-container">
@@ -138,6 +138,11 @@ export default {
     padding: 2rem;
     
 
+}
+.profile-card-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .user-card {

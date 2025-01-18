@@ -20,7 +20,9 @@
         </div>
 
         <Divider type="solid" />
-        <router-link :to="'/training/' + training.id">
+
+<div class="training-button-container">
+  <router-link :to="'/training/' + training.id">
           <Button
             class="training-panel-button"
             icon="pi pi-info-circle"
@@ -47,6 +49,8 @@
           label="Verwijderen"
           severity="danger"
         />
+</div>
+      
       </AccordionContent>
     </AccordionPanel>
   </Accordion>
@@ -165,5 +169,14 @@ export default {
   padding-top: 0.5em;
   /* margin-top: 1em; */
   border-top: 0.125em solid var(--theme-primary);
+}
+
+.training-button-container{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25em;
 }
 </style>

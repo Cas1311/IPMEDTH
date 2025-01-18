@@ -75,6 +75,10 @@ export default {
 };
 </script>
 
+<style>
+.p-toast {
+  max-width: 90vw;
+}</style>
 <style scoped>
 .training-container {
   display: flex;

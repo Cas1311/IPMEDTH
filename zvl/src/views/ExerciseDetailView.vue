@@ -1,8 +1,9 @@
 <template>
-  <Toast />
+  <Toast  />
+  
   <ConfirmPopup />
 
-  <div v-if="loadingExercise">
+  <div v-if="exerciseLoading">
     <p>Loading...</p>
   </div>
 
@@ -10,7 +11,7 @@
     <div class="buttonContainer">
       <router-link :to="'/exercise/edit/' + exercise.id">
         <Button
-          v-if="authStore.isAuthenticated"
+          v-if="isAuthenticated"
           icon="pi pi-file-edit"
           class="exerciseButton"
           label="Bewerken"
@@ -19,7 +20,7 @@
       </router-link>
 
       <Button
-        v-if="authStore.isAuthenticated"
+        v-if="isAuthenticated"
         icon="pi pi-trash"
         class="exerciseButton"
         @click="confirmDelete($event)"
@@ -34,6 +35,9 @@
 
 <script>
 import { useAuthStore } from "@/stores/auth";
+import { useExerciseStore } from "@/stores/exercises";
+import { mapActions } from "pinia";
+import { mapState } from "pinia";
 import ShowData from "@/components/ShowData.vue";
 import Button from "primevue/button";
 import ConfirmPopup from "primevue/confirmpopup";
@@ -49,26 +53,18 @@ export default {
   },
   data() {
     return {
-      exercise: null,
+      // exercise: null,
       loadingExercise: true,
-      authStore: useAuthStore(),
+      
     };
   },
   mounted() {
     const exerciseId = this.$route.params.id;
-    this.$axios
-      .get(`/exercises/${exerciseId}?incl=requirements,skills,category`)
-      .then((response) => {
-        this.exercise = response.data;
-      })
-      .catch((error) => {
-        console.error("Error fetching exercise:", error);
-      })
-      .finally(() => {
-        this.loadingExercise = false;
-      });
+    this.fetchExerciseByIdFromApi(exerciseId);
   },
   methods: {
+    ...mapActions(useExerciseStore, ['fetchExerciseByIdFromApi', 'deleteExerciseApi']),
+
     confirmDelete(event) {
       this.$confirm.require({
         target: event.currentTarget,
@@ -84,7 +80,7 @@ export default {
         },
         accept: async () => {
           try {
-            await this.$axios.delete(`/exercises/${this.exercise.id}`);
+            await this.deleteExerciseApi(this.exercise.id)
             this.$toast.add({
               severity: "success",
               summary: "Verwijderd",
@@ -104,6 +100,12 @@ export default {
       });
     },
   },
+
+  computed:{
+    ...mapState(useAuthStore, ['isAuthenticated', 'exercise', {exerciseLoading: 'loading'}]),
+    ...mapState(useExerciseStore, ['exercise', {exerciseLoading: 'loading'}])
+    
+  }
 };
 </script>
 
@@ -127,5 +129,9 @@ export default {
 .exerciseButton {
   width: 40vw;
   height: 100%;
+}
+
+.p-toast {
+  max-width: 90vw;
 }
 </style>
