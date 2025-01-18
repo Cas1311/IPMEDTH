@@ -2,7 +2,7 @@
   <Toast />
   <ConfirmPopup />
 
-  <div v-if="loading">
+  <div v-if="loadingExercise">
     <p>Loading...</p>
   </div>
 
@@ -10,6 +10,7 @@
     <div class="buttonContainer">
       <router-link :to="'/exercise/edit/' + exercise.id">
         <Button
+          v-if="authStore.isAuthenticated"
           icon="pi pi-file-edit"
           class="exerciseButton"
           label="Bewerken"
@@ -18,6 +19,7 @@
       </router-link>
 
       <Button
+        v-if="authStore.isAuthenticated"
         icon="pi pi-trash"
         class="exerciseButton"
         @click="confirmDelete($event)"
@@ -31,6 +33,7 @@
 </template>
 
 <script>
+import { useAuthStore } from "@/stores/auth";
 import ShowData from "@/components/ShowData.vue";
 import Button from "primevue/button";
 import ConfirmPopup from "primevue/confirmpopup";
@@ -38,10 +41,17 @@ import Toast from "primevue/toast";
 import { useToast } from "primevue/usetoast"; // Import useToast for programmatically adding toasts
 
 export default {
+  components: {
+    ShowData,
+    Button,
+    ConfirmPopup,
+    Toast,
+  },
   data() {
     return {
       exercise: null,
-      loading: true,
+      loadingExercise: true,
+      authStore: useAuthStore(),
     };
   },
   mounted() {
@@ -55,12 +65,11 @@ export default {
         console.error("Error fetching exercise:", error);
       })
       .finally(() => {
-        this.loading = false;
+        this.loadingExercise = false;
       });
   },
   methods: {
     confirmDelete(event) {
-      // Confirmation popup
       this.$confirm.require({
         target: event.currentTarget,
         message: "Weet je zeker dat je de oefening wilt verwijderen?",
@@ -75,38 +84,25 @@ export default {
         },
         accept: async () => {
           try {
-            // Deleting the exercise
             await this.$axios.delete(`/exercises/${this.exercise.id}`);
-
-            // Show success toast
             this.$toast.add({
               severity: "success",
               summary: "Verwijderd",
               detail: "Oefening succesvol verwijderd",
               life: 3000,
             });
-
-            // Redirect to exercises list after deletion
             this.$router.push("/exercises");
           } catch (error) {
-            // Show error toast if deletion fails
             this.$toast.add({
               severity: "error",
               summary: "Fout",
-              detail: "Er is een fout opgetreden bij het verwijderen van de oefening.",
+              detail: "Er is een fout opgetreden bij het verwijderen van de oefening",
               life: 3000,
             });
-            console.error("Error deleting exercise:", error);
           }
         },
       });
     },
-  },
-  components: {
-    ShowData,
-    Button,
-    ConfirmPopup,
-    Toast,
   },
 };
 </script>
