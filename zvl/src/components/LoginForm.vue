@@ -3,9 +3,9 @@
     <h1>Login</h1>
     <div class="formfields">
       <form @submit.prevent="handleLogin" class="login-form">
-        <h2>Gebruikersnaam</h2>
+        <h2>Email</h2>
         <div class="field">
-          <InputText name="username" type="text" v-model="username" class="input-field" />
+          <InputText name="username" type="text" v-model="email" class="input-field" />
         </div>
 
         <div class="field">
@@ -114,16 +114,23 @@ export default {
   },
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       errorMessage: "",
     };
   },
   methods: {
     ...mapActions(useAuthStore, ["login"]),
+
+    
     async handleLogin() {
+        
       try {
-        await this.login({ username: this.username, password: this.password });
+        const credentials = {
+          email: this.email,
+          password: this.password,
+        };
+        await this.login(credentials);
         this.$router.push("/");
       } catch (error) {
         this.errorMessage = "Onjuiste gebruikersnaam of wachtwoord";
