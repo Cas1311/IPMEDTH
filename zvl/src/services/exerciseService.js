@@ -32,7 +32,7 @@ export async function fetchExercises(filters = {}) {
 
 export async function fetchExerciseById(exerciseId) {
     try {
-        const response = await axiosInstance.get(`/exercises/${exerciseId}??incl=skills,requirements,category`);
+        const response = await axiosInstance.get(`/exercises/${exerciseId}?incl=skills,requirements,category`);
         return response.data;
         
     } catch (error) {
