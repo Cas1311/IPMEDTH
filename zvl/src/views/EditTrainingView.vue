@@ -23,7 +23,7 @@
     </div>
     <ScrollPanel style="width: 100%; height: 80vh">
       <div v-if="trainingLoading">
-      <p>Loading...</p>
+      <p>Laden...</p>
     </div>
     <div v-else class="trainings-list">
       <TrainingDetailCard :training="training" :show-extra="false" />
@@ -33,7 +33,7 @@
 
       <div>
         <div v-if="loading">
-          <p>Loading...</p>
+          <p>Laden...</p>
         </div>
 
         <div v-else class="exercise-list">
