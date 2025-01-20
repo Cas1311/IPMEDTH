@@ -58,6 +58,13 @@ export default {
         { label: "Trainingen Overzicht", icon: "pi pi-calendar", route: "/trainings" },
         {label: "Inloggen", icon: "pi pi-sign-in", route: "/login", requiresAuth: false},
         {label: "Profiel", icon: "pi pi-user", route: "/profile", requiresAuth: true,},
+        {
+          label: "Gebruikers",
+          icon: "pi pi-users",
+          route: "/users",
+          requiresAuth: true,
+          requiresAdmin: true,
+        },
       ],
       isHidden: false,
       lastScrollPosition: 0,
@@ -78,10 +85,24 @@ export default {
 
     filteredItems() {
       return this.items.filter(item => {
-        if (item.requiresAuth === undefined) return true; // No auth condition, show always
-        return this.isAuthenticated ? item.requiresAuth : !item.requiresAuth;
+        if (item.requiresAuth === undefined && item.requiresAdmin === undefined) {
+          return true;
+        }
+
+        if (item.requiresAuth === false && this.isAuthenticated) {
+          return false;
+        }
+
+        if (item.requiresAuth && !this.isAuthenticated) {
+          return false;
+        }
+
+        if (item.requiresAdmin && this.role !== 'Admin') {
+          return false;
+        }
+        return true;
       });
-    },
+    }
   
   },
   watch: {

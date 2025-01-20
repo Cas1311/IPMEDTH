@@ -90,6 +90,7 @@
 
 <script>
 import TreeSelect from "primevue/treeselect";
+import Multiselect from "primevue/multiselect";
 import Slider from "primevue/slider";
 import InputText from "primevue/inputtext";
 import SelectButton from "primevue/selectbutton";
@@ -162,6 +163,7 @@ export default {
     AccordionHeader,
     AccordionContent,
     TreeSelect,
+    
   },
 };
 </script>
