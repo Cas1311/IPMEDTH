@@ -4,7 +4,7 @@
   <ConfirmPopup />
 
   <div v-if="exerciseLoading">
-    <p>Loading...</p>
+    <p>Laden...</p>
   </div>
 
   <div class="exercisecontainer" v-else>

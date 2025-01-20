@@ -4,7 +4,7 @@
       <template #start>
         <!-- Back button for small screens -->
         <Button class="back-button" @click="goBack">
-          <i class="pi pi-arrow-left"></i>Back
+          <i class="pi pi-arrow-left"></i>Terug
         </Button>
       </template>
       <template #end>

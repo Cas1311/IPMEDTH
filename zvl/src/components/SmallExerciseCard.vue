@@ -83,7 +83,7 @@
               </template>
               <p>{{ exercise.description }}</p>
             </Panel>
-            <Panel header="Procedure" toggleable collapsed="true">
+            <Panel header="Uitvoering" toggleable collapsed="true">
               <template #toggleicon="data">
                 <Button
                   :icon="'pi ' + (data.collapsed ? 'pi-chevron-down' : 'pi-chevron-up')"

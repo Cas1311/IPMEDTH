@@ -6,7 +6,7 @@
       <ToggleSwitch v-model="checked" />
     </div>
     <div v-if="loading">
-      <p>Loading...</p>
+      <p>Laden...</p>
     </div>
 
     <div v-else class="exercise-list">

@@ -3,7 +3,7 @@
     <h2>Training informatie</h2>
     
         <div v-if="trainingLoading">
-            <p>Loading...</p>
+            <p>Laden...</p>
         </div>
         <div v-else class="trainings-list">
 
@@ -17,7 +17,7 @@
         </div>
         
         <div v-if="this.loading">
-            <p>Loading...</p>
+            <p>Laden...</p>
         </div>
 
 

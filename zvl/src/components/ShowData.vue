@@ -20,7 +20,7 @@
       <div class="row">
         <!-- Skills -->
         <div class="sectionContainer column">
-          <h3>Skills</h3>
+          <h3>Vaardigheden</h3>
           <ul class="skillContainer">
             <li class="skill" v-for="skill in exercise.skills || []" :key="skill.id">
               {{ skill.name }}
