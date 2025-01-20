@@ -13,10 +13,15 @@
                 {{ user.role }}
             </template>
     <template #content>
-        <Divider></Divider>
+        
         <p>
             {{ user.email }}
         </p>
+        <Divider></Divider>
+    </template>
+
+    <template #footer>
+        <Button label="Gebruiker verwijderen" icon="pi pi-trash" severity="danger"></Button>
     </template>
         </Card>
         </div>

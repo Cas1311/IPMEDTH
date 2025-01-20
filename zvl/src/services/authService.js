@@ -55,3 +55,12 @@ export async function fetchAllUsers(){
       }
       return users;
 }
+
+export async function deleteUser(userId){
+    try {
+        await axiosInstance.delete(`/users/${userId}`);
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+    
+}

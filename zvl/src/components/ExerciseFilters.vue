@@ -17,8 +17,7 @@
           <div class="filter-item-container">
             <h3>Categorie en onderdelen</h3>
             <TreeSelect
-              filter
-              filterMode="lenient"
+              
               v-model="selectedSkillIds"
               :options="options"
               selectionMode="checkbox"

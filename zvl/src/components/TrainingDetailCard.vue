@@ -10,6 +10,7 @@
         <div></div>
         <template #content>
             <div v-if="isAuthenticated">
+              <div v-if="showExtra">
                 <Divider type="solid" />
           
           <router-link :to="'/training/edit/' + training.id">
@@ -17,6 +18,7 @@
           </router-link>
           <Button icon="pi pi-trash" class="training-panel-button" @click="confirm($event)" label="Verwijderen"
             severity="danger" />
+          </div>
             </div>
         
         </template> 
@@ -46,7 +48,7 @@ export default {
         },
         showExtra: {
             type: Boolean,
-            default: true, // Default to not showing extra details
+            default: false, // Default to not showing extra details
         },
     },
 

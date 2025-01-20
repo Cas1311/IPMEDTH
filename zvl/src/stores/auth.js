@@ -6,6 +6,7 @@ import { isAuthenticated } from '@/services/authService';
 import { register } from '@/services/authService';
 import { getUserInfo } from '@/services/authService';
 import { fetchAllUsers } from '@/services/authService';
+import { deleteUser } from '@/services/authService';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -85,5 +86,14 @@ export const useAuthStore = defineStore('auth', {
     this.role = null;
     this.isAuthenticated = false;
   },
+
+  async deleteUser(userId){
+    try {
+      deleteUser(userId);
+      this.users = this.users.filter(user => user.id !== userId);
+  } catch (error) {
+      console.error("Failed to delete user:", error);
+  } 
+  }
 },
 });
