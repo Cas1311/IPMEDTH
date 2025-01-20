@@ -5,59 +5,80 @@
       <form @submit.prevent="handleRegister" class="register-form">
         <h2>Rol</h2>
         <div class="field">
-          <Select v-model="formData.role" :options="roles" placeholder="Selecteer rol" class="input-field" />
-          <p v-if="!formData.role" class="error-message">
-            Dit veld is verplicht.
-          </p>
+          <Select
+            v-model="formData.role"
+            :options="roles"
+            placeholder="Selecteer rol"
+            class="input-field"
+          />
+          <p v-if="showErrors && !formData.role" class="error-message">Dit veld is verplicht.</p>
         </div>
-
 
         <h2>Voornaam</h2>
         <div class="field">
-          <InputText name="first_name" type="text" v-model="formData.first_name" class="input-field" />
-          <p v-if="!formData.first_name" class="error-message">
-            Dit veld is verplicht.
-          </p>
-
+          <InputText
+            name="first_name"
+            type="text"
+            v-model="formData.first_name"
+            class="input-field"
+          />
+          <p v-if="showErrors && !formData.first_name" class="error-message">Dit veld is verplicht.</p>
         </div>
-
 
         <h2>Tweede naam (optioneel)</h2>
         <div class="field">
-          <InputText name="middle_name" type="text" v-model="formData.middle_name" class="input-field" />
+          <InputText
+            name="middle_name"
+            type="text"
+            v-model="formData.middle_name"
+            class="input-field"
+          />
         </div>
 
         <h2>Achternaam</h2>
         <div class="field">
-          <InputText name="last_name" type="text" v-model="formData.last_name" class="input-field" />
-          <p v-if="!formData.last_name" class="error-message">
-            Dit veld is verplicht.
-          </p>
+          <InputText
+            name="last_name"
+            type="text"
+            v-model="formData.last_name"
+            class="input-field"false
+          />
+          <p v-if="showErrors && !formData.last_name" class="error-message">Dit veld is verplicht.</p>
         </div>
-
 
         <h2>Email</h2>
         <div class="field">
-          <InputText name="email" type="email" v-model="formData.email" class="input-field" />
-          <p v-if="!formData.email" class="error-message">
-            Dit veld is verplicht.
-          </p>
+          <InputText
+            name="email"
+            type="email"
+            v-model="formData.email"
+            class="input-field"
+          />
+          <p v-if="showErrors && !formData.email" class="error-message">Dit veld is verplicht.</p>
         </div>
-
 
         <h2>Wachtwoord</h2>
         <div class="field">
-          <Password name="password" :feedback="false" fluid v-model="formData.password" class="input-field" />
-          <p v-if="!formData.password" class="error-message">
-            Dit veld is verplicht.
-          </p>
+          <Password
+            name="password"
+            :feedback="false"
+            fluid
+            v-model="formData.password"
+            class="input-field"
+          />
+          <p v-if="showErrors && !formData.password" class="error-message">Wachtwoord moet minimaal 8 karakters zijn en is verplicht</p>
         </div>
 
         <h2>Bevestig Wachtwoord</h2>
         <div class="field">
-          <Password name="confirmPassword" :feedback="false" fluid v-model="formData.confirmPassword"
-            class="input-field" />
-          <p v-if="!formData.confirmPassword" class="error-message">
+          <Password
+            name="confirmPassword"
+            :feedback="false"
+            fluid
+            v-model="formData.confirmPassword"
+            class="input-field"
+          />
+          <p v-if="showErrors && !formData.confirmPassword" class="error-message">
             Dit veld is verplicht.
           </p>
         </div>
@@ -66,17 +87,9 @@
 
         <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
       </form>
-
-      <div class="login-link">
-        <p>
-          Heb je al een account?
-          <router-link class="login-link" to="/login">Log hier in</router-link>
-        </p>
-      </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import Button from "primevue/button";
@@ -91,17 +104,14 @@ export default {
     Button,
     InputText,
     Password,
-    Select
+    Select,
   },
 
   data() {
     return {
-      roles: [
-        'Admin', 'Trainer', 'Guest'
-      ],
+      roles: ["Admin", "Trainer", "Guest"],
       errorMessage: "",
-      formData:
-      {
+      formData: {
         role: "",
         disabled: false,
         first_name: "",
@@ -110,8 +120,9 @@ export default {
         email: "",
         password: "",
         confirmPassword: "",
-      }
-
+      },
+      showErrors: false,
+      errorMessage: "",
     };
   },
   methods: {
@@ -119,6 +130,7 @@ export default {
 
     async handleRegister() {
       this.errorMessage = "";
+      this.showErrors = true;
 
       if (
         !this.formData.role ||
@@ -145,8 +157,7 @@ export default {
           last_name: this.formData.last_name,
           email: this.formData.email,
           password: this.formData.password,
-
-        }
+        };
         await this.register(credentials);
         this.$router.push("/users");
       } catch (error) {
@@ -156,7 +167,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .register-container {
@@ -173,7 +183,7 @@ export default {
 }
 
 .formfields {
-  background-color: var(--p-stepper-steppanel-background);
+  background-color: #0f172a;
   padding: 1em;
   border-radius: 0.5em;
 }
