@@ -1,5 +1,6 @@
 <template>
-    
+    <Toast />
+    <ConfirmPopup></ConfirmPopup>
     <div class="profile-container">
         <h1>Alle gebruikers</h1>
         <router-link :to="'/register'">
@@ -21,7 +22,7 @@
     </template>
 
     <template #footer>
-        <Button label="Gebruiker verwijderen" icon="pi pi-trash" severity="danger"></Button>
+        <Button label="Gebruiker verwijderen" icon="pi pi-trash"  @click="confirm($event, user.id)" severity="danger"></Button>
     </template>
         </Card>
         </div>
@@ -35,6 +36,8 @@
 import Button from 'primevue/button';
 import Divider from 'primevue/divider';
 import Card from 'primevue/card';
+import ConfirmPopup from 'primevue/confirmpopup';
+import Toast from 'primevue/toast';
 import { useAuthStore } from "@/stores/auth";
 import { mapActions } from 'pinia'
 import { mapState } from 'pinia'
@@ -52,7 +55,32 @@ export default {
 
 
     methods: {
-        ...mapActions(useAuthStore, ['getAllUsers']),
+        ...mapActions(useAuthStore, ['getAllUsers', 'deleteUser']),
+
+        confirm(event, userId) {
+      this.$confirm.require({
+        target: event.currentTarget,
+        message: 'Weet je zeker dat je de gebruiker wilt verwijderen?',
+        rejectProps: {
+          label: 'Annuleren',
+          severity: 'secondary',
+          outlined: true
+        },
+        acceptProps: {
+          label: 'Verwijderen',
+          severity: 'danger'
+        },
+        accept: () => {
+          this.$toast.add({ severity: 'secondary', summary: 'Verwijderd', detail: 'Gebruiker verwijderd', life: 3000 });
+          this.deleteUser(userId)
+          .then(() => {
+            this.getAllUsers(); // Refresh user list after deletion
+          })
+          this.$router.push('/users');
+        },
+
+      });
+    },
 
     },
 
@@ -63,7 +91,9 @@ export default {
     components: {
         Divider,
         Card,
-        Button
+        Button,
+        ConfirmPopup,
+        Toast,
     },
 };
 </script>
